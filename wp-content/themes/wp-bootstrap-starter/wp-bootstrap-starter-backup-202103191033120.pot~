@@ -1,0 +1,440 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Bootstrap Starter\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-19 10:31+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.2; wp-5.6.2\n"
+"X-Domain: wp-bootstrap-starter"
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:152
+#, php-format
+msgid "%s <span class=\"says\">says:</span>"
+msgstr ""
+
+#. used between list items, there is a space after the comma
+#: ../wp-bootstrap-starter/inc/template-tags.php:55
+#: ../wp-bootstrap-starter/inc/template-tags.php:61
+msgid ", "
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:156
+#, php-format
+msgctxt "1: date, 2: time"
+msgid "%1$s at %2$s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:159
+msgid ""
+"<span style=\"margin-left: 5px;\" class=\"glyphicon glyphicon-edit\"></span> "
+"Edit"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/wp_bootstrap_navwalker.php:365
+msgid "Add a menu"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:123
+#: ../wp-bootstrap-starter/functions.php:132
+#: ../wp-bootstrap-starter/functions.php:141
+#: ../wp-bootstrap-starter/functions.php:150
+msgid "Add widgets here."
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:200
+msgid "All Bootstrap Assets and FontAwesome will be loaded in CDN."
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:143
+msgid "Apply coupon"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:92
+msgid "Available on backorder"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:175
+msgid "Background Color"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:184
+msgid "Background Image"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:146
+msgid "Banner Tagline"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:135
+msgid "Banner Title"
+msgstr ""
+
+#. Name of the template
+msgid "Blank with Container"
+msgstr ""
+
+#. Name of the template
+msgid "Blank without Container"
+msgstr ""
+
+#: ../wp-bootstrap-starter/footer.php:23
+msgid "Bootstrap WordPress Theme"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:97
+msgid "Cancel Reply"
+msgstr ""
+
+#. Name of the theme
+msgid "climate"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:52
+#: ../wp-bootstrap-starter/comments.php:70
+msgid "Comment navigation"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:87
+msgid "Comments are closed."
+msgstr ""
+
+#. 1: comment count number, 2: title.
+#: ../wp-bootstrap-starter/comments.php:41
+#, php-format
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../wp-bootstrap-starter/template-parts/content.php:36
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:143
+msgid "Coupon code"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:143
+msgid "Coupon:"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:137
+msgid "Edit"
+msgstr ""
+
+#. %s: Name of current post
+#: ../wp-bootstrap-starter/inc/template-tags.php:71
+#: ../wp-bootstrap-starter/template-parts/content-page.php:39
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:130
+msgid "Footer 1"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:139
+msgid "Footer 2"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:148
+msgid "Footer 3"
+msgstr ""
+
+#. Name of the template
+msgid "Full Width"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:97
+msgid "Header Banner"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:124
+msgid "Header Banner Background Color"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:106
+msgid "Header Image"
+msgstr ""
+
+#. URI of the theme
+#. Author URI of the theme
+msgid "http://www.webbkod.com"
+msgstr ""
+
+#: ../wp-bootstrap-starter/404.php:21
+msgid ""
+"It looks like nothing was found at this location. Maybe try one of the links "
+"below or a search?"
+msgstr ""
+
+#: ../wp-bootstrap-starter/template-parts/content-none.php:31
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#: ../wp-bootstrap-starter/searchform.php:3
+msgctxt "label"
+msgid "Search for:"
+msgstr ""
+
+#. %s: post title
+#: ../wp-bootstrap-starter/inc/template-tags.php:40
+#, php-format
+msgid "Leave a Comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:94
+msgid "Leave a Reply"
+msgstr ""
+
+#. 1: Reply Specific User
+#: ../wp-bootstrap-starter/comments.php:96
+#, php-format
+msgid "Leave a Reply to %s"
+msgstr ""
+
+#. Name of the template
+msgid "Left Sidebar"
+msgstr ""
+
+#. Author of the theme
+msgid "Naimesh Rao"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:56
+#: ../wp-bootstrap-starter/comments.php:74
+msgid "Newer Comments"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:206
+msgid "No"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:193
+msgid "no"
+msgstr ""
+
+#: ../wp-bootstrap-starter/template-parts/content-none.php:14
+msgid "Nothing Found"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:55
+#: ../wp-bootstrap-starter/comments.php:73
+msgid "Older Comments"
+msgstr ""
+
+#. 1: title.
+#: ../wp-bootstrap-starter/comments.php:35
+#, php-format
+msgid "One thought on &ldquo;%1$s&rdquo;"
+msgstr ""
+
+#: ../wp-bootstrap-starter/404.php:17
+msgid "Oops! That page can&rsquo;t be found."
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:167
+msgid "Other Customizations"
+msgstr ""
+
+#: ../wp-bootstrap-starter/template-parts/content.php:40
+#: ../wp-bootstrap-starter/template-parts/content-notitle.php:18
+#: ../wp-bootstrap-starter/template-parts/content-page.php:27
+msgid "Pages:"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:264
+msgid "Password:"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:137
+msgid "Pingback:"
+msgstr ""
+
+#: ../wp-bootstrap-starter/searchform.php:3
+msgctxt "placeholder"
+msgid "Search &hellip;"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:31
+#, php-format
+msgctxt "post author"
+msgid "by %s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:98
+msgid "Post Comment"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:26
+#, php-format
+msgctxt "post date"
+msgid "Posted on %s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:57
+#, php-format
+msgid "Posted in %1$s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:24
+msgid "Preset Styles"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:31
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:97
+msgid "Price"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:47
+msgid "Primary"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:30
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:77
+msgid "Product"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:32
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:103
+msgid "Quantity"
+msgstr ""
+
+#: ../wp-bootstrap-starter/template-parts/content-none.php:21
+#, php-format
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:157
+msgid "Remove Header Banner"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:56
+msgid "Remove this item"
+msgstr ""
+
+#: ../wp-bootstrap-starter/search.php:19
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/loop/orderby.php:22
+msgid "Shop order"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:121
+msgid "Sidebar"
+msgstr ""
+
+#: ../wp-bootstrap-starter/header.php:36
+msgid "Skip to content"
+msgstr ""
+
+#: ../wp-bootstrap-starter/template-parts/content-none.php:25
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:264
+msgid "Submit"
+msgstr ""
+
+#: ../wp-bootstrap-starter/searchform.php:5
+msgctxt "submit button"
+msgid "Search"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:33
+msgid "Subtotal"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:63
+#, php-format
+msgid "Tagged %1$s"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:38
+msgid "Theme Option"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:142
+msgid ""
+"To customize the contents of this header banner and other elements of your "
+"site go to Dashboard - Appearance - Customize"
+msgstr ""
+
+#: ../wp-bootstrap-starter/header.php:89
+msgid ""
+"To customize the contents of this header banner and other elements of your "
+"site, go to Dashboard > Appearance > Customize"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:263
+msgid "To view this protected post, enter the password below:"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:125
+msgid "Total"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:75
+msgid "Typography"
+msgstr ""
+
+#: ../wp-bootstrap-starter/woocommerce/cart/cart.php:148
+msgid "Update cart"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:225
+msgid "Upload Logo (replaces text)"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:199
+msgid "Use CDN for Assets"
+msgstr ""
+
+#: ../wp-bootstrap-starter/functions.php:86
+#, php-format
+msgid ""
+"Welcome to WP Bootstrap Starter Theme! Before diving in to your new theme, "
+"please visit the <a style=\"color: #fff; font-weight: bold;\" href=\"%1$s\" "
+"target=\"_blank\">theme's</a> page for access to dozens of tips and in-depth "
+"tutorials."
+msgstr ""
+
+#. Description of the theme
+msgid ""
+"Works with Bootstrap 4 | Font Awesome 5 | Official Theme Dvelope by Webbkod"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:131
+msgid "WP Bootstrap Framework"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/customizer.php:205
+msgid "Yes"
+msgstr ""
+
+#: ../wp-bootstrap-starter/comments.php:103
+msgid ""
+"You may use these <abbr title=\"HyperText Markup Language\">HTML</abbr> tags "
+"and attributes:"
+msgstr ""
+
+#: ../wp-bootstrap-starter/inc/template-tags.php:164
+msgid "Your comment is awaiting moderation."
+msgstr ""

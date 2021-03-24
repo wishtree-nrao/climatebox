@@ -1,0 +1,189 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: wpDiscuz Media Uploader\n"
+"POT-Creation-Date: 2020-05-25 08:25+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: WpdiscuzMediaUploader.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"Language: "
+
+#: class.WpdiscuzMediaUploader.php:95 options/settings.php:281 options/WmuOptions.php:387
+msgid "Regenerate attachments"
+msgstr ""
+
+#: class.WpdiscuzMediaUploader.php:96
+#, php-format
+msgid "Please navigate to settings page and click %s button."
+msgstr ""
+
+#: class.WpdiscuzMediaUploader.php:104
+msgid "wpDiscuz Media Uploader requires wpDiscuz to be installed!"
+msgstr ""
+
+#: class.WpdiscuzMediaUploader.php:137
+msgid "File is empty. Please upload something more substantial. This error could also be caused by uploads being disabled in your php.ini or by post_max_size being defined as smaller than upload_max_filesize in php.ini."
+msgstr ""
+
+#: class.WpdiscuzMediaUploader.php:138
+msgid "Sorry, uploading not allowed for this post"
+msgstr ""
+
+#: class.WpdiscuzMediaUploader.php:139
+msgid "You do not have sufficient permissions to perform this action"
+msgstr ""
+
+#: class.WpdiscuzMediaUploader.php:140 options/WmuOptions.php:254
+msgid "Size restriction, try uploading an image with smaller width/height"
+msgstr ""
+
+#: includes/WmuHelper.php:132
+msgid "Your browser does not support the video tag."
+msgstr ""
+
+#: includes/WmuHelper.php:151
+msgid "Your browser does not support the audio tag."
+msgstr ""
+
+#: includes/WmuHelper.php:193
+msgid "Delete"
+msgstr ""
+
+#: includes/WmuHelper.php:264
+msgid "Attached Videos"
+msgstr ""
+
+#: includes/WmuHelper.php:266
+msgid "Attached Files"
+msgstr ""
+
+#: includes/WmuHelper.php:319
+msgid "All"
+msgstr ""
+
+#: includes/WmuHelper.php:320
+msgid "With Attachments"
+msgstr ""
+
+#: includes/WmuHelper.php:328
+msgid "Comments with attachments"
+msgstr ""
+
+#: options/phrases.php:7
+msgid "Message if image sizes (w/h) bigger than allowed"
+msgstr ""
+
+#: options/phrases.php:11
+msgid "Media tab title"
+msgstr ""
+
+#: options/settings.php:143
+msgid "unlimit"
+msgstr ""
+
+#: options/settings.php:145
+msgid "Server 'max_file_uploads' is "
+msgstr ""
+
+#: options/settings.php:159 options/settings.php:173
+msgid "width (px)"
+msgstr ""
+
+#: options/settings.php:160 options/settings.php:174
+msgid "height (px)"
+msgstr ""
+
+#: options/WmuOptions.php:255
+msgid "Media"
+msgstr ""
+
+#: options/WmuOptions.php:296
+msgid "Images max width for uploading"
+msgstr ""
+
+#: options/WmuOptions.php:303
+msgid "Images max height for uploading"
+msgstr ""
+
+#: options/WmuOptions.php:310
+msgid "Enable HTML5 video player"
+msgstr ""
+
+#: options/WmuOptions.php:312
+msgid "Uploaded video files will be added as a download link under comment text. However if file format is .mp4, .webm or .ogg, it'll convert link to HTML5 video player."
+msgstr ""
+
+#: options/WmuOptions.php:317
+msgid "Enable HTML5 audio player"
+msgstr ""
+
+#: options/WmuOptions.php:324
+msgid "Max number of files"
+msgstr ""
+
+#: options/WmuOptions.php:326
+msgid "You can not set this value more than 'max_file_uploads'. If you want to increase server parameters please contact to your hosting service support."
+msgstr ""
+
+#: options/WmuOptions.php:331
+msgid "Video player sizes"
+msgstr ""
+
+#: options/WmuOptions.php:338
+msgid "Image sizes on comment"
+msgstr ""
+
+#: options/WmuOptions.php:345
+msgid "Enable images lazy loading?"
+msgstr ""
+
+#: options/WmuOptions.php:352
+msgid "Attach files to current post?"
+msgstr ""
+
+#: options/WmuOptions.php:359
+msgid "Enable comments filtering"
+msgstr ""
+
+#: options/WmuOptions.php:366
+msgid "Show 'My Content and Settings' 'Media' tab"
+msgstr ""
+
+#: options/WmuOptions.php:373
+msgid "Compress images before upload"
+msgstr ""
+
+#: options/WmuOptions.php:380
+msgid "Compression quality"
+msgstr ""
+
+#. Name of the plugin
+msgid "wpDiscuz - Media Uploader"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Better comment system. Wordpress post comments and discussion plugin. Allows your visitors discuss, vote for comments and share."
+msgstr ""
+
+#. URI of the plugin
+msgid "https://www.gvectors.com/wpdiscuz/"
+msgstr ""
+
+#. Author of the plugin
+msgid "gVectors Team"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.gvectors.com/"
+msgstr ""

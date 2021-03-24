@@ -1,0 +1,232 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: climate\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-03-23 05:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.2; wp-5.6.2\n"
+"X-Domain: wp-bootstrap-starter"
+
+#: inc/wp_bootstrap_navwalker.php:365
+msgid "Add a menu"
+msgstr ""
+
+#: comments.php:97
+msgid "Cancel Reply"
+msgstr ""
+
+#. Name of the theme
+msgid "climate"
+msgstr ""
+
+#. Name of the template
+msgid "Climate Box Toolkit"
+msgstr ""
+
+#: comments.php:52 comments.php:70
+msgid "Comment navigation"
+msgstr ""
+
+#: comments.php:87
+msgid "Comments are closed."
+msgstr ""
+
+#. 1: comment count number, 2: title.
+#: comments.php:41
+#, php-format
+msgctxt "comments title"
+msgid "%1$s thought on &ldquo;%2$s&rdquo;"
+msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Name of the template
+msgid "Competitions Page"
+msgstr ""
+
+#. Name of the template
+msgid "Contest Page"
+msgstr ""
+
+#: single-mapposter.php:44 single-rl_gallery.php:44
+msgid "Continue reading <span class=\"meta-nav\">&rarr;</span>"
+msgstr ""
+
+#. Name of the template
+msgid "Discussion Material Page"
+msgstr ""
+
+#. %s: Name of current post
+#: single-discussion_topic.php:86 single.php:133
+#: template-parts/content-page.php:39
+#, php-format
+msgid "Edit %s"
+msgstr ""
+
+#: functions.php:1971
+msgid "Error 404"
+msgstr ""
+
+#. Name of the template
+msgid "Explore Page"
+msgstr ""
+
+#. Name of the template
+msgid "Full Width"
+msgstr ""
+
+#. Name of the template
+msgid "Gallery Page"
+msgstr ""
+
+#: functions.php:1756
+msgid "Home"
+msgstr ""
+
+#. URI of the theme
+#. Author URI of the theme
+msgid "http://www.webbkod.com"
+msgstr ""
+
+#: template-parts/content-none.php:36
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#. Name of the template
+msgid "Landing Page"
+msgstr ""
+
+#: comments.php:94
+msgid "Leave a Reply"
+msgstr ""
+
+#. 1: Reply Specific User
+#: comments.php:96
+#, php-format
+msgid "Leave a Reply to %s"
+msgstr ""
+
+#. Name of the template
+msgid "Map & Poster"
+msgstr ""
+
+#. Author of the theme
+msgid "Naimesh Rao"
+msgstr ""
+
+#: comments.php:56 comments.php:74
+msgid "Newer Comments"
+msgstr ""
+
+#: template-parts/content-none.php:14
+msgid "Nothing Found"
+msgstr ""
+
+#: comments.php:55 comments.php:73
+msgid "Older Comments"
+msgstr ""
+
+#. 1: title.
+#: comments.php:35
+#, php-format
+msgid "One thought on &ldquo;%1$s&rdquo;"
+msgstr ""
+
+#: single-mapposter.php:48 single-quiz_listing.php:35
+#: single-discussion_topic.php:73 single-rl_gallery.php:48
+#: single-competition.php:96 single-textbooks.php:211 single.php:88
+#: template-parts/content.php:50 template-parts/content-notitle.php:18
+#: template-parts/content-page.php:27
+msgid "Pages:"
+msgstr ""
+
+#: comments.php:98
+msgid "Post Comment"
+msgstr ""
+
+#. Name of the template
+msgid "Project List Page"
+msgstr ""
+
+#. Name of the template
+msgid "Project Submit Page"
+msgstr ""
+
+#. Name of the template
+msgid "Quiz Page"
+msgstr ""
+
+#: template-parts/content-none.php:22
+#, php-format
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: search.php:23
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: header.php:36
+msgid "Skip to content"
+msgstr ""
+
+#: template-parts/content-none.php:28
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#. Name of the template
+msgid "Stories Page"
+msgstr ""
+
+#. Name of the template
+msgid "Submit Questions Page"
+msgstr ""
+
+#. Name of the template
+msgid "Submitted Questions"
+msgstr ""
+
+#. Name of the template
+msgid "Teacher Discussion Topics"
+msgstr ""
+
+#. Name of the template
+msgid "Teachers Page"
+msgstr ""
+
+#. Name of the template
+msgid "Textbook Page"
+msgstr ""
+
+#. Name of the template
+msgid "Ultimate Member Page"
+msgstr ""
+
+#. Name of the template
+msgid "Video Lessons and Webinars Page"
+msgstr ""
+
+#. Description of the theme
+msgid ""
+"Works with Bootstrap 4 | Font Awesome 5 | Official Theme Dvelope by Webbkod"
+msgstr ""
+
+#: comments.php:103
+msgid ""
+"You may use these <abbr title=\"HyperText Markup Language\">HTML</abbr> tags "
+"and attributes:"
+msgstr ""
