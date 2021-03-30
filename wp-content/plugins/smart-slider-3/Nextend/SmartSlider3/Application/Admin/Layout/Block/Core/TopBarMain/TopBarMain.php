@@ -6,7 +6,7 @@ namespace Nextend\SmartSlider3\Application\Admin\Layout\Block\Core\TopBarMain;
  * @var $this BlockTopBarMain
  */
 ?>
-<script>
+<script type="text/javascript">
     N2R('documentReady', function ($) {
         $('#<?php echo $this->getID(); ?>').css('top', N2Classes.Window.getTopOffset() + 'px');
     });

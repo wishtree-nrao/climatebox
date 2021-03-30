@@ -543,7 +543,6 @@ class wpDiscuzForm implements wpdFormConst {
             }
         }
         update_post_meta($comment->comment_post_ID, self::WPDISCUZ_RATING_COUNT, $postRatings);
-        $form->updateSeparateRatingMeta($postRatings, $comment->comment_post_ID);
     }
 
     private function chagePostSingleRating($metaKey, $commentID, $difference, $postRatings) {

@@ -19,31 +19,19 @@
 							<?php /*<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/search.svg" /> */ ?>
 							<ul class="nav nav-tabs" id="ExploreTab" role="tablist">
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$LM_Page = pll_get_post( 66 );
-									$LM_Page_url = get_the_permalink($LM_Page);
-									?>
-									<a class="nav-link" id="TeacherTabLM-tab" href="<?php echo $LM_Page_url; ?>">
+									<a class="nav-link" id="TeacherTabLM-tab" href="<?php echo home_url('/guidelines-for-teachers/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/lm_icon.svg" />
 										<span><?php pll_e('Learning Materials'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$VLW_Page = pll_get_post( 1269 );
-									$VLW_Page_url = get_the_permalink($VLW_Page);
-									?>
-									<a class="nav-link" id="TeacherTabVW-tab" href="<?php echo $VLW_Page_url; ?>">
+									<a class="nav-link" id="TeacherTabVW-tab" href="<?php echo home_url('/guidelines-for-teachers/video-lessons-and-webinars/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/video_icon.svg" />
 										<span><?php pll_e('Video Lessons and Webinars'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$DM_Page = pll_get_post( 1276 );
-									$DM_Page_url = get_the_permalink($DM_Page);
-									?>
-									<a class="nav-link active" id="TeacherTabD-tab" href="<?php echo $DM_Page_url; ?>">
+									<a class="nav-link active" id="TeacherTabD-tab" href="<?php echo home_url('/guidelines-for-teachers/discussion-material/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/discuss_icon.svg" />
 										<span><?php pll_e('Discussion Material'); ?></span>
 									</a>

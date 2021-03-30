@@ -10,22 +10,7 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Columns {
-	/**
-	 * @var PLL_Model
-	 */
-	public $model;
-
-	/**
-	 * @var PLL_Admin_Links
-	 */
-	public $links;
-
-	/**
-	 * Language selected in the admin language filter.
-	 *
-	 * @var PLL_Language
-	 */
-	public $filter_lang;
+	public $links, $model, $filter_lang;
 
 	/**
 	 * Constructor: setups filters and actions
@@ -66,13 +51,13 @@ class PLL_Admin_Filters_Columns {
 	}
 
 	/**
-	 * Adds languages and translations columns in posts, pages, media, categories and tags tables.
+	 * Adds languages and translations columns in posts, pages, media, categories and tags tables
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param string[] $columns List of table columns.
-	 * @param string   $before  The column before which we want to add our languages.
-	 * @return string[] Modified list of columns.
+	 * @param array  $columns List of table columns
+	 * @param string $before  The column before which we want to add our languages
+	 * @return array modified list of columns
 	 */
 	protected function add_column( $columns, $before ) {
 		if ( $n = array_search( $before, array_keys( $columns ) ) ) {
@@ -105,12 +90,12 @@ class PLL_Admin_Filters_Columns {
 	}
 
 	/**
-	 * Hides the column for the filtered language.
+	 * Hide the column for the filtered language
 	 *
 	 * @since 2.7
 	 *
-	 * @param string[] $hidden Array of hidden columns.
-	 * @return string[]
+	 * @param array $hidden Array of hidden columns
+	 * @return array
 	 */
 	public function hidden_columns( $hidden ) {
 		if ( ! empty( $this->filter_lang ) ) {
@@ -120,12 +105,12 @@ class PLL_Admin_Filters_Columns {
 	}
 
 	/**
-	 * Adds the language and translations columns ( before the comments column ) in the posts, pages and media library tables.
+	 * Adds the language and translations columns ( before the comments column ) in the posts, pages and media library tables
 	 *
 	 * @since 0.1
 	 *
-	 * @param string[] $columns List of posts table columns.
-	 * @return string[] Modified list of columns.
+	 * @param array $columns list of posts table columns
+	 * @return array modified list of columns
 	 */
 	public function add_post_column( $columns ) {
 		return $this->add_column( $columns, 'comments' );
@@ -139,7 +124,6 @@ class PLL_Admin_Filters_Columns {
 	 *
 	 * @param string $column  Column name
 	 * @param int    $post_id
-	 * @return void
 	 */
 	public function post_column( $column, $post_id ) {
 		$inline = wp_doing_ajax() && isset( $_REQUEST['action'], $_POST['inline_lang_choice'] ) && 'inline-save' === $_REQUEST['action']; // phpcs:ignore WordPress.Security.NonceVerification
@@ -150,10 +134,6 @@ class PLL_Admin_Filters_Columns {
 		}
 
 		$language = $this->model->get_language( substr( $column, 9 ) );
-
-		if ( empty( $language ) ) {
-			return;
-		}
 
 		// Hidden field containing the post language for quick edit
 		if ( $column == $this->get_first_language_column() ) {
@@ -176,19 +156,14 @@ class PLL_Admin_Filters_Columns {
 					/* translators: accessibility text, %s is a native language name */
 					$s = sprintf( __( 'Edit the translation in %s', 'polylang' ), $language->name );
 				}
-
-				$post = get_post( $id );
-
-				if ( ! empty( $post ) ) {
-					printf(
-						'<a class="%1$s" title="%2$s" href="%3$s"><span class="screen-reader-text">%4$s</span>%5$s</a>',
-						esc_attr( $class ),
-						esc_attr( $post->post_title ),
-						esc_url( $link ),
-						esc_html( $s ),
-						$flag // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
-					);
-				}
+				printf(
+					'<a class="%1$s" title="%2$s" href="%3$s"><span class="screen-reader-text">%4$s</span>%5$s</a>',
+					esc_attr( $class ),
+					esc_attr( get_post( $id )->post_title ),
+					esc_url( $link ),
+					esc_html( $s ),
+					$flag // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+				);
 			} elseif ( $id === $post_id ) {
 				printf(
 					'<span class="pll_column_flag" style=""><span class="screen-reader-text">%1$s</span>%2$s</span>',
@@ -239,12 +214,12 @@ class PLL_Admin_Filters_Columns {
 	}
 
 	/**
-	 * Adds the language column ( before the posts column ) in the 'Categories' or 'Post Tags' table.
+	 * Adds the language column ( before the posts column ) in the 'Categories' or 'Post Tags' table
 	 *
 	 * @since 0.1
 	 *
-	 * @param string[] $columns List of terms table columns.
-	 * @return string[] modified List of columns.
+	 * @param array $columns list of terms table columns
+	 * @return array modified list of columns
 	 */
 	public function add_term_column( $columns ) {
 		return $this->add_column( $columns, 'posts' );
@@ -258,7 +233,6 @@ class PLL_Admin_Filters_Columns {
 	 * @param string $out
 	 * @param string $column  Column name
 	 * @param int    $term_id
-	 * @return string
 	 */
 	public function term_column( $out, $column, $term_id ) {
 		$inline = wp_doing_ajax() && isset( $_REQUEST['action'], $_POST['inline_lang_choice'] ) && 'inline-save-tax' === $_REQUEST['action']; // phpcs:ignore WordPress.Security.NonceVerification
@@ -282,16 +256,12 @@ class PLL_Admin_Filters_Columns {
 			$taxonomy = $GLOBALS['taxonomy'];
 		}
 
-		if ( ! isset( $taxonomy, $post_type ) || ! post_type_exists( $post_type ) || ! taxonomy_exists( $taxonomy ) ) {
+		if ( ! post_type_exists( $post_type ) || ! taxonomy_exists( $taxonomy ) ) {
 			return $out;
 		}
 
 		$term_id = (int) $term_id;
 		$language = $this->model->get_language( substr( $column, 9 ) );
-
-		if ( empty( $language ) ) {
-			return $out;
-		}
 
 		if ( $column == $this->get_first_language_column() ) {
 			$out = sprintf( '<div class="hidden" id="lang_%d">%s</div>', intval( $term_id ), esc_html( $lang->slug ) );
@@ -346,8 +316,6 @@ class PLL_Admin_Filters_Columns {
 	 * Update rows of translated posts when the language is modified in quick edit
 	 *
 	 * @since 1.7
-	 *
-	 * @return void
 	 */
 	public function ajax_update_post_rows() {
 		check_ajax_referer( 'inlineeditnonce', '_pll_nonce' );
@@ -362,7 +330,7 @@ class PLL_Admin_Filters_Columns {
 			wp_die( 0 );
 		}
 
-		/** @var WP_Posts_List_Table $wp_list_table */
+		global $wp_list_table;
 		$wp_list_table = _get_list_table( 'WP_Posts_List_Table', array( 'screen' => sanitize_key( $_POST['screen'] ) ) );
 
 		$x = new WP_Ajax_Response();
@@ -390,8 +358,6 @@ class PLL_Admin_Filters_Columns {
 	 * Update rows of translated terms when adding / deleting a translation or when the language is modified in quick edit
 	 *
 	 * @since 1.7
-	 *
-	 * @return void
 	 */
 	public function ajax_update_term_rows() {
 		check_ajax_referer( 'pll_language', '_pll_nonce' );
@@ -406,7 +372,7 @@ class PLL_Admin_Filters_Columns {
 			wp_die( 0 );
 		}
 
-		/** @var WP_Terms_List_Table $wp_list_table */
+		global $wp_list_table;
 		$wp_list_table = _get_list_table( 'WP_Terms_List_Table', array( 'screen' => sanitize_key( $_POST['screen'] ) ) );
 
 		$x = new WP_Ajax_Response();
@@ -436,7 +402,7 @@ class PLL_Admin_Filters_Columns {
 	 *
 	 * @since 2.8
 	 *
-	 * @param PLL_Language $language PLL_Language object.
+	 * @param object $language PLL_Language object.
 	 * @return string
 	 */
 	protected function get_flag_html( $language ) {

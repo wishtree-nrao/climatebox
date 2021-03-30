@@ -9,36 +9,7 @@
  * @since 1.8
  */
 class PLL_Filters_Links {
-	/**
-	 * Stores the plugin options.
-	 *
-	 * @var array
-	 */
-	public $options;
-
-	/**
-	 * @var PLL_Model
-	 */
-	public $model;
-
-	/**
-	 * Instance of a child class of PLL_Links_Model.
-	 *
-	 * @var PLL_Links_Model
-	 */
-	public $links_model;
-
-	/**
-	 * @var PLL_Links
-	 */
-	public $links;
-
-	/**
-	 * Current language.
-	 *
-	 * @var PLL_Language
-	 */
-	public $curlang;
+	public $links, $links_model, $model, $options, $curlang;
 
 	/**
 	 * Constructor
@@ -104,13 +75,13 @@ class PLL_Filters_Links {
 	}
 
 	/**
-	 * Modifies custom posts links.
+	 * Modifies custom posts links
 	 *
 	 * @since 1.6
 	 *
-	 * @param string  $link Post link.
-	 * @param WP_Post $post Post object.
-	 * @return string Modified post link.
+	 * @param string $link post link
+	 * @param object $post post object
+	 * @return string modified post link
 	 */
 	public function post_type_link( $link, $post ) {
 		// /!\ WP does not use pretty permalinks for preview
@@ -119,13 +90,13 @@ class PLL_Filters_Links {
 			$link = $this->options['force_lang'] ? $this->links_model->switch_language_in_link( $link, $lang ) : $link;
 
 			/**
-			 * Filters a post or custom post type link.
+			 * Filter a post or custom post type link
 			 *
 			 * @since 1.6
 			 *
-			 * @param string       $link The post link.
-			 * @param PLL_Language $lang The current language.
-			 * @param WP_Post      $post The post object.
+			 * @param string $link the post link
+			 * @param object $lang the current language
+			 * @param object $post the post object
 			 */
 			$link = apply_filters( 'pll_post_type_link', $link, $lang, $post );
 		}
@@ -134,14 +105,14 @@ class PLL_Filters_Links {
 	}
 
 	/**
-	 * Modifies term links.
+	 * Modifies term link
 	 *
 	 * @since 0.7
 	 *
-	 * @param string  $link Term link.
-	 * @param WP_Term $term Term object.
-	 * @param string  $tax  Taxonomy name;
-	 * @return string Modified term link.
+	 * @param string $link term link
+	 * @param object $term term object
+	 * @param string $tax  taxonomy name
+	 * @return string modified term link
 	 */
 	public function term_link( $link, $term, $tax ) {
 		if ( $this->model->is_translated_taxonomy( $tax ) ) {
@@ -153,17 +124,16 @@ class PLL_Filters_Links {
 			 *
 			 * @since 1.6
 			 *
-			 * @param string       $link The term link.
-			 * @param PLL_Language $lang The current language.
-			 * @param WP_Term      $term The term object.
+			 * @param string $link the term link
+			 * @param object $lang the current language
+			 * @param object $term the term object
 			 */
 			return apply_filters( 'pll_term_link', $link, $lang, $term );
 		}
 
-		// In case someone calls get_term_link for the 'language' taxonomy.
+		// in case someone calls get_term_link for the 'language' taxonomy
 		if ( 'language' === $tax ) {
-			$lang = $this->model->get_language( $term->term_id );
-			return $this->links_model->home_url( $lang );
+			return $this->links_model->home_url( $term );
 		}
 
 		return $link;

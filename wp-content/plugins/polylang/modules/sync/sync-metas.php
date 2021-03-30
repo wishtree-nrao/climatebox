@@ -9,31 +9,8 @@
  * @since 2.3
  */
 abstract class PLL_Sync_Metas {
-	/**
-	 * @var PLL_Model
-	 */
 	public $model;
-
-	/**
-	 * Meta type. Typically 'post' or 'term'.
-	 *
-	 * @var string
-	 */
-	protected $meta_type;
-
-	/**
-	 * Stores the previous values when updating a meta.
-	 *
-	 * @var array
-	 */
-	protected $prev_value;
-
-	/**
-	 * Stores the metas to synchronize before deleting them.
-	 *
-	 * @var array
-	 */
-	protected $to_copy;
+	protected $meta_type, $prev_value, $to_copy;
 
 	/**
 	 * Constructor
@@ -58,8 +35,6 @@ abstract class PLL_Sync_Metas {
 	 * Removes "added_{$this->meta_type}_meta" action
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	protected function remove_add_meta_action() {
 		remove_action( "added_{$this->meta_type}_meta", array( $this, 'add_meta' ), 10, 4 );
@@ -69,8 +44,6 @@ abstract class PLL_Sync_Metas {
 	 * Removes all meta synchronization actions and filters
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	protected function remove_all_meta_actions() {
 		$this->remove_add_meta_action();
@@ -86,8 +59,6 @@ abstract class PLL_Sync_Metas {
 	 * Adds "added_{$this->meta_type}_meta" action
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	protected function restore_add_meta_action() {
 		add_action( "added_{$this->meta_type}_meta", array( $this, 'add_meta' ), 10, 4 );
@@ -97,8 +68,6 @@ abstract class PLL_Sync_Metas {
 	 * Adds meta synchronization actions and filters
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	protected function add_all_meta_actions() {
 		$this->restore_add_meta_action();
@@ -138,28 +107,28 @@ abstract class PLL_Sync_Metas {
 	}
 
 	/**
-	 * Get the custom fields to copy or synchronize.
+	 * Get the custom fields to copy or synchronize
 	 *
 	 * @since 2.3
 	 *
-	 * @param int    $from Id of the post from which we copy informations.
-	 * @param int    $to   Id of the post to which we paste informations.
-	 * @param string $lang Language slug.
-	 * @param bool   $sync True if it is synchronization, false if it is a copy.
-	 * @return string[] List of meta keys.
+	 * @param int    $from Id of the post from which we copy informations
+	 * @param int    $to   Id of the post to which we paste informations
+	 * @param string $lang Language slug
+	 * @param bool   $sync True if it is synchronization, false if it is a copy
+	 * @return array List of meta keys
 	 */
 	protected function get_metas_to_copy( $from, $to, $lang, $sync = false ) {
 		/**
-		 * Filters the custom fields to copy or synchronize.
+		 * Filter the custom fields to copy or synchronize
 		 *
 		 * @since 0.6
 		 * @since 1.9.2 The `$from`, `$to`, `$lang` parameters were added.
 		 *
-		 * @param string[] $keys List of custom fields names.
-		 * @param bool     $sync True if it is synchronization, false if it is a copy.
-		 * @param int      $from Id of the post from which we copy informations.
-		 * @param int      $to   Id of the post to which we paste informations.
-		 * @param string   $lang Language slug.
+		 * @param array  $keys List of custom fields names
+		 * @param bool   $sync True if it is synchronization, false if it is a copy
+		 * @param int    $from Id of the post from which we copy informations
+		 * @param int    $to   Id of the post to which we paste informations
+		 * @param string $lang Language slug
 		 */
 		return array_unique( apply_filters( "pll_copy_{$this->meta_type}_metas", array(), $sync, $from, $to, $lang ) );
 	}
@@ -199,7 +168,6 @@ abstract class PLL_Sync_Metas {
 	 * @param int    $id         Object ID.
 	 * @param string $meta_key   Meta key.
 	 * @param mixed  $meta_value Meta value. Must be serializable if non-scalar.
-	 * @return void
 	 */
 	public function add_meta( $mid, $id, $meta_key, $meta_value ) {
 		static $avoid_recursion = false;
@@ -251,7 +219,6 @@ abstract class PLL_Sync_Metas {
 	 * @param int    $id         Object ID.
 	 * @param string $meta_key   Meta key.
 	 * @param mixed  $meta_value Meta value. Must be serializable if non-scalar.
-	 * @return void
 	 */
 	public function update_meta( $mid, $id, $meta_key, $meta_value ) {
 		static $avoid_recursion = false;
@@ -284,13 +251,12 @@ abstract class PLL_Sync_Metas {
 	}
 
 	/**
-	 * Store metas to synchronize before deleting them.
+	 * Store metas to synchronize before deleting them
 	 *
 	 * @since 2.3
 	 *
-	 * @param int[] $mids  Not used.
+	 * @param array $mids  Not used
 	 * @param int   $id    Object ID.
-	 * @return void
 	 */
 	public function store_metas_to_sync( $mids, $id ) {
 		$tr_ids = $this->model->{$this->meta_type}->get_translations( $id );
@@ -301,15 +267,14 @@ abstract class PLL_Sync_Metas {
 	}
 
 	/**
-	 * Synchronizes deleted meta across translations.
+	 * Synchronize deleted meta across translations
 	 *
 	 * @since 2.3
 	 *
-	 * @param int[]  $mids  Not used.
+	 * @param array  $mids  Not used
 	 * @param int    $id    Object ID.
 	 * @param string $key   Meta key.
 	 * @param mixed  $value Meta value.
-	 * @return void
 	 */
 	public function delete_meta( $mids, $id, $key, $value ) {
 		static $avoid_recursion = false;
@@ -343,7 +308,6 @@ abstract class PLL_Sync_Metas {
 	 * @param int    $to   Id of the target object
 	 * @param string $lang Language code of the target object
 	 * @param bool   $sync Optional, defaults to true. True if it is synchronization, false if it is a copy
-	 * @return void
 	 */
 	public function copy( $from, $to, $lang, $sync = false ) {
 		$this->remove_all_meta_actions();
@@ -393,10 +357,9 @@ abstract class PLL_Sync_Metas {
 	 *
 	 * @since 2.3
 	 *
-	 * @param int    $object_id    Id of the object being saved.
-	 * @param object $obj          Not used.
-	 * @param int[]  $translations The list of translations object ids.
-	 * @return void
+	 * @param int    $object_id    Id of the object being asaved
+	 * @param object $obj          Not used
+	 * @param array  $translations The list of translations object ids
 	 */
 	public function save_object( $object_id, $obj, $translations ) {
 		foreach ( $translations as $tr_lang => $tr_id ) {

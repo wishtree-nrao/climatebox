@@ -100,7 +100,7 @@ class HelperTinyMCE {
 
     public function addButtonDialog() {
         ?>
-        <script>
+        <script type="text/javascript">
             window.NextendSmartSliderWPTinyMCEModal = function (ed) {
                 N2Classes.SelectSlider(n2_('Select A Slider'), function (id, alias) {
                     if (alias) {

@@ -5,7 +5,7 @@
 
 /**
  * Manages the compatibility with Yoast SEO
- * Version tested: 15.9.2
+ * Version tested: 11.5
  *
  * @since 2.3
  */
@@ -47,44 +47,45 @@ class PLL_WPSEO {
 			add_filter( 'wpseo_frontend_presentation', array( $this, 'frontend_presentation' ) );
 			add_filter( 'wpseo_breadcrumb_indexables', array( $this, 'breadcrumb_indexables' ) );
 		} else {
-			add_filter( 'pll_copy_post_metas', array( $this, 'copy_post_metas' ), 10, 2 );
+			// Primary category
+			add_filter( 'pll_copy_post_metas', array( $this, 'copy_post_metas' ) );
 			add_filter( 'pll_translate_post_meta', array( $this, 'translate_post_meta' ), 10, 3 );
 		}
 	}
 
 	/**
-	 * Registers options for translation.
+	 * Registers custom post types and taxonomy titles for translation.
 	 *
 	 * @since 2.9
 	 */
 	public function wpseo_translate_options() {
-		if ( method_exists( 'WPSEO_Options', 'clear_cache' ) ) {
-			WPSEO_Options::clear_cache();
+		$keys = array();
+
+		foreach ( get_post_types( array( 'public' => true, '_builtin' => false ) ) as $t ) {
+			if ( pll_is_translated_post_type( $t ) ) {
+				$keys[] = 'title-' . $t;
+				$keys[] = 'metadesc-' . $t;
+			}
 		}
 
-		$keys = array(
-			'title-*',
-			'metadesc-*',
-			'bctitle-*',
-			'breadcrumbs-sep',
-			'breadcrumbs-home',
-			'breadcrumbs-prefix',
-			'breadcrumbs-archiveprefix',
-			'breadcrumbs-searchprefix',
-			'breadcrumbs-404crumb',
-			'company_name',
-			'rssbefore',
-			'rssafter',
-		);
+		foreach ( get_post_types( array( 'has_archive' => true, '_builtin' => false ) ) as $t ) {
+			if ( pll_is_translated_post_type( $t ) ) {
+				$keys[] = 'title-ptarchive-' . $t;
+				$keys[] = 'metadesc-ptarchive-' . $t;
+				$keys[] = 'bctitle-ptarchive-' . $t;
+			}
+		}
 
-		new PLL_Translate_Option( 'wpseo_titles', array_fill_keys( $keys, 1 ), array( 'context' => 'wordpress-seo' ) );
+		foreach ( get_taxonomies( array( 'public' => true, '_builtin' => false ) ) as $t ) {
+			if ( pll_is_translated_taxonomy( $t ) ) {
+				$keys[] = 'title-tax-' . $t;
+				$keys[] = 'metadesc-tax-' . $t;
+			}
+		}
 
-		$keys = array(
-			'og_frontpage_title',
-			'og_frontpage_desc',
-		);
-
-		new PLL_Translate_Option( 'wpseo_social', array_fill_keys( $keys, 1 ), array( 'context' => 'wordpress-seo' ) );
+		if ( ! empty( $keys ) ) {
+			new PLL_Translate_Option( 'wpseo_titles', array_fill_keys( $keys, 1 ), array( 'context' => 'wordpress-seo' ) );
+		}
 	}
 
 	/**
@@ -102,7 +103,7 @@ class PLL_WPSEO {
 			$path = ltrim( wp_parse_url( pll_get_requested_url(), PHP_URL_PATH ), '/' );
 		}
 
-		if ( preg_match( '#sitemap(_index)?\.xml|([^\/]+?)-?sitemap([0-9]+)?\.xml|([a-z]+)?-?sitemap\.xsl#', $path ) ) {
+		if ( 'sitemap_index.xml' === $path || preg_match( '#([^/]+?)-sitemap([0-9]+)?\.xml|([a-z]+)?-?sitemap\.xsl#', $path ) ) {
 			$url = PLL()->links_model->switch_language_in_link( $url, PLL()->curlang );
 		}
 
@@ -194,11 +195,11 @@ class PLL_WPSEO {
 	}
 
 	/**
-	 * Add filters before the sitemap is evaluated and outputed.
+	 * Add filters before the sitemap is evaluated and outputed
 	 *
 	 * @since 2.6
 	 *
-	 * @param WP_Query $query Instance of WP_Query being filtered.
+	 * @param object $query Instance of WP_Query being filtered.
 	 */
 	public function before_sitemap( $query ) {
 		$type = $query->get( 'sitemap' );
@@ -369,8 +370,6 @@ class PLL_WPSEO {
 				$presentation->model->permalink = pll_home_url();
 				$presentation->model->title = WPSEO_Options::get( 'title-home-wpseo' );
 				$presentation->model->description = WPSEO_Options::get( 'metadesc-home-wpseo' );
-				$presentation->model->open_graph_title = WPSEO_Options::get( 'og_frontpage_title' );
-				$presentation->model->open_graph_description = WPSEO_Options::get( 'og_frontpage_desc' );
 				break;
 
 			case 'post-type-archive':
@@ -419,9 +418,7 @@ class PLL_WPSEO {
 				case 'post-type-archive':
 					if ( pll_is_translated_post_type( $indexable->object_sub_type ) ) {
 						$indexable->permalink = get_post_type_archive_link( $indexable->object_sub_type );
-						$breadcrumb_title = WPSEO_Options::get( 'bctitle-ptarchive-' . $indexable->object_sub_type );
-						$breadcrumb_title = $breadcrumb_title ? $breadcrumb_title : $indexable->breadcrumb_title; // The option may be empty.
-						$indexable->breadcrumb_title = pll__( $breadcrumb_title );
+						$indexable->breadcrumb_title = pll__( WPSEO_Options::get( 'bctitle-ptarchive-' . $indexable->object_sub_type ) );
 					}
 					break;
 			}
@@ -431,35 +428,14 @@ class PLL_WPSEO {
 	}
 
 	/**
-	 * Copies or synchronizes the metas.
+	 * Synchronize the primary term
 	 *
 	 * @since 2.3.3
 	 *
-	 * @param string[] $keys List of custom fields names.
-	 * @param bool     $sync True if it is synchronization, false if it is a copy.
+	 * @param array $keys List of custom fields names.
 	 * @return array
 	 */
-	public function copy_post_metas( $keys, $sync ) {
-		if ( ! $sync ) {
-			// Text requiring translation.
-			$keys[] = '_yoast_wpseo_title';
-			$keys[] = '_yoast_wpseo_metadesc';
-			$keys[] = '_yoast_wpseo_bctitle';
-			$keys[] = '_yoast_wpseo_focuskw';
-			$keys[] = '_yoast_wpseo_opengraph-title';
-			$keys[] = '_yoast_wpseo_opengraph-description';
-			$keys[] = '_yoast_wpseo_twitter-title';
-			$keys[] = '_yoast_wpseo_twitter-description';
-
-			// Copy the image urls.
-			$keys[] = '_yoast_wpseo_opengraph-image';
-			$keys[] = '_yoast_wpseo_twitter-image';
-		}
-
-		$keys[] = '_yoast_wpseo_meta-robots-noindex';
-		$keys[] = '_yoast_wpseo_meta-robots-nofollow';
-		$keys[] = '_yoast_wpseo_meta-robots-adv';
-
+	public function copy_post_metas( $keys ) {
 		$taxonomies = get_taxonomies(
 			array(
 				'hierarchical' => true,

@@ -33,7 +33,7 @@ class Devices extends AbstractFieldHidden {
 
         $html = '';
         $i    = 0;
-        foreach ($options as $value => $class) {
+        foreach ($options AS $value => $class) {
             $this->values[] = $value;
 
             $html .= Html::tag('div', array(

@@ -36,10 +36,10 @@ class Asset extends AbstractAsset {
         $familyQuery = array();
         $names       = array();
         if (count($this->files)) {
-            foreach ($this->files as $family => $styles) {
-                if (count($styles) && !in_array($family, Google::$excludedFamilies)) {
+            foreach ($this->files AS $family => $styles) {
+                if (count($styles)) {
                     $familyQuery[] = $family . ':' . implode(',', $styles);
-                    foreach ($styles as $style) {
+                    foreach ($styles AS $style) {
                         $names[] = $family . ':' . (substr($style, -6) == 'italic' ? 'i' : 'n') . $style[0];
                     }
                 }

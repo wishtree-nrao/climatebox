@@ -19,12 +19,8 @@ get_header(); ?>
 
 					<div class="pagehead">
 						<?php
-						// the_archive_title( '<h1>', '</h1>' )
-						?>
-						<h1><?php echo __(get_the_archive_title(), 'acf'); ?></h1>
-						
-						<?php
-						//the_archive_description( '<div class="archive-description">', '</div>' );
+						the_archive_title( '<h1>', '</h1>' );
+						the_archive_description( '<div class="archive-description">', '</div>' );
 						?>
 					</div>
 

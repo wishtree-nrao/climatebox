@@ -146,15 +146,15 @@ if (!post_password_required($post->ID)) {
     
     $wpCommClasses = implode(" ", $wpCommClasses);
 
+    $isShowSubscribeBar = $form->isShowSubscriptionBar();
+    $isPostmaticActive = !class_exists("Prompt_Comment_Form_Handling") || (class_exists("Prompt_Comment_Form_Handling") && !$wpdiscuz->options->subscription["usePostmaticForCommentNotification"]);
+
     $currentUserId = 0;
     $currentUserEmail = isset($_COOKIE["comment_author_email_" . COOKIEHASH]) ? $_COOKIE["comment_author_email_" . COOKIEHASH] : "";
     if ($currentUser && $currentUser->ID) {
         $currentUserId = $currentUser->ID;
         $currentUserEmail = $currentUser->user_email;
     }
-
-    $isShowSubscribeBar = $form->isShowSubscriptionBar() && WpdiscuzHelper::isUserCanFollowOrSubscribe($currentUserEmail);
-    $isPostmaticActive = !class_exists("Prompt_Comment_Form_Handling") || (class_exists("Prompt_Comment_Form_Handling") && !$wpdiscuz->options->subscription["usePostmaticForCommentNotification"]);
 
     $wpdiscuz->helper->superSocializerFix();
     if ($commentsOpen) {

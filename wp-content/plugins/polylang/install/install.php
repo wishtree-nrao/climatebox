@@ -14,8 +14,6 @@ class PLL_Install extends PLL_Install_Base {
 	 * Checks min PHP and WP version, displays a notice if a requirement is not met.
 	 *
 	 * @since 2.6.7
-	 *
-	 * @return bool
 	 */
 	public function can_activate() {
 		global $wp_version;
@@ -37,8 +35,6 @@ class PLL_Install extends PLL_Install_Base {
 	 * Displays a notice if PHP min version is not met.
 	 *
 	 * @since 2.6.7
-	 *
-	 * @return void
 	 */
 	public function php_version_notice() {
 		load_plugin_textdomain( 'polylang' ); // Plugin i18n.
@@ -59,8 +55,6 @@ class PLL_Install extends PLL_Install_Base {
 	 * Displays a notice if WP min version is not met.
 	 *
 	 * @since 2.6.7
-	 *
-	 * @return void
 	 */
 	public function wp_version_notice() {
 		global $wp_version;
@@ -84,7 +78,7 @@ class PLL_Install extends PLL_Install_Base {
 	 *
 	 * @since 1.8
 	 *
-	 * @return array
+	 * return array
 	 */
 	public static function get_default_options() {
 		return array(
@@ -108,8 +102,6 @@ class PLL_Install extends PLL_Install_Base {
 	 * Plugin activation
 	 *
 	 * @since 0.5
-	 *
-	 * @return void
 	 */
 	protected function _activate() {
 		if ( $options = get_option( 'polylang' ) ) {
@@ -139,8 +131,6 @@ class PLL_Install extends PLL_Install_Base {
 	 * Plugin deactivation
 	 *
 	 * @since 0.5
-	 *
-	 * @return void
 	 */
 	protected function _deactivate() {
 		delete_option( 'rewrite_rules' ); // Don't use flush_rewrite_rules at network activation. See #32471

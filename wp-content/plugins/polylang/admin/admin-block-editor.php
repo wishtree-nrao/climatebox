@@ -9,17 +9,7 @@
  * @since 2.5
  */
 class PLL_Admin_Block_Editor {
-	/**
-	 * @var PLL_Model
-	 */
-	protected $model;
-
-	/**
-	 * Preferred language to assign to a new post.
-	 *
-	 * @var PLL_Language
-	 */
-	protected $pref_lang;
+	public $model;
 
 	/**
 	 * Constructor: setups filters and actions
@@ -36,15 +26,15 @@ class PLL_Admin_Block_Editor {
 	}
 
 	/**
-	 * Filters the preload REST requests by the current language of the post.
-	 * Necessary otherwise subsequent REST requests, all filtered by the language,
-	 * would not hit the preloaded requests.
+	 * Filter the preload REST requests by the current language of the post
+	 * Necessary otherwise subsequent REST requests all filtered by the language
+	 * would not hit the preloaded requests
 	 *
 	 * @since 2.5
 	 *
-	 * @param (string|string[])[] $preload_paths Array of paths to preload.
-	 * @param WP_Post             $post          The post resource data.
-	 * @return (string|string[])[]
+	 * @param array  $preload_paths Array of paths to preload.
+	 * @param object $post          The post resource data.
+	 * @return array
 	 */
 	public function preload_paths( $preload_paths, $post ) {
 		if ( $this->model->is_translated_post_type( $post->post_type ) ) {

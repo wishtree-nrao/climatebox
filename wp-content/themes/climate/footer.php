@@ -25,11 +25,6 @@
 <?php endif; ?>
 </div><!-- #page -->
 
-<style type="text/css">
-	.quiz_view .ays-quiz-container .ays-question-counter:before{content: '<?php pll_e( 'Question'); ?> '}
-	.home_twitter #ctf .ctf-tweet-actions .ctf-twitterlink:before{content: '<?php pll_e( 'View On'); ?> ';}
-</style>
-
 <?php wp_footer(); ?>
 </body>
 </html>

@@ -33,13 +33,13 @@
     ?>
 
     <div id="page" class="site">
-     <a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'wp-bootstrap-starter' ); ?></a>
-     <?php if(!is_page_template( 'blank-page.php' ) && !is_page_template( 'blank-page-with-container.php' )): ?>
-     <header id="masthead" class="site-header navbar-static-top <?php echo wp_bootstrap_starter_bg_class(); ?>" role="banner">
+       <a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'wp-bootstrap-starter' ); ?></a>
+       <?php if(!is_page_template( 'blank-page.php' ) && !is_page_template( 'blank-page-with-container.php' )): ?>
+       <header id="masthead" class="site-header navbar-static-top <?php echo wp_bootstrap_starter_bg_class(); ?>" role="banner">
         <div class="container">
             <nav class="navbar navbar-expand-xl p-0">
                 <div class="navbar-brand">
-                 <div class="logo_wrapper">
+                   <div class="logo_wrapper">
                     <?php if ( get_theme_mod( 'wp_bootstrap_starter_logo' ) ): ?>
                         <a href="<?php echo esc_url( home_url( '/' )); ?>">
                             <img src="<?php echo esc_url(get_theme_mod( 'wp_bootstrap_starter_logo' )); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
@@ -99,16 +99,10 @@
                             <i class="fas fa-user"></i>
                         </button>
                         <div class="dropdown_popup collapse multi-collapse" id="HeaderProfile">
-                            <?php // Get URL for Current Lang
-                            $account = pll_get_post( 44 );
-                            $account_url = get_the_permalink($account);
-                            // $logout = pll_get_post( 42 );
-                            // $logout_url = get_the_permalink($logout);
-                            ?>
                             <ul>
                                 <li class="username"><span><?php $display_name = um_user('display_name'); echo $display_name; ?></span></li>
                                 <?php /*<li><a href="<?php echo get_site_url(); ?>/user">My Profile</a></li>*/  ?>
-                                <li><a href="<?php echo $account_url; ?>"><?php pll_e('My Account'); ?></a></li>
+                                <li><a href="<?php echo get_site_url(); ?>/account"><?php pll_e('My Account'); ?></a></li>
                                 <li><a href="<?php echo get_site_url(); ?>/logout"><?php pll_e('Logout'); ?></a></li>
                             </ul>
                         </div>
@@ -117,12 +111,8 @@
 
                 <?php }  else { ?>
 
-                 <?php // Get URL for Current Lang
-                 $login = pll_get_post( 36 );
-                 $login_url = get_the_permalink($login);
-                 ?>
                  <ul class="user_menu">
-                    <li><a href="<?php echo $login_url; ?>"><?php pll_e('Login'); ?></a></li>
+                    <li><a href="<?php echo get_site_url(); ?>/login"><?php pll_e('Login'); ?></a></li>
                 </ul>
 
             <?php  } ?>
@@ -146,8 +136,7 @@
 <div id="breadcrumbs" class="breadcrumbs">
     <div class="container">
         <div class="breadcrumbs_wrap">
-            <?php // bcn_display($return = false, $linked = true, $reverse = false, $force = false) ?>
-            <?php custom_breadcrumbs(); ?>
+            <?php bcn_display($return = false, $linked = true, $reverse = false, $force = false) ?>
         </div>
     </div>
 </div>

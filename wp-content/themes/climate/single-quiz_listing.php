@@ -19,7 +19,7 @@ get_header(); ?>
 					<?php
 					while ( have_posts() ) : the_post(); ?>
 
-						<header class="entry-header quiz_heading full-width-container" style="background-image: url('<?php echo get_the_post_thumbnail_url(); ?>');">
+						<header class="entry-header quiz_heading full-width-container">
 							<div class="container">
 								<div class="quiz_heading_wrap">
 									<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>

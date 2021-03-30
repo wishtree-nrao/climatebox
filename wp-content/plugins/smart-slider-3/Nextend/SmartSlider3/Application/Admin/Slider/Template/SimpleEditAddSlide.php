@@ -72,12 +72,12 @@ $slider = $this->getSlider();
     N2R('windowLoad', function ($) {
         var $form = $('#n2_slider_add_slide_form');
 
-        $('#slider-add-slide-region').trigger("focus");
+        $('#slider-add-slide-region').focus();
 
         $('.n2_slider_add_slide').on('click', function (e) {
             e.preventDefault();
 
-            $form.trigger("submit");
+            $form.submit();
         });
 
         document.addEventListener('keydown', function (e) {
@@ -86,7 +86,7 @@ $slider = $this->getSlider();
                 if (e.code === 'KeyS') { // ctrl + s
                     e.preventDefault();
 
-                    $form.trigger("submit");
+                    $form.submit();
                 }
             }
         }, {

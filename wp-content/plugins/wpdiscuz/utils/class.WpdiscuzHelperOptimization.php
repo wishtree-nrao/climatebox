@@ -20,7 +20,7 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
 		add_action("admin_post_removeVoteData", [&$this, "removeVoteData"]);
 		add_action("admin_post_resetPhrases", [&$this, "resetPhrases"]);
 		add_action("transition_comment_status", [&$this, "statusEventHandler"], 10, 3);
-		add_action("deleted_post", [&$this, "actionsOnDeletedPost"], 10);
+		add_action("deleted_post", [&$this->dbManager, "removeRatings"], 10);
 		add_action("wpdiscuz_clean_post_cache", [&$this, "cleanPostCache"]);
 		add_action("wpdiscuz_clean_all_caches", [&$this, "cleanAllCaches"]);
 	}
@@ -67,11 +67,6 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
 				$this->helperEmail->notifyOnApproving($comment);
 			}
 		}
-	}
-
-	public function actionsOnDeletedPost($post_id) {
-		$this->dbManager->removeRatings($post_id);
-		$this->dbManager->deleteFeedbackFormsForPost($post_id);
 	}
 
 	/**
@@ -161,8 +156,6 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
 	public function deleteUserRelatedData($id, $reassign) {
 		$user = get_user_by("id", $id);
 		if ($user && $user->user_email) {
-			$this->dbManager->deleteSubscriptionsByEmail($user->user_email);
-			$this->dbManager->deleteFollowersByEmail($user->user_email);
 			$this->dbManager->deleteFollowsByEmail($user->user_email);
 		}
 		$this->dbManager->deleteUserVotes($id);

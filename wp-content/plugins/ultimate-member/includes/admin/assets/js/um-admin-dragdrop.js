@@ -12,7 +12,7 @@ function UM_Drag_and_Drop() {
 				
 				jQuery('.um-admin-drag-col,.um-admin-drag-group').sortable('cancel');
 				
-				jQuery('#publish').prop('disabled', false);
+				jQuery('#publish').removeAttr('disabled');
 				
 			} else {
 				
@@ -246,7 +246,7 @@ function UM_Rows_Refresh(){
 		type: 'POST',
 		data: jQuery( '.um_update_order' ).serialize(),
 		success: function(){
-			jQuery('#publish').prop('disabled', false);
+			jQuery('#publish').removeAttr('disabled');
 		}
 	});
 	

@@ -574,13 +574,9 @@ class WpdiscuzHelperAjax implements WpDiscuzConstants {
                     $progress = $step * $limit * 100 / $rebuildRatingsCount;
                     $response["progress"] = ($p = intval($progress)) > 100 ? 100 : $p;
                     $response["startId"] = $rebuildRatingsData[count($rebuildRatingsData) - 1]["meta_id"];
-					if ($response["progress"] == 100) {
-						update_option(self::OPTION_SLUG_SHOW_RATING_REBUIL_MSG, "0");
-					}
                 } else {
                     $response["progress"] = 100;
                     $response["startId"] = 0;
-                    update_option(self::OPTION_SLUG_SHOW_RATING_REBUIL_MSG, "0");
                 }
                 $response["step"] = $step;
             }
@@ -1070,8 +1066,6 @@ class WpdiscuzHelperAjax implements WpDiscuzConstants {
                 if ($postMeta) {
                     foreach ($postMeta as $key => $value) {
                         $this->dbManager->deleteCommentMeta($key);
-                        update_post_meta($postId, self::POSTMETA_RATING_SEPARATE_AVG . $key, 0);
-                        update_post_meta($postId, self::POSTMETA_RATING_SEPARATE_COUNT . $key, 0);
                     }
                     update_post_meta($postId, self::POSTMETA_RATING_COUNT, []);
                 }

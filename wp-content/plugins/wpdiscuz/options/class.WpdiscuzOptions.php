@@ -2276,18 +2276,6 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             </div>
 			<?php
 		}
-		if ($wizardCompleted && intval(get_option(self::OPTION_SLUG_SHOW_RATING_REBUIL_MSG))) {
-			?>
-            <div class='notice notice-warning'>
-                <p>
-					<?php esc_html_e("Please rebuild ratings for the best performance and fastest experience", "wpdiscuz"); ?>
-                    &nbsp;
-                    <a href="<?php echo esc_url_raw(admin_url("admin.php?page=" . self::PAGE_TOOLS . "#wpdtool-ratings")); ?>"
-                       class="button button-primary"><?php esc_html_e("Rebuild Ratings", "wpdiscuz"); ?></a>
-                </p>
-            </div>
-			<?php
-		}
 	}
 
 	public function getDefaultFileTypes() {

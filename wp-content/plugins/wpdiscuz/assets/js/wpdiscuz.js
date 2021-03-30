@@ -227,12 +227,10 @@ jQuery(document).ready(function($) {
 				if ($(this).is(':hidden')) {
 					icon.removeClass('fa-chevron-up');
 					icon.addClass('fa-chevron-down');
-					toggle.find('.wpd-view-replies-text').text(wpdiscuzAjaxObj.wc_show_replies_text);
 					toggle.attr('wpd-tooltip', wpdiscuzAjaxObj.wc_show_replies_text);
 				} else {
 					icon.removeClass('fa-chevron-down');
 					icon.addClass('fa-chevron-up');
-					toggle.find('.wpd-view-replies-text').text(wpdiscuzAjaxObj.wc_hide_replies_text);
 					toggle.attr('wpd-tooltip', wpdiscuzAjaxObj.wc_hide_replies_text);
 				}
 				btn.addClass('wpd_not_clicked');
@@ -1371,8 +1369,8 @@ jQuery(document).ready(function($) {
 					if (r.success) {
 						$('#wpd-comm-' + uniqueId).replaceWith(r.data.comment_list);
 						$('#wpd-comm-' + uniqueId + ' .wpd-toggle .fas').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-						$('#wpd-comm-' + uniqueId + ' .wpd-toggle .wpd-view-replies .wpd-view-replies-text').text(wpdiscuzAjaxObj.wc_hide_replies_text);
 						$('#wpd-comm-' + uniqueId + ' .wpd-toggle').attr('wpd-tooltip', wpdiscuzAjaxObj.wc_hide_replies_text);
+						$('#wpd-comm-' + uniqueId + ' .wpd-toggle .wpd-view-replies').remove();
 
 						runCallbacks(r);
 					}

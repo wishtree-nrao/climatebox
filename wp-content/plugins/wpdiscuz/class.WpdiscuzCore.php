@@ -2,7 +2,7 @@
 /*
  * Plugin Name: wpDiscuz
  * Description: #1 WordPress Comment Plugin. Innovative, modern and feature-rich comment system to supercharge your website comment section.
- * Version: 7.1.5
+ * Version: 7.1.3
  * Author: gVectors Team
  * Author URI: https://gvectors.com/
  * Plugin URI: https://wpdiscuz.com/
@@ -148,8 +148,6 @@ class WpdiscuzCore implements WpDiscuzConstants {
 		add_filter("auto_update_plugin", [&$this, "shouldUpdate"], 10, 2);
 
 		add_filter("preprocess_comment", [&$this, "validateRecaptcha"], 10, 2);
-
-		add_action("admin_bar_menu", [&$this, "addToolbarItems"], 300);
 	}
 
 	public static function getInstance() {
@@ -1059,24 +1057,15 @@ class WpdiscuzCore implements WpDiscuzConstants {
 			wp_register_script("wpdiscuz-contenthover", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/contenthover/jquery.contenthover.min.js"), ["jquery"], $this->version, true);
 			wp_enqueue_script("wpdiscuz-contenthover");
 
-			if (isset($_GET["page"])) {
-			    if ($_GET["page"] === self::PAGE_WPDISCUZ) {
-                    wp_register_style("wpdiscuz-easy-responsive-tabs-css", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/easy-responsive-tabs/css/easy-responsive-tabs.min.css"), null, $this->version);
-                    wp_enqueue_style("wpdiscuz-easy-responsive-tabs-css");
-                    wp_register_script("wpdiscuz-easy-responsive-tabs-js", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/easy-responsive-tabs/js/easy-responsive-tabs.js"), ["jquery"], $this->version, true);
-                    wp_enqueue_script("wpdiscuz-easy-responsive-tabs-js");
-                    wp_register_script("wpdiscuz-jquery-cookie", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/wpdccjs/wpdcc.js"), ["jquery"], $this->version, true);
-                    wp_enqueue_script("wpdiscuz-jquery-cookie");
-                    wp_register_script("wpdiscuz-chart-js", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/chart/chart.min.js"), [], $this->version, true);
-                    wp_enqueue_script("wpdiscuz-chart-js");
-                } else if ($_GET["page"] === self::PAGE_PHRASES) {
-					wp_register_style("wpdiscuz-easy-responsive-tabs-css", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/easy-responsive-tabs/css/easy-responsive-tabs.min.css"), null, $this->version);
-					wp_enqueue_style("wpdiscuz-easy-responsive-tabs-css");
-					wp_register_script("wpdiscuz-easy-responsive-tabs-js", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/easy-responsive-tabs/js/easy-responsive-tabs.js"), ["jquery"], $this->version, true);
-					wp_enqueue_script("wpdiscuz-easy-responsive-tabs-js");
-					wp_register_script("wpdiscuz-jquery-cookie", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/wpdccjs/wpdcc.js"), ["jquery"], $this->version, true);
-					wp_enqueue_script("wpdiscuz-jquery-cookie");
-                }
+			if (isset($_GET["page"]) && $_GET["page"] === self::PAGE_WPDISCUZ) {
+				wp_register_style("wpdiscuz-easy-responsive-tabs-css", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/easy-responsive-tabs/css/easy-responsive-tabs.min.css"), null, $this->version);
+				wp_enqueue_style("wpdiscuz-easy-responsive-tabs-css");
+				wp_register_script("wpdiscuz-easy-responsive-tabs-js", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/easy-responsive-tabs/js/easy-responsive-tabs.js"), ["jquery"], $this->version, true);
+				wp_enqueue_script("wpdiscuz-easy-responsive-tabs-js");
+				wp_register_script("wpdiscuz-jquery-cookie", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/wpdccjs/wpdcc.js"), ["jquery"], $this->version, true);
+				wp_enqueue_script("wpdiscuz-jquery-cookie");
+				wp_register_script("wpdiscuz-chart-js", plugins_url(WPDISCUZ_DIR_NAME . "/assets/third-party/chart/chart.min.js"), [], $this->version, true);
+				wp_enqueue_script("wpdiscuz-chart-js");
 			}
 		} else if ($pagenow === "comment.php") {
 			wp_register_style("wpdiscuz-options-css", plugins_url(WPDISCUZ_DIR_NAME . "/assets/css/wpdiscuz-options.css"), null, $this->version);
@@ -1318,10 +1307,6 @@ class WpdiscuzCore implements WpDiscuzConstants {
 			}
 			if (version_compare($this->version, "7.0.3", "<") && version_compare($this->version, "1.0.0", "!=")) {
 				$this->dbManager->alterSubscriptionTable();
-			}
-			if (version_compare($this->version, "7.1.4", "<") && version_compare($this->version, "1.0.0", "!=")) {
-				$showRatingRebuildMsg = intval($this->dbManager->showRatingRebuildMsg());
-				add_option(self::OPTION_SLUG_SHOW_RATING_REBUIL_MSG, ($showRatingRebuildMsg ? "1" : "0"), "", "no");
 			}
 			do_action("wpdiscuz_clean_all_caches", $pluginData["Version"], $this->version);
 		}
@@ -1592,7 +1577,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
 			"is_share_enabled"             => $this->options->isShareEnabled(),
 			"post_permalink"               => $post_permalink,
 			"can_user_reply"               => comments_open($post->ID) && $this->options->wp["threadComments"] && (($this->form ? $this->form->isUserCanComment($currentUser, $postId) : true) || $high_level_user) && !(class_exists("WooCommerce") && get_post_type($post) === "product" && !$replyForWoo),
-			"can_user_follow"              => $this->options->subscription["isFollowActive"] && $isUserLoggedIn && !empty($currentUserEmail) && $this->helper->isUserCanFollowOrSubscribe($currentUserEmail),
+			"can_user_follow"              => $this->options->subscription["isFollowActive"] && $isUserLoggedIn && !empty($currentUserEmail),
 			"can_user_vote"                => $currentUser->ID || $this->options->thread_layouts["isGuestCanVote"],
 			"wpd_stick_btn"                => $this->options->moderation["enableStickButton"] && ($high_level_user || $can_stick_or_close) ? "<span class='wpd_stick_btn wpd-cta-button'>%s</span>" : "",
 			"wpd_close_btn"                => $this->options->moderation["enableCloseButton"] && ($high_level_user || $can_stick_or_close) ? "<span class='wpd_close_btn wpd-cta-button'>%s</span>" : "",
@@ -2247,72 +2232,6 @@ class WpdiscuzCore implements WpDiscuzConstants {
 			}
 		}
 		return $commentdata;
-	}
-
-	public function addToolbarItems($admin_bar){
-	    if ($this->isWpdiscuzLoaded && current_user_can("manage_options")) {
-            $admin_bar->add_menu([
-                "id"    => self::PAGE_WPDISCUZ,
-                "title" => "wpDiscuz",
-                "href"  => esc_url_raw(admin_url("admin.php?page=" . WpdiscuzCore::PAGE_WPDISCUZ)),
-                "meta"  => [
-                    "title" => "wpDiscuz",
-					"target" => "_blank",
-                ],
-            ]);
-            $admin_bar->add_menu([
-                "id"    => self::PAGE_WPDISCUZ . "-child",
-                "parent" => self::PAGE_WPDISCUZ,
-                "title" => esc_html__("Dashboard", "wpdiscuz"),
-                "href"  => esc_url_raw(admin_url("admin.php?page=" . WpdiscuzCore::PAGE_WPDISCUZ)),
-                "meta"  => [
-                    "title" => esc_html__("Dashboard", "wpdiscuz"),
-                    "target" => "_blank",
-                ],
-            ]);
-            $admin_bar->add_menu([
-                "id"    => self::PAGE_SETTINGS,
-                "parent" => self::PAGE_WPDISCUZ,
-                "title" => esc_html__("Settings", "wpdiscuz"),
-                "href"  => esc_url_raw(admin_url("admin.php?page=" . WpdiscuzCore::PAGE_SETTINGS)),
-                "meta"  => [
-                    "title" => esc_html__("Settings", "wpdiscuz"),
-                    "target" => "_blank",
-                ],
-            ]);
-			if (!$this->options->general["isUsePoMo"]) {
-				$admin_bar->add_menu([
-					"id" => self::PAGE_PHRASES,
-					"parent" => self::PAGE_WPDISCUZ,
-					"title" => esc_html__("Phrases", "wpdiscuz"),
-					"href" => esc_url_raw(admin_url("admin.php?page=" . WpdiscuzCore::PAGE_PHRASES)),
-					"meta" => [
-						"title" => esc_html__("Phrases", "wpdiscuz"),
-						"target" => "_blank",
-					],
-				]);
-			}
-			$admin_bar->add_menu([
-				"id" => self::PAGE_TOOLS,
-				"parent" => self::PAGE_WPDISCUZ,
-				"title" => esc_html__("Tools", "wpdiscuz"),
-				"href" => esc_url_raw(admin_url("admin.php?page=" . WpdiscuzCore::PAGE_TOOLS)),
-				"meta" => [
-					"title" => esc_html__("Tools", "wpdiscuz"),
-					"target" => "_blank",
-				],
-			]);
-			$admin_bar->add_menu([
-				"id" => self::PAGE_ADDONS,
-				"parent" => self::PAGE_WPDISCUZ,
-				"title" => esc_html__("Addons", "wpdiscuz"),
-				"href" => esc_url_raw(admin_url("admin.php?page=" . WpdiscuzCore::PAGE_ADDONS)),
-				"meta" => [
-					"title" => esc_html__("Addons", "wpdiscuz"),
-					"target" => "_blank",
-				],
-			]);
-		}
 	}
 
 }

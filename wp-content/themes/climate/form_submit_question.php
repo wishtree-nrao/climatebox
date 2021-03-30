@@ -35,7 +35,7 @@ get_header(); ?>
 												'post_type'     => 'submit_question',
 												'post_status'   => 'publish'
 											),
-											'submit_value'  => __("Submit Question", 'acf'),
+											'submit_value'  => 'Submit Question',
 											'updated_message' => __("Question submitted successfully", 'acf')
 										)); ?>
 									<?php endwhile; ?>

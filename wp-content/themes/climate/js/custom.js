@@ -46,8 +46,8 @@ jQuery(document).click(function(e) {
 
 
 // Add DropArrow in Mobile Menu
-jQuery( "<span class='lvl2_click'></span>" ).insertAfter( "ul.navbar-nav > li.menu-item-has-children > a" );
-var container = jQuery("ul.navbar-nav");
+jQuery( "<span class='lvl2_click'></span>" ).insertAfter( "ul#menu-main-menu > li.menu-item-has-children > a" );
+var container = jQuery("ul#menu-main-menu");
 container.find("li.menu-item-has-children > .lvl2_click").click(function (e) {
 	var menu = jQuery(this).parent(".menu-item").toggleClass("open_lvl2_submenu");
 	jQuery(".menu-item", container).not(menu).removeClass("open_lvl2_submenu");

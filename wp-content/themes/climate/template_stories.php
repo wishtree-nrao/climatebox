@@ -19,31 +19,19 @@
 							<?php /*<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/search.svg" /> */ ?>
 							<ul class="nav nav-tabs" id="ExploreTab" role="tablist">
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$News = pll_get_post( 64 );
-									$News_url = get_the_permalink($News);
-									?>
-									<a class="nav-link " id="ExploreTabNews-tab" href="<?php echo $News_url; ?>">
+									<a class="nav-link " id="ExploreTabNews-tab" href="<?php echo home_url('/explore/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/news_icon.svg" />
 										<span><?php pll_e('News'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$Stories = pll_get_post( 1230 );
-									$Stories_url = get_the_permalink($Stories);
-									?>
-									<a class="nav-link active" id="ExploreTabStories-tab" href="<?php echo $Stories_url; ?>">
+									<a class="nav-link active" id="ExploreTabStories-tab" href="<?php echo home_url('/explore/stories/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/stories_icon.svg" />
 										<span><?php pll_e('Stories'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$Gallery = pll_get_post( 1249 );
-									$Gallery_url = get_the_permalink($Gallery);
-									?>
-									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo $Gallery_url; ?>">
+									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo home_url('/explore/gallery/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/gallery_icon.svg" />
 										<span><?php pll_e('Gallery'); ?></span>
 									</a>

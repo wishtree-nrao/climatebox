@@ -9,13 +9,6 @@
  * @since 1.2
  */
 class PLL_Walker_Dropdown extends Walker {
-	/**
-	 * Database fields to use.
-	 *
-	 * @see https://developer.wordpress.org/reference/classes/walker/#properties Walker::$db_fields.
-	 *
-	 * @var array
-	 */
 	public $db_fields = array( 'parent' => 'parent', 'id' => 'id' );
 
 	/**
@@ -23,12 +16,11 @@ class PLL_Walker_Dropdown extends Walker {
 	 *
 	 * @since 1.2
 	 *
-	 * @param string   $output            Passed by reference. Used to append additional content.
-	 * @param stdClass $element           The data object.
-	 * @param int      $depth             Depth of the item.
-	 * @param array    $args              An array of additional arguments.
-	 * @param int      $current_object_id ID of the current item.
-	 * @return void
+	 * @param string $output            Passed by reference. Used to append additional content.
+	 * @param object $element           The data object.
+	 * @param int    $depth             Depth of the item.
+	 * @param array  $args              An array of additional arguments.
+	 * @param int    $current_object_id ID of the current item.
 	 */
 	public function start_el( &$output, $element, $depth = 0, $args = array(), $current_object_id = 0 ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$value = $args['value'];
@@ -46,13 +38,12 @@ class PLL_Walker_Dropdown extends Walker {
 	 *
 	 * @since 1.2
 	 *
-	 * @param stdClass $element           Data object.
-	 * @param array    $children_elements List of elements to continue traversing.
-	 * @param int      $max_depth         Max depth to traverse.
-	 * @param int      $depth             Depth of current element.
-	 * @param array    $args              An array of arguments.
-	 * @param string   $output            Passed by reference. Used to append additional content.
-	 * @return void
+	 * @param object $element           Data object.
+	 * @param array  $children_elements List of elements to continue traversing.
+	 * @param int    $max_depth         Max depth to traverse.
+	 * @param int    $depth             Depth of current element.
+	 * @param array  $args              An array of arguments.
+	 * @param string $output            Passed by reference. Used to append additional content.
 	 */
 	public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
 		$element = (object) $element; // Make sure we have an object
@@ -84,7 +75,7 @@ class PLL_Walker_Dropdown extends Walker {
 	public function walk( $elements, $max_depth, ...$args ) { // // phpcs:ignore WordPressVIPMinimum.Classes.DeclarationCompatibility.DeclarationCompatibility
 		$output = '';
 
-		if ( is_array( $max_depth ) ) { // @phpstan-ignore-line
+		if ( is_array( $max_depth ) ) {
 			// Backward compatibility with Polylang < 2.6.7
 			if ( WP_DEBUG ) {
 				trigger_error( // phpcs:ignore WordPress.PHP.DevelopmentFunctions

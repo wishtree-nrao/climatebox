@@ -9,32 +9,7 @@
  * @since 2.4
  */
 class PLL_Sync {
-	/**
-	 * @var PLL_Sync_Tax
-	 */
-	public $taxonomies;
-
-	/**
-	 * @var PLL_Sync_Post_Metas
-	 */
-	public $post_metas;
-
-	/**
-	 * @var PLL_Sync_Term_Metas
-	 */
-	public $term_metas;
-
-	/**
-	 * Stores the plugin options.
-	 *
-	 * @var array
-	 */
-	protected $options;
-
-	/**
-	 * @var PLL_Model
-	 */
-	protected $model;
+	public $taxonomies, $post_metas, $term_meta;
 
 	/**
 	 * Constructor
@@ -70,11 +45,11 @@ class PLL_Sync {
 	}
 
 	/**
-	 * Get post fields to synchronize.
+	 * Get post fields to synchornize
 	 *
 	 * @since 2.4
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param object $post Post object
 	 * @return array
 	 */
 	protected function get_fields_to_sync( $post ) {
@@ -144,14 +119,13 @@ class PLL_Sync {
 	}
 
 	/**
-	 * Synchronizes post fields in translations.
+	 * Synchronizes post fields in translations
 	 *
 	 * @since 2.4
 	 *
-	 * @param int     $post_id      Post id.
-	 * @param WP_Post $post         Post object.
-	 * @param int[]   $translations Post translations.
-	 * @return void
+	 * @param int    $post_id      post id
+	 * @param object $post         post object
+	 * @param array  $translations post translations
 	 */
 	public function pll_save_post( $post_id, $post, $translations ) {
 		global $wpdb;
@@ -196,32 +170,24 @@ class PLL_Sync {
 	 * @param int    $term_id  Term id.
 	 * @param int    $tt_id    Term taxonomy id, not used.
 	 * @param string $taxonomy Taxonomy name.
-	 * @return void
 	 */
 	public function sync_term_parent( $term_id, $tt_id, $taxonomy ) {
 		global $wpdb;
 
 		if ( is_taxonomy_hierarchical( $taxonomy ) && $this->model->is_translated_taxonomy( $taxonomy ) ) {
 			$term = get_term( $term_id );
+			$translations = $this->model->term->get_translations( $term_id );
 
-			if ( $term instanceof WP_Term ) {
-				$translations = $this->model->term->get_translations( $term_id );
+			foreach ( $translations as $lang => $tr_id ) {
+				if ( ! empty( $tr_id ) && $tr_id !== $term_id ) {
+					$tr_parent = $this->model->term->get_translation( $term->parent, $lang );
+					$wpdb->update(
+						$wpdb->term_taxonomy,
+						array( 'parent' => isset( $tr_parent ) ? $tr_parent : 0 ),
+						array( 'term_taxonomy_id' => get_term( (int) $tr_id, $taxonomy )->term_taxonomy_id )
+					);
 
-				foreach ( $translations as $lang => $tr_id ) {
-					if ( ! empty( $tr_id ) && $tr_id !== $term_id ) {
-						$tr_parent = $this->model->term->get_translation( $term->parent, $lang );
-						$tr_term   = get_term( (int) $tr_id, $taxonomy );
-
-						if ( $tr_term instanceof WP_Term ) {
-							$wpdb->update(
-								$wpdb->term_taxonomy,
-								array( 'parent' => $tr_parent ? $tr_parent : 0 ),
-								array( 'term_taxonomy_id' => $tr_term->term_taxonomy_id )
-							);
-
-							clean_term_cache( $tr_id, $taxonomy ); // OK since WP 3.9.
-						}
-					}
+					clean_term_cache( $tr_id, $taxonomy ); // OK since WP 3.9
 				}
 			}
 		}
@@ -233,20 +199,19 @@ class PLL_Sync {
 	 * @since 1.8
 	 *
 	 * @param int $post_id post id
-	 * @return void
 	 */
 	public function edit_attachment( $post_id ) {
 		$this->pll_save_post( $post_id, get_post( $post_id ), $this->model->post->get_translations( $post_id ) );
 	}
 
 	/**
-	 * Synchronize sticky posts.
+	 * Synchronize sticky posts
 	 *
 	 * @since 2.3
 	 *
-	 * @param int[] $value     New option value.
-	 * @param int[] $old_value Old option value.
-	 * @return int[]
+	 * @param array $value     New option value
+	 * @param array $old_value Old option value
+	 * @return array
 	 */
 	public function sync_sticky_posts( $value, $old_value ) {
 		if ( in_array( 'sticky_posts', $this->options['sync'] ) ) {

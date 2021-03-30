@@ -45,12 +45,7 @@ get_header(); ?>
 				<?php  ?>
 				<div id="TBsidebarWrap" class="sidebarWrap">
 					
-					<?php // Get URL for Current Lang
-					$textbooks = pll_get_post( 316 );
-					$textbooks_url = get_the_permalink($textbooks);
-					?>
-
-					<a class="btn btn_back" href="<?php echo $textbooks_url; ?>" title="<?php pll_e('Back to Textbooks list'); ?>"><i class="fas fa-chevron-left"></i> <?php pll_e('Back to Textbooks list'); ?></a>
+					<a class="btn btn_back" href="<?php echo get_site_url(); ?>/toolkit/textbooks/" title="<?php pll_e('Back to Textbooks list'); ?>"><i class="fas fa-chevron-left"></i> <?php pll_e('Back to Textbooks list'); ?></a>
 
 					<div id="TBsidebar" class="sidebar_left">
 						<div class="textbook_list">

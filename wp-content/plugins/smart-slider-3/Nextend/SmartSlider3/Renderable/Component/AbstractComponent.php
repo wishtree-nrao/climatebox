@@ -523,7 +523,7 @@ abstract class AbstractComponent {
             'mobileportrait',
             'mobilelandscape'
         );
-        foreach ($devices as $device) {
+        foreach ($devices AS $device) {
             $this->attributes['data-' . $device . $name] = $this->data->get($device . $name, null);
         }
     }
@@ -541,15 +541,9 @@ abstract class AbstractComponent {
             $gradientBackgroundProps = ' ' . $x . '% ' . $y . '% / cover no-repeat';
         }
 
-        $color = $this->owner->fill($this->data->get('bgcolor', '00000000'));
-        if (empty($color)) {
-            $color = '00000000';
-        }
+        $color    = $this->owner->fill($this->data->get('bgcolor', '00000000'));
         $gradient = $this->data->get('bgcolorgradient', 'off');
         $colorEnd = $this->owner->fill($this->data->get('bgcolorgradientend', '00000000'));
-        if (empty($colorEnd)) {
-            $colorEnd = '00000000';
-        }
         $this->addLocalStyle('normal', 'background', $this->getBackgroundCSS($color, $gradient, $colorEnd, $background, $gradientBackgroundProps));
 
 

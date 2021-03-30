@@ -50,26 +50,15 @@ class WPRocket {
         return $excluded_inline;
     }
 
-    public function rocket_defer_inline_exclusions($inline_exclusions) {
+    public function rocket_defer_inline_exclusions($regexp) {
 
-        if (is_string($inline_exclusions)) {
-            // Only for WP Rocket 3.8.0
-
-            if (!empty($inline_exclusions)) {
-                $inline_exclusions .= '|';
-            }
-
-            $inline_exclusions .= 'N2R';
-        } else if (is_array($inline_exclusions)) {
-            /**
-             * Since WP Rocket 3.8.1 param is an array
-             *
-             * @see https://github.com/wp-media/wp-rocket/pull/3424
-             */
-            $inline_exclusions[] = 'N2R';
+        if (!empty($regexp)) {
+            $regexp .= '|';
         }
 
-        return $inline_exclusions;
+        $regexp .= 'N2R';
+
+        return $regexp;
     }
 
     public function initCDN() {

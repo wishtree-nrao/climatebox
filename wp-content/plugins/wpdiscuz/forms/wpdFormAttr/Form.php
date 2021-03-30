@@ -271,7 +271,6 @@ class Form {
                         unset($postRatingMeta[$mettaKey][$oldCommentRating]);
                     }
                     update_post_meta($postID, wpdFormConst::WPDISCUZ_RATING_COUNT, $postRatingMeta);
-                    $this->updateSeparateRatingMeta($postRatingMeta, $postID);
                 }
                 $this->ratings[] = ["metakey" => $mettaKey, "value" => $data];
             }
@@ -333,7 +332,6 @@ class Form {
                 }
             }
             update_post_meta($postID, wpdFormConst::WPDISCUZ_RATING_COUNT, $wpdiscuzRatingCount);
-			$this->updateSeparateRatingMeta($wpdiscuzRatingCount, $postID);
         }
     }
 
@@ -489,12 +487,23 @@ class Form {
             $post = get_post($atts["postid"]);
             $this->initFormFields();
             if ($this->ratingsExists && (($this->wpdOptions->rating["ratingCssOnNoneSingular"] && !is_singular()) || is_singular())) {
+                $wpdiscuzRatingCountMeta = get_post_meta($post->ID, wpdFormConst::WPDISCUZ_RATING_COUNT, true);
+                $wpdiscuzRatingCount = $wpdiscuzRatingCountMeta && is_array($wpdiscuzRatingCountMeta) ? $wpdiscuzRatingCountMeta : [];
                 $ratingList = [];
-                foreach (array_unique($this->ratingsFieldsKey) as $key => $field) {
-                    $avg = get_post_meta($post->ID, wpdFormConst::WPDISCUZ_RATING_SEPARATE_AVG . $field, true);
-                    $c = get_post_meta($post->ID, wpdFormConst::WPDISCUZ_RATING_SEPARATE_COUNT . $field, true);
-					$ratingList[$field]["average"] = $avg ? $avg : 0;
-                    $ratingList[$field]["count"] = $c ? $c : 0;
+                foreach ($wpdiscuzRatingCount as $metaKey => $data) {
+                    $tempRating = 0;
+                    $tempRatingCount = 0;
+                    foreach ($data as $rating => $count) {
+                        $tempRating += $rating * $count;
+                        $tempRatingCount += $count;
+                    }
+                    if ($tempRatingCount <= 0) {
+                        $ratingList[$metaKey]["average"] = 0;
+                        $ratingList[$metaKey]["count"] = 0;
+                    } else {
+                        $ratingList[$metaKey]["average"] = round($tempRating / $tempRatingCount, 1);
+                        $ratingList[$metaKey]["count"] = $tempRatingCount;
+                    }
                 }
                 if ($ratingList) {
                     $atts["show-label"] = filter_var($atts['show-label'], FILTER_VALIDATE_BOOLEAN);
@@ -503,6 +512,8 @@ class Form {
                     }
                     $html .= "<div class='wpdiscuz-post-rating-wrap wpd-custom-field'>";
                     if (!isset($atts["metakey"]) || $atts["metakey"] === "" || $atts["metakey"] === "all") {
+                        $avg = 0;
+                        $q = 0;
                         foreach ($ratingList as $key => $value) {
                             $html .= $this->getSingleRatingHtml($key, $value, $atts);
                         }
@@ -1520,18 +1531,5 @@ class Form {
     public function getAllowedFieldsType() {
         return $this->row->allowedFieldsType();
     }
-
-    public function updateSeparateRatingMeta($ratings, $post_id) {
-        foreach ($ratings as $key => $values) {
-            $avg = 0;
-            $c = 0;
-            foreach ($values as $rating => $count) {
-                $avg += $rating * $count;
-                $c += $count;
-			}
-            update_post_meta($post_id, wpdFormConst::WPDISCUZ_RATING_SEPARATE_AVG . $key, round($avg / $c, 1));
-            update_post_meta($post_id, wpdFormConst::WPDISCUZ_RATING_SEPARATE_COUNT . $key, $c);
-		}
-	}
 
 }

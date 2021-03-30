@@ -13,41 +13,30 @@ get_header();
 			<div class="col-sm-12 col-md-12">
 				<div class="post_content">
 
+					<?php /*<h1><?php echo get_the_title(); ?></h1>*/ ?>
+
 					<div class="row">
 						<div class="col-sm-12 col-md-8 col-lg-9">
 							<?php /*<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/search.svg" /> */ ?>
 							<ul class="nav nav-tabs" id="ExploreTab" role="tablist">
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$News = pll_get_post( 64 );
-									$News_url = get_the_permalink($News);
-									?>
-									<a class="nav-link active" id="ExploreTabNews-tab" href="<?php echo $News_url; ?>">
+									<a class="nav-link active" id="ExploreTabNews-tab" href="<?php echo home_url($wp->request); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/news_icon.svg" />
 										<span><?php pll_e('News'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$Stories = pll_get_post( 1230 );
-									$Stories_url = get_the_permalink($Stories);
-									?>
-									<a class="nav-link" id="ExploreTabStories-tab" href="<?php echo $Stories_url; ?>" >
+									<a class="nav-link" id="ExploreTabStories-tab" href="<?php echo home_url($wp->request.'/stories/'); ?>" >
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/stories_icon.svg" />
 										<span><?php pll_e('Stories'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<?php // Get URL for Current Lang
-									$Gallery = pll_get_post( 1249 );
-									$Gallery_url = get_the_permalink($Gallery);
-									?>
-									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo $Gallery_url; ?>">
+									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo home_url($wp->request.'/gallery/'); ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/gallery_icon.svg" />
 										<span><?php pll_e('Gallery'); ?></span>
 									</a>
 								</li>
-								<?php // echo home_url($wp->request.'/gallery/'); Redirect Method by Nidhi ?>
 							</ul>
 
 							<div class="tab-content" id="ExploreTabContent">

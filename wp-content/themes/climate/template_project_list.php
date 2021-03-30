@@ -30,13 +30,7 @@ $user = wp_get_current_user();
 								</div>
 								<div class="col-sm-12 col-md-12 col-lg-6">
 									<div class="head_action">
-
-										<?php // Get URL for Current Lang
-										$contests = pll_get_post( 68 );
-										$contests_url = get_the_permalink($contests);
-										?>
-
-										<a class="btn btnBlue" href="<?php echo $contests_url; ?>"><?php pll_e('See Contest List'); ?></a>
+										<a class="btn btnBlue" href="<?php echo get_site_url(); ?>/school-contests/"><?php pll_e('See Contest List'); ?></a>
 								
 										<form class="search" method="get" action="<?php echo home_url('/school-contests/submitted-projects/'); ?>">
 											<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">

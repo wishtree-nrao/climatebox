@@ -22,13 +22,7 @@
 
 									<?php $user = wp_get_current_user();
 									if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator', (array) $user->roles ) || in_array( 'administrator', (array) $user->roles ) || in_array( 'um_contest-admin', (array) $user->roles ) ) { ?>
-
-										<?php // Get URL for Current Lang
-										$submitted_project = pll_get_post( 771 );
-										$submitted_project_url = get_the_permalink($submitted_project);
-										?>
-
-										<a class="btn btnBlue" href="<?php echo $submitted_project_url; ?>"><?php pll_e('Submitted Projects'); ?></a>
+										<a class="btn btnBlue" href="<?php echo get_site_url(); ?>/submitted-projects/"><?php pll_e('Submitted Projects'); ?></a>
 									<?php } ?>
 
 									<?php 

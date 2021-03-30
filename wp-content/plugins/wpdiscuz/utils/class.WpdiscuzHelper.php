@@ -7,7 +7,7 @@ class WpdiscuzHelper implements WpDiscuzConstants {
 
     private static $spoilerPattern = '@\[(\[?)(spoiler)(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*+(?:\[(?!\/\2\])[^\[]*+)*+)\[\/\2\])?)(\]?)@isu';
     private static $inlineFormPattern = '@\[(\[?)(wpdiscuz\-feedback)(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*+(?:\[(?!\/\2\])[^\[]*+)*+)\[\/\2\])?)(\]?)@isu';
-    private static $inlineFormAttsPattern = '@([\w-]+)\s*=\s*\'([^\']*)\'(?:\s|$)|([\w-]+)\s*=\s*\'([^\']*)\'(?:\s|$)|([\w-]+)\s*=\s*([^\s\']+)(?:\s|$)|\'([^\']*)\'(?:\s|$)|\'([^\']*)\'(?:\s|$)|(\S+)(?:\s|$)@isu';
+    private static $inlineFormAttsPattern = '@([\w-]+)\s*=\s*\"([^\"]*)\"(?:\s|$)|([\w-]+)\s*=\s*\'([^\']*)\'(?:\s|$)|([\w-]+)\s*=\s*([^\s\'\"]+)(?:\s|$)|\"([^\"]*)\"(?:\s|$)|\'([^\']*)\'(?:\s|$)|(\S+)(?:\s|$)@isu';
     private $options;
     private $dbManager;
     private $wpdiscuzForm;
@@ -833,69 +833,60 @@ class WpdiscuzHelper implements WpDiscuzConstants {
         return $users;
     }
 
-	public function checkFeedbackShortcodes($post_ID, $post_after, $post_before) {
-		if (comments_open($post_ID) && ($form = $this->wpdiscuzForm->getForm($post_ID)) && $form->getFormID()) {
+    public function checkFeedbackShortcodes($post_ID, $post_after, $post_before) {
+        if (comments_open($post_ID) && ($form = $this->wpdiscuzForm->getForm($post_ID)) && $form->getFormID()) {
             preg_match_all(self::$inlineFormPattern, $post_before->post_content, $matchesBefore, PREG_SET_ORDER);
-		    if ($post_after->post_content) {
-                preg_match_all(self::$inlineFormPattern, $post_after->post_content, $matchesAfter, PREG_SET_ORDER);
-            } else {
-				$matchesAfter = $matchesBefore;
-				$matchesBefore = [];
-            }
-			if ($matchesAfter || $matchesBefore) {
-				$inlineFormsBefore = [];
-				$defaultAtts = ["id" => "", "question" => "", "opened" => 0, "content" => ""];
-				foreach ($matchesBefore as $k => $matchBefore) {
-					if (isset($matchBefore[3])) {
-					    $matchBefore[3] = str_replace('\"', "'", addslashes($matchBefore[3]));
-					    if (preg_match_all(self::$inlineFormAttsPattern, $matchBefore[3], $attsBefore, PREG_SET_ORDER)) {
+            preg_match_all(self::$inlineFormPattern, $post_after->post_content, $matchesAfter, PREG_SET_ORDER);
+            if ($matchesAfter || $matchesBefore) {
+                $inlineFormsBefore = [];
+                $defaultAtts = ["id" => "", "question" => "", "opened" => 0, "content" => ""];
+                foreach ($matchesBefore as $k => $matchBefore) {
+                    if (isset($matchBefore[3]) && preg_match_all(self::$inlineFormAttsPattern, $matchBefore[3], $attsBefore, PREG_SET_ORDER)) {
+                        $atts = [];
+                        foreach ($attsBefore as $k1 => $attrBefore) {
+                            $atts[$attrBefore[1]] = $attrBefore[2];
+                        }
+                        $atts = array_merge($defaultAtts, $atts);
+                        if (($atts["id"] = trim($atts["id"])) && ($atts["question"] = strip_tags($atts["question"]))) {
+                            $inlineFormsBefore[$atts["id"]] = ["question" => $atts["question"], "opened" => $atts["opened"], "content" => $matchBefore[5]];
+                        }
+                    }
+                }
+                foreach ($matchesAfter as $k => $matchAfter) {
+                    if (isset($matchAfter[3])) {
+                        if (function_exists("use_block_editor_for_post") && use_block_editor_for_post($post_ID)) {
+                            $matchAfter[3] = json_decode('"' . $matchAfter[3] . '"');
+                        }
+                        if (preg_match_all(self::$inlineFormAttsPattern, $matchAfter[3], $attsAfter, PREG_SET_ORDER)) {
                             $atts = [];
-                            foreach ($attsBefore as $k1 => $attrBefore) {
-                                $atts[$attrBefore[1]] = $attrBefore[2];
+                            foreach ($attsAfter as $k1 => $attrAfter) {
+                                $atts[$attrAfter[1]] = $attrAfter[2];
                             }
+                            $atts["content"] = $matchAfter[5];
                             $atts = array_merge($defaultAtts, $atts);
                             if (($atts["id"] = trim($atts["id"])) && ($atts["question"] = strip_tags($atts["question"]))) {
-                                $inlineFormsBefore[$atts["id"]] = ["question" => $atts["question"], "opened" => $atts["opened"], "content" => $matchBefore[5]];
-                            }
-                        }
-					}
-				}
-				foreach ($matchesAfter as $k => $matchAfter) {
-					if (isset($matchAfter[3])) {
-						$matchAfter[3] = str_replace('\"', "'", addslashes($matchAfter[3]));
-						if (function_exists("use_block_editor_for_post") && use_block_editor_for_post($post_ID)) {
-							$matchAfter[3] = json_decode('"' . $matchAfter[3] . '"');
-						}
-						if (preg_match_all(self::$inlineFormAttsPattern, $matchAfter[3], $attsAfter, PREG_SET_ORDER)) {
-							$atts = [];
-							foreach ($attsAfter as $k1 => $attrAfter) {
-								$atts[$attrAfter[1]] = $attrAfter[2];
-							}
-							$atts["content"] = $matchAfter[5];
-							$atts = array_merge($defaultAtts, $atts);
-							if (($atts["id"] = trim($atts["id"])) && ($atts["question"] = strip_tags($atts["question"]))) {
-								if (isset($inlineFormsBefore[$atts["id"]])) {
-									if ($this->dbManager->getFeedbackFormByUid($post_ID, $atts["id"])) {
+                                if (isset($inlineFormsBefore[$atts["id"]])) {
+                                    if ($this->dbManager->getFeedbackFormByUid($post_ID, $atts["id"])) {
 										if ($atts["question"] !== $inlineFormsBefore[$atts["id"]]["question"] || $atts["opened"] !== $inlineFormsBefore[$atts["id"]]["opened"] || $atts["content"] !== $inlineFormsBefore[$atts["id"]]["content"]) {
 											$this->dbManager->updateFeedbackForm($post_ID, $atts["id"], $atts["question"], $atts["opened"], $atts["content"]);
 										}
-									} else {
+                                    } else {
 										$this->dbManager->addFeedbackForm($post_ID, $atts["id"], $atts["question"], $atts["opened"], $atts["content"]);
-									}
-									unset($inlineFormsBefore[$atts["id"]]);
-								} else {
-									$this->dbManager->addFeedbackForm($post_ID, $atts["id"], $atts["question"], $atts["opened"], $atts["content"]);
-								}
-							}
-						}
-					}
-				}
-				foreach ($inlineFormsBefore as $uid => $inlineFormBefore) {
-					$this->dbManager->deleteFeedbackForm($post_ID, $uid);
-				}
-			}
-		}
-	}
+                                    }
+                                    unset($inlineFormsBefore[$atts["id"]]);
+                                } else {
+                                    $this->dbManager->addFeedbackForm($post_ID, $atts["id"], $atts["question"], $atts["opened"], $atts["content"]);
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach ($inlineFormsBefore as $uid => $inlineFormBefore) {
+                    $this->dbManager->deleteFeedbackForm($post_ID, $uid);
+                }
+            }
+        }
+    }
 
     public function getCommentFormPath($theme) {
         if (file_exists(get_stylesheet_directory() . "/wpdiscuz/comment-form.php")) {
@@ -1002,10 +993,6 @@ class WpdiscuzHelper implements WpDiscuzConstants {
         $content = preg_replace('~<\/blockquote>\s?<blockquote>~is', '</p><p>', $content);
         $content = preg_replace('~<\/code>\s?<code>~is', '</p><p>', $content);
         return $content;
-    }
-
-    public static function isUserCanFollowOrSubscribe($email) {
-        return !in_array(strstr($email, "@"), ["@facebook.com", "@twitter.com", "@ok.ru", "@wechat.com", "@qq.com", "@weibo.com", "@baidu.com", "@example.com",]);
     }
 
     public function addRatingResetButton($postType, $post) {

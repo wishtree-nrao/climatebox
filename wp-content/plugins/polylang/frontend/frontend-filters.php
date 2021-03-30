@@ -9,11 +9,6 @@
  * @since 1.2
  */
 class PLL_Frontend_Filters extends PLL_Filters {
-	/**
-	 * Internal non persistent cache object.
-	 *
-	 * @var PLL_Cache
-	 */
 	public $cache;
 
 	/**
@@ -54,7 +49,8 @@ class PLL_Frontend_Filters extends PLL_Filters {
 		// Translates biography
 		add_filter( 'get_user_metadata', array( $this, 'get_user_metadata' ), 10, 4 );
 
-		if ( Polylang::is_ajax_on_front() ) {
+		// FIXME test get_user_locale for backward compatibility with WP < 4.7
+		if ( Polylang::is_ajax_on_front() && function_exists( 'get_user_locale' ) ) {
 			add_filter( 'load_textdomain_mofile', array( $this, 'load_textdomain_mofile' ) );
 		}
 	}
@@ -71,18 +67,18 @@ class PLL_Frontend_Filters extends PLL_Filters {
 	}
 
 	/**
-	 * Filters sticky posts by current language.
+	 * Filters sticky posts by current language
 	 *
 	 * @since 0.8
 	 *
-	 * @param int[] $posts List of sticky posts ids.
-	 * @return int[] Modified list of sticky posts ids
+	 * @param array $posts list of sticky posts ids
+	 * @return array modified list of sticky posts ids
 	 */
 	public function option_sticky_posts( $posts ) {
 		global $wpdb;
 
 		// Do not filter sticky posts on REST requests as $this->curlang is *not* the 'lang' parameter set in the request
-		if ( ! defined( 'REST_REQUEST' ) && ! empty( $this->curlang ) && ! empty( $posts ) ) {
+		if ( ! defined( 'REST_REQUEST' ) && $this->curlang && ! empty( $posts ) ) {
 			$_posts = wp_cache_get( 'sticky_posts', 'options' ); // This option is usually cached in 'all_options' by WP
 
 			if ( empty( $_posts ) || ! is_array( $_posts[ $this->curlang->term_taxonomy_id ] ) ) {

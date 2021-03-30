@@ -17,9 +17,9 @@ class PLL_Settings_Licenses extends PLL_Settings_Module {
 	public $priority = 100;
 
 	/**
-	 * Stores an array of objects allowing to manage a license.
+	 * Stores an array of PLL_License instances.
 	 *
-	 * @var PLL_License[]
+	 * @var array
 	 */
 	protected $items;
 
@@ -77,11 +77,11 @@ class PLL_Settings_Licenses extends PLL_Settings_Module {
 	}
 
 	/**
-	 * Get the html for a row (one per license key) for display.
+	 * Get the html for a row (one per license key) for display
 	 *
 	 * @since 1.9
 	 *
-	 * @param PLL_License $item Object allowing to manage a license.
+	 * @param array $item licence id, name and key
 	 * @return string
 	 */
 	protected function get_row( $item ) {
@@ -122,8 +122,6 @@ class PLL_Settings_Licenses extends PLL_Settings_Module {
 	 * Ajax method to deactivate a license
 	 *
 	 * @since 1.9
-	 *
-	 * @return void
 	 */
 	public function deactivate_license() {
 		check_ajax_referer( 'pll_options', '_pll_nonce' );

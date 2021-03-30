@@ -358,8 +358,7 @@ add_action( 'wp_ajax_ctf_lite_dismiss', 'ctf_lite_dismiss' );
 function ctf_admin_hide_unrelated_notices() {
 
 	// Bail if we're not on a ctf screen or page.
-	if ( ! isset( $_GET['page'] )
-         || ($_GET['page'] !== 'custom-twitter-feeds' && $_GET['page'] !== 'ctf-sw') ) {
+	if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'custom-twitter-feeds' ) {
 		return;
 	}
 

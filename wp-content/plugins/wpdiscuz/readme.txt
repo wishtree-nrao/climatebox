@@ -2,8 +2,8 @@
 Contributors: gVectors Team
 Tags: comment, comments, ajax comments, comment form, comment fields
 Requires at least: 5.0
-Tested up to: 5.7
-Stable tag: 7.1.5
+Tested up to: 5.6
+Stable tag: 7.1.3
 Requires PHP: 5.4 and higher
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -178,27 +178,6 @@ Nothing will be lost!  **Comments - wpDiscuz** will show all old comments.
 
 
 == Changelog ==
-
-= Comments - wpDiscuz v7.1.5 =
-
-* Fixed Bug: Small issue with feedback forms
-* Added: Removes post related feedback forms when post is deleted
-
-
-**IMPORTANT!**
-1. Please don't forget delete all caches and purge CDN after the update.
-2. If you're updating from 5.x.x versions please read this topic: [https://wordpress.org/support/topic/before-updating-to-wpdiscuz-7-version/](https://wordpress.org/support/topic/before-updating-to-wpdiscuz-7-version/)
-
-
-= Comments - wpDiscuz v7.1.4 =
-
-* Added: WordPress 5.7 compatibility
-* Added: Keep showing "hide/show replies" button on expending replies
-* Added: wpDiscuz dashboard and settings menu on the top admin menu
-* Added: Removes user subscription and follow data when user is deleted
-* Added: Store post average rating information in _postmeta table
-* Fixed Bug: wpDiscuz inline commenting and Block editor conflict
-
 
 = Comments - wpDiscuz v7.1.3 =
 

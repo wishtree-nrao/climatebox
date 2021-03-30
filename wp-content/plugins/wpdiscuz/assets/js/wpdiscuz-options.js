@@ -444,9 +444,6 @@ jQuery(document).ready(function ($) {
                         $('.rebuild-ratings-step').val(0);
                         $('.rebuild-ratings-start-id').val(0);
                         doingAjax = false;
-                        setTimeout(function () {
-                            location.reload(true);
-                        }, 2000);
                     }
                 }
             } catch (e) {

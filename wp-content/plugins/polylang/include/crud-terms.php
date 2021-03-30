@@ -10,37 +10,7 @@
  * @since 2.4
  */
 class PLL_CRUD_Terms {
-	/**
-	 * @var PLL_Model
-	 */
-	public $model;
-
-	/**
-	 * Current language (used to filter the content).
-	 *
-	 * @var PLL_Language
-	 */
-	public $curlang;
-
-	/**
-	 * Language selected in the admin language filter.
-	 *
-	 * @var PLL_Language
-	 */
-	public $filter_lang;
-
-	/**
-	 * Preferred language to assign to new contents.
-	 *
-	 * @var PLL_Language
-	 */
-	public $pref_lang;
-
-	/**
-	 * Stores the 'lang' query var from WP_Query.
-	 *
-	 * @var string
-	 */
+	public $model, $curlang, $filter_lang, $pref_lang;
 	private $tax_query_lang;
 
 	/**
@@ -79,7 +49,6 @@ class PLL_CRUD_Terms {
 	 *
 	 * @param int    $term_id
 	 * @param string $taxonomy
-	 * @return void
 	 */
 	protected function set_default_language( $term_id, $taxonomy ) {
 		if ( ! $this->model->term->get_language( $term_id ) ) {
@@ -100,15 +69,14 @@ class PLL_CRUD_Terms {
 	}
 
 	/**
-	 * Called when a category or post tag is created or edited.
-	 * Does nothing except on taxonomies which are filterable.
+	 * Called when a category or post tag is created or edited
+	 * Does nothing except on taxonomies which are filterable
 	 *
 	 * @since 0.1
 	 *
-	 * @param int    $term_id  Term id of the term being saved.
-	 * @param int    $tt_id    Term taxonomy id.
-	 * @param string $taxonomy Taxonomy name.
-	 * @return void
+	 * @param int    $term_id
+	 * @param int    $tt_id    Term taxonomy id
+	 * @param string $taxonomy
 	 */
 	public function save_term( $term_id, $tt_id, $taxonomy ) {
 		if ( $this->model->is_translated_taxonomy( $taxonomy ) ) {
@@ -120,30 +88,28 @@ class PLL_CRUD_Terms {
 			}
 
 			/**
-			 * Fires after the term language and translations are saved.
+			 * Fires after the term language and translations are saved
 			 *
 			 * @since 1.2
 			 *
-			 * @param int    $term_id      Term id.
-			 * @param string $taxonomy     Taxonomy name.
-			 * @param int[]  $translations The list of translations term ids.
+			 * @param int    $term_id      term id
+			 * @param string $taxonomy     taxonomy name
+			 * @param array  $translations the list of translations term ids
 			 */
 			do_action( 'pll_save_term', $term_id, $taxonomy, $this->model->term->get_translations( $term_id ) );
 		}
 	}
 
 	/**
-	 * Get the language(s) to filter WP_Term_Query.
+	 * Get the language(s) to filter get_terms
 	 *
 	 * @since 1.7.6
 	 *
-	 * @param string[] $taxonomies Queried taxonomies.
-	 * @param array    $args       WP_Term_Query arguments.
-	 * @return PLL_Language|string|false The language(s) to use in the filter, false otherwise.
+	 * @param array $taxonomies queried taxonomies
+	 * @param array $args       get_terms arguments
+	 * @return object|string|bool the language(s) to use in the filter, false otherwise
 	 */
 	protected function get_queried_language( $taxonomies, $args ) {
-		global $pagenow;
-
 		// Does nothing except on taxonomies which are filterable
 		// Since WP 4.7, make sure not to filter wp_get_object_terms()
 		if ( ! $this->model->is_translated_taxonomy( $taxonomies ) || ! empty( $args['object_ids'] ) ) {
@@ -156,7 +122,7 @@ class PLL_CRUD_Terms {
 		}
 
 		// On tags page, everything should be filtered according to the admin language filter except the parent dropdown
-		if ( 'edit-tags.php' === $pagenow && empty( $args['class'] ) ) {
+		if ( 'edit-tags.php' === $GLOBALS['pagenow'] && empty( $args['class'] ) ) {
 			return $this->filter_lang;
 		}
 
@@ -164,17 +130,17 @@ class PLL_CRUD_Terms {
 	}
 
 	/**
-	 * Adds language dependent cache domain when querying terms.
-	 * Useful as the 'lang' parameter is not included in cache key by WordPress.
+	 * Adds language dependent cache domain when querying terms
+	 * Useful as the 'lang' parameter is not included in cache key by WordPress
 	 *
 	 * @since 1.3
 	 *
-	 * @param array    $args       WP_Term_Query arguments.
-	 * @param string[] $taxonomies Queried taxonomies.
-	 * @return array Modified arguments.
+	 * @param array $args
+	 * @param array $taxonomies
+	 * @return array modified arguments
 	 */
 	public function get_terms_args( $args, $taxonomies ) {
-		// Don't break _get_term_hierarchy().
+		// Don't break _get_term_hierarchy()
 		if ( 'all' === $args['get'] && 'id' === $args['orderby'] && 'id=>parent' === $args['fields'] ) {
 			$args['lang'] = '';
 		}
@@ -196,10 +162,10 @@ class PLL_CRUD_Terms {
 	 *
 	 * @since 0.2
 	 *
-	 * @param string[] $clauses    List of sql clauses.
-	 * @param string[] $taxonomies List of taxonomies.
-	 * @param array    $args       WP_Term_Query arguments.
-	 * @return string[] Modified sql clauses.
+	 * @param array $clauses    list of sql clauses
+	 * @param array $taxonomies list of taxonomies
+	 * @param array $args       get_terms arguments
+	 * @return array modified sql clauses
 	 */
 	public function terms_clauses( $clauses, $taxonomies, $args ) {
 		$lang = $this->get_queried_language( $taxonomies, $args );
@@ -207,25 +173,22 @@ class PLL_CRUD_Terms {
 	}
 
 	/**
-	 * Sets the WP_Term_Query language when doing a WP_Query.
-	 * Needed since WP 4.9.
+	 * Sets the WP_Term_Query language when doing a WP_Query
+	 * Needed since WP 4.9
 	 *
 	 * @since 2.3.2
 	 *
-	 * @param WP_Query $query WP_Query object.
-	 * @return void
+	 * @param object $query WP_Query object
 	 */
 	public function set_tax_query_lang( $query ) {
 		$this->tax_query_lang = isset( $query->query_vars['lang'] ) ? $query->query_vars['lang'] : '';
 	}
 
 	/**
-	 * Removes the WP_Term_Query language filter for WP_Query.
-	 * Needed since WP 4.9.
+	 * Removes the WP_Term_Query language filter for WP_Query
+	 * Needed since WP 4.9
 	 *
 	 * @since 2.3.2
-	 *
-	 * @return void
 	 */
 	public function unset_tax_query_lang() {
 		unset( $this->tax_query_lang );
@@ -238,7 +201,6 @@ class PLL_CRUD_Terms {
 	 * @since 0.1
 	 *
 	 * @param int $term_id
-	 * @return void
 	 */
 	public function delete_term( $term_id ) {
 		$this->model->term->delete_translation( $term_id );

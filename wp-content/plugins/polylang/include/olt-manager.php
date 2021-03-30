@@ -13,33 +13,10 @@
  * @since 1.2
  */
 class PLL_OLT_Manager {
-	/**
-	 * Singleton instance
-	 *
-	 * @var PLL_OLT_Manager
-	 */
-	protected static $instance;
-
-	/**
-	 * Stores the default site locale before it is modified.
-	 *
-	 * @var string
-	 */
+	protected static $instance; // For singleton
 	protected $default_locale;
-
-	/**
-	 * Stores all loaded text domains and mo files.
-	 *
-	 * @var string[][]
-	 */
-	protected $list_textdomains = array();
-
-	/**
-	 * Stores post types an taxonomies labels to translate.
-	 *
-	 * @var string[][]
-	 */
-	public $labels = array();
+	protected $list_textdomains = array(); // All text domains
+	public $labels = array(); // Post types and taxonomies labels to translate
 
 	/**
 	 * Constructor: setups relevant filters
@@ -51,8 +28,9 @@ class PLL_OLT_Manager {
 		add_filter( 'pre_update_option_active_plugins', array( $this, 'make_polylang_first' ) );
 		add_filter( 'pre_update_option_active_sitewide_plugins', array( $this, 'make_polylang_first' ) );
 
-		// Overriding load text domain only on front since WP 4.7.
-		if ( is_admin() && ! Polylang::is_ajax_on_front() ) {
+		// Overriding load text domain only on front since WP 4.7
+		// FIXME test get_user_locale for backward compatibility with WP < 4.7
+		if ( is_admin() && ! Polylang::is_ajax_on_front() && function_exists( 'get_user_locale' ) ) {
 			return;
 		}
 
@@ -88,8 +66,6 @@ class PLL_OLT_Manager {
 	 * Loads text domains
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function load_textdomains() {
 		// Our load_textdomain_mofile filter has done its job. let's remove it before calling load_textdomain
@@ -107,7 +83,7 @@ class PLL_OLT_Manager {
 			 * See WP_Locale_Switcher::change_locale()
 			 */
 			if ( ! class_exists( 'WP_Textdomain_Registry' ) && function_exists( '_get_path_to_translation' ) ) {
-				_get_path_to_translation( '', true );
+				_get_path_to_translation( null, true );
 			}
 
 			foreach ( $this->list_textdomains as $textdomain ) {
@@ -163,23 +139,36 @@ class PLL_OLT_Manager {
 	}
 
 	/**
-	 * Saves all text domains in a table for later usage.
-	 * It replaces the 'override_load_textdomain' filter previously used.
+	 * FIXME: Backward compatibility with Polylang for WooCommerce < 0.3.4
+	 * Was formerly hooked to the filter 'override_load_textdomain'
+	 *
+	 * @since 0.1
+	 *
+	 * @param bool $bool Whether to override the .mo file loading.
+	 * @return bool
+	 */
+	public function mofile( $bool ) {
+		return $bool;
+	}
+
+	/**
+	 * Saves all text domains in a table for later usage
+	 * It replaces the 'override_load_textdomain' filter used since 0.1
 	 *
 	 * @since 2.0.4
 	 *
-	 * @param string $mofile The translation file name.
-	 * @param string $domain The text domain name.
-	 * @return string
+	 * @param string $mofile translation file name
+	 * @param string $domain text domain name
+	 * @return bool
 	 */
 	public function load_textdomain_mofile( $mofile, $domain ) {
-		// On multisite, 2 files are sharing the same domain so we need to distinguish them.
+		// On multisite, 2 files are sharing the same domain so we need to distinguish them
 		if ( 'default' === $domain && false !== strpos( $mofile, '/ms-' ) ) {
 			$this->list_textdomains['ms-default'] = array( 'mo' => $mofile, 'domain' => $domain );
 		} else {
 			$this->list_textdomains[ $domain ] = array( 'mo' => $mofile, 'domain' => $domain );
 		}
-		return ''; // Hack to prevent WP loading text domains as we will load them all later.
+		return ''; // Hack to prevent WP loading text domains as we will load them all later
 	}
 
 	/**
@@ -216,12 +205,11 @@ class PLL_OLT_Manager {
 	}
 
 	/**
-	 * Translates post types and taxonomies labels once the language is known.
+	 * Translates post types and taxonomies labels once the language is known
 	 *
 	 * @since 0.9
 	 *
-	 * @param WP_Post_Type|WP_Taxonomy $type Either a post type or a taxonomy.
-	 * @return void
+	 * @param object $type either a post type or a taxonomy
 	 */
 	public function translate_labels( $type ) {
 		// Use static array to avoid translating several times the same ( default ) labels
@@ -244,12 +232,12 @@ class PLL_OLT_Manager {
 	}
 
 	/**
-	 * Allows Polylang to be the first plugin loaded ;-).
+	 * Allows Polylang to be the first plugin loaded ;- )
 	 *
 	 * @since 1.2
 	 *
-	 * @param string[] $plugins List of active plugins.
-	 * @return string[] List of active plugins.
+	 * @param array $plugins list of active plugins
+	 * @return array list of active plugins
 	 */
 	public function make_polylang_first( $plugins ) {
 		if ( $key = array_search( POLYLANG_BASENAME, $plugins ) ) {

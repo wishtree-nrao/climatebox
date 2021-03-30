@@ -53,7 +53,7 @@ function um_set_url_from_data( directory, key, value ) {
 
 	var new_data = {};
 
-	if ( Array.isArray( value ) ) {
+	if ( jQuery.isArray( value ) ) {
 		jQuery.each( value, function( i ) {
 			value[ i ] = encodeURIComponent( value[ i ] );
 		});
@@ -390,14 +390,11 @@ function um_build_template( directory, data ) {
 function UM_Member_Grid( container ) {
 	if ( container.find( '.um-member' ).length ) {
 		container.imagesLoaded( function() {
-
-			var masonry_args = wp.hooks.applyFilters( 'um_member_directory_grid_masonry_attrs', {
+			var $grid = container.masonry({
 				itemSelector: '.um-member',
 				columnWidth: '.um-member',
 				gutter: '.um-gutter-sizer'
-			}, container );
-
-			var $grid = container.masonry( masonry_args );
+			});
 
 			$grid.on( 'layoutComplete', function( event, laidOutItems ) {
 				jQuery( document ).trigger( "um_grid_initialized", [ event, laidOutItems ] );
@@ -635,11 +632,7 @@ jQuery(document.body).ready( function() {
 		if ( jQuery(this).find('option:not(:disabled)').length === 1 ) {
 			jQuery(this).prop('disabled', true);
 		}
-
-		var obj = jQuery(this);
-		obj.select2('destroy').select2({
-			dropdownParent: obj.parent()
-		});
+		jQuery(this).select2('destroy').select2();
 	});
 
 	/**
@@ -928,7 +921,7 @@ jQuery(document.body).ready( function() {
 
 
 	//filters controls
-	jQuery('.um-member-directory-filters-a').on( 'click', function() {
+	jQuery('.um-member-directory-filters-a').click( function() {
 		var obj = jQuery(this);
 		var search_bar = obj.parents('.um-directory').find('.um-search');
 
@@ -992,11 +985,8 @@ jQuery(document.body).ready( function() {
 			jQuery(this).prop('disabled', true);
 		}
 
-		var obj = jQuery(this);
-		obj.select2('destroy').select2({
-			dropdownParent: obj.parent()
-		});
-		obj.val('').trigger( 'change' );
+		jQuery(this).select2('destroy').select2();
+		jQuery(this).val('').trigger( 'change' );
 
 		um_ajax_get_members( directory );
 
@@ -1133,10 +1123,7 @@ jQuery(document.body).ready( function() {
 			if ( select.find('option:not(:disabled)').length > 1 ) {
 				select.prop('disabled', false);
 			}
-
-			select.select2('destroy').select2({
-				dropdownParent: select.parent()
-			});
+			select.select2('destroy').select2();
 
 			if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
 				select.trigger('change');
@@ -1260,9 +1247,7 @@ jQuery(document.body).ready( function() {
 				if ( select.find('option:not(:disabled)').length > 1 ) {
 					select.prop('disabled', false);
 				}
-				select.select2('destroy').select2({
-					dropdownParent: select.parent()
-				});
+				select.select2('destroy').select2();
 
 				if ( directory.find( '.um-search-filter select[data-um-parent="' +  filter_name + '"]' ).length > 0 ) {
 					select.trigger('change');

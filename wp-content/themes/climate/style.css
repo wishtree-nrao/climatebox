@@ -5,8 +5,7 @@
  Author:       Naimesh Rao
  Author URI:   http://www.webbkod.com
  Template:     wp-bootstrap-starter
- Text Domain:  wp-bootstrap-starter
- Version:      1.0
+ Version:      2.0
 */
 
 /* Font Style */
@@ -92,7 +91,6 @@ input::-ms-clear, input::-ms-reveal {display: none;}
 
 .blankdiv_xxl{height: 100px;}
 
-.clearfix:after{content: '';display: table;clear: both;}
 
 
 .btn{padding: 10px 25px 10px 25px;display: inline-block;border-radius: 50px;font-size: 16px;text-align: center;
@@ -142,9 +140,8 @@ table{font-size: 15px;line-height: normal;}
 table tr th{padding: 10px 10px;}
 table tr td{padding: 10px 10px;}
 
-.text_block_line{border-left: 0;background: rgba(0, 0, 0, 0.1);clear: both;}
+.text_block_line{border-left: 0;background: rgba(0, 0, 0, 0.1);}
 .text_img_title{font-style: italic;color: rgba(10, 10, 10, 0.5);}
-.text_block_line table{border: 0;width: 100%;}
 
 .text_title_1{padding: 10px 10px;font-size: 18px;line-height: normal;margin-bottom: 0;color: #0468B1;}
 .text_title{padding: 0;line-height: normal;margin-bottom: 30px;color: #0468B1;text-transform: uppercase;font-size: 20px;
@@ -177,15 +174,6 @@ font-family: 'ProximaNova-Bold', sans-serif;}
 .breadcrumbs .breadcrumbs_wrap a span{color: inherit !important;}
 
 
-/* Custom Breadcrumb */
-.breadcrumbs .breadcrumbs_wrap ul{margin: 0;padding: 0;list-style: none;}
-.breadcrumbs .breadcrumbs_wrap ul li{display: inline-block;}
-.breadcrumbs .breadcrumbs_wrap ul li:after{content: '>';width: 20px;display: inline-block;
-text-align: center;vertical-align: middle;height: 20px;line-height: 20px;}
-.breadcrumbs .breadcrumbs_wrap ul li:last-child:after{display: none;}
-.breadcrumbs .breadcrumbs_wrap ul li a{line-height: 20px;}
-
-
 
 /* Hide Breadcrumbs */
 body.home .breadcrumbs,
@@ -215,12 +203,8 @@ body.single-discussion_topic.um_teacher .breadcrumbs
 /* ============= Single Page CSS ============= */
 .post_attachment_head{background-size: cover;background-position: top center;background-repeat: no-repeat;padding-bottom: 100px;
 margin-bottom: 20px;width: 100vw;position: relative;min-height: 370px;}
-/*.post_attachment_head:after{content: '';background-image: url(img/post_img_shape.png);position: absolute;left: 0;right: 0;
-bottom: 0;top: 0;background-size: cover;background-position: bottom;}*/
-
-.post_attachment_head:after{content: '';background-image: url(img/shapes/banner_image_wave_blue.svg);position: absolute;left: 0;right: 0;
-bottom: 0;top: 0;background-size: 100%;background-position: center bottom;background-repeat: no-repeat;}
-
+.post_attachment_head:after{content: '';background-image: url(img/post_img_shape.png);position: absolute;left: 0;right: 0;
+bottom: 0;top: 0;background-size: cover;background-position: bottom;}
 
 
 body.single-stories .entry-content, body.single-post .entry-content,
@@ -553,7 +537,7 @@ font-weight: normal !important;font-family: 'ProximaNova-Bold', sans-serif;}
 .home_twitter #ctf .ctf-tweet-actions{position: absolute;left: 15px;bottom: 5px;margin: 0 !important;right: 0;z-index: 1;}
 .home_twitter #ctf .ctf-tweet-actions .ctf-twitterlink{text-transform: uppercase;margin: 0;padding: 0;
 font-size: 15px;color: #0A0A0A !important;position: relative;padding-right: 35px;}
-/*.home_twitter #ctf .ctf-tweet-actions .ctf-twitterlink:before{content: 'View On ';}*/
+.home_twitter #ctf .ctf-tweet-actions .ctf-twitterlink:before{content: 'View On ';}
 .home_twitter #ctf .ctf-tweet-actions .ctf-twitterlink:after {content: '';position: absolute;right: 0;top: 0;bottom: 0;
 height: 20px;display: inline-block;width: 30px;margin: auto;background-image: url(img/icons/right_arrow_black.svg);
 background-size: 20px;background-repeat: no-repeat;background-position: center;background-color: transparent;vertical-align: text-bottom;}
@@ -874,12 +858,10 @@ padding: 0;min-height: inherit !important;}
 .quiz_view .ays-quiz-container .ays-question-counter{position: static;display: block;width: 100%;text-align: left;
 margin:  0 0 10px !important;padding: 0;font-size: 26px;line-height: normal;color: #89B12A !important;
 font-family: 'ProximaNova-Bold', sans-serif;}
-/*.quiz_view .ays-quiz-container .ays-question-counter:before{content: 'Question '}*/
+.quiz_view .ays-quiz-container .ays-question-counter:before{content: 'Question '}
 
-.quiz_view .ays-quiz-container .ays_quiz_question{margin: 0 0 20px;text-align: left;}
-.quiz_view .ays-quiz-container .ays_quiz_question p,
-.quiz_view .ays-quiz-container .ays_quiz_question span
-{margin: 0 !important;padding: 0;color: #0A0A0A !important;
+.quiz_view .ays-quiz-container .ays_quiz_question{margin: 0 0 20px;}
+.quiz_view .ays-quiz-container .ays_quiz_question p{margin: 0 !important;padding: 0;color: #0A0A0A !important;
 text-align: left !important;font-size: 26px !important;line-height: normal;}
 
 .quiz_view .ays-quiz-container .step{min-height: 0 !important;padding: 20px 0;-ms-flex-wrap: wrap;flex-wrap: wrap;}
@@ -907,8 +889,6 @@ border-radius: 0;background: #9CC33B !important;text-shadow: 0 3px 6px rgba(0, 0
 .quiz_view .ays-quiz-answers .ays-field:nth-child(2) label:before{content: 'B' !important;}
 .quiz_view .ays-quiz-answers .ays-field:nth-child(3) label:before{content: 'C' !important;}
 .quiz_view .ays-quiz-answers .ays-field:nth-child(4) label:before{content: 'D' !important;}
-.quiz_view .ays-quiz-answers .ays-field:nth-child(5) label:before{content: 'E' !important;}
-.quiz_view .ays-quiz-answers .ays-field:nth-child(6) label:before{content: 'F' !important;}
 
 .quiz_view .ays-quiz-container .ays-quiz-answers .ays-field label:after{position: absolute;right: 0;width: 40px;text-align: center;
 height: 30px;margin: auto;bottom: 0;top: 0;font-family: FontAwesome;font-size: 22px;line-height: 30px;color: #fff;background-image: none;}
@@ -970,8 +950,8 @@ background-position: top right, left 30px bottom 50px;}
 .quiz_view a.next_quiz{position: absolute;right: 30px;bottom: 15px;color: #89B12A !important;}
 
 .quiz_view [id^="ays-quiz-container"] .ays_quiz_results_page .ays_restart_button
-{position: absolute;bottom: 15px;right: auto;background: transparent !important;color: #89B12A !important;font-weight: normal;
-padding: 0 !important;border-radius: 0 !important;height: auto;line-height: normal;font-size: 18px !important;margin: 0;left: 15px;}
+{position: absolute;bottom: 15px;right: 150px;background: transparent !important;color: #89B12A !important;font-weight: normal;
+padding: 0 !important;border-radius: 0 !important;height: auto;line-height: normal;font-size: 18px !important;margin: 0;}
 
 
 
@@ -989,7 +969,7 @@ margin: 0;padding: 0 0 0 15px;color: #0A0A0A;font-size: 30px;}
 
 .post_litem.quiz_item .post_thumb img{margin-bottom: 0;}
 .post_litem.quiz_item p.title{position: absolute;bottom: 10px;z-index: 3;margin: 0;padding: 0 10px;max-height: 36px;line-height: 18px;
-overflow: hidden;color: #fff;text-transform: none;left: 0;right: 0;font-family: 'ProximaNova-Regular', sans-serif;height: auto;
+overflow: hidden;color: #fff;text-transform: none;left: 0;right: 20%;font-family: 'ProximaNova-Regular', sans-serif;height: auto;
 font-size: 15px;}
 
 
@@ -1047,8 +1027,7 @@ background-repeat: no-repeat;background-position: center;background-color: trans
 .quiz_heading .vc_column-inner .wpb_wrapper h1{text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);color: #fff;font-size: 40px;}
 */
 
-/*background-size: 100% 100%;background-position: top center;*/
-.quiz_heading{background-size: cover;background-position: center;background-repeat: no-repeat;padding-bottom: 100px;
+.quiz_heading{background-size: 100% 100%;background-position: top center;background-repeat: no-repeat;padding-bottom: 100px;
 background-image: url(img/quiz_header_bg.png);margin-bottom: 15px;}
 .quiz_heading .quiz_heading_wrap{width: 500px;text-align: center;margin: auto !important;padding: 100px 0 200px;
 max-width: 100%;position: static;}
@@ -1057,13 +1036,8 @@ border: 0;padding: 0;margin: 0;}
 
 .quiz_heading .container{position: relative;}
 .quiz_heading .quiz_heading_wrap:before{content: '';background-image: url(img/shapes/earth_mascot_1.svg);width: 200px;
-bottom: 0;left: 0;margin: 0 0 -50px;background-color: transparent;background-position: center;height: 200px;background-size: 190px;
-background-repeat: no-repeat;position: absolute;z-index: 11;}
-/*.quiz_heading:after{content: '';background-image: url(img/shapes/banner_image_wave_blue.svg);
-position: absolute;left: 0;right: 0;bottom: 0;top: 0;background-size: cover;background-position: bottom;}
-*/
-.quiz_heading:after{content: '';background-image: url(img/shapes/banner_image_wave_green.svg);
-position: absolute;left: 0;right: 0;bottom: 0;top: 0;background-size: 100%;background-position: center bottom;background-repeat: no-repeat;}
+bottom: 0;left: 0;margin: 0 0 5px;background-color: transparent;background-position: center;height: 200px;background-size: 190px;
+background-repeat: no-repeat;position: absolute;}
 
 
 
@@ -1174,7 +1148,7 @@ color: #fff;padding: 10px 20px;line-height: normal;margin-left: 10px;}
 .acf-form .acf-fields .acf-field .acf-repeater .acf-table{border: 0 !important;border-collapse: separate;border-spacing: 0 3px;}
 .acf-form .acf-fields .acf-field .acf-repeater .acf-table > tbody > tr{}
 .acf-form .acf-fields .acf-field .acf-repeater .acf-table > tbody > tr > td{border: 0 !important;background: #fff;}
-.acf-form .acf-fields .acf-field .acf-repeater .acf-actions .acf-button{float: left;display: block;background: rgba(4, 104, 177, 0.5);
+.acf-form .acf-fields .acf-field .acf-repeater .acf-actions .acf-button{float: left;display: block;background: #B8B8B8;
 color: #fff;line-height: 40px;height: auto;padding: 0 20px;cursor: pointer;}
 .acf-form .acf-fields .acf-field .acf-repeater .acf-table{}
 .acf-form .acf-fields .acf-field .acf-repeater .acf-row-handle.order{background: #fff;}
@@ -1248,16 +1222,12 @@ body.single.single-w4pl .entry-footer{display: none;}
 
 /* ============= UM Page Design ============= */
 
-/* FIX CSS For Diff Language */
 body.logged-in.um-page-login .pagehead, body.um-page-password-reset .pagehead,
-body.um-page-user .pagehead, body.um-page-account .pagehead,
-body.page-id-1369 .pagehead
+body.um-page-user .pagehead, body.um-page-account .pagehead
 {display: none;}
 
 
-/* FIX CSS For Diff Language */
-body.um-page-login .pagehead, body.um-page-password-reset .pagehead, body.um-page-register .pagehead,
-body.page-id-1364 .pagehead, body.page-id-1369 .pagehead, body.page-id-1372 .pagehead
+body.um-page-login .pagehead, body.um-page-password-reset .pagehead, body.um-page-register .pagehead
 {width: 450px;margin-left: auto;margin-right: auto;max-width: 100%;}
 
 .um_page{padding-bottom: 30px;}
@@ -1350,7 +1320,7 @@ cursor: pointer;padding: 10px;height: auto;line-height: normal;box-sizing: borde
 .select2-container.select2-container--open.select2-container--default .select2-dropdown .select2-results li:hover
 {color: #fff !important;background: rgba(4, 104, 177, 0.6) !important;}
 .select2-container.select2-container--open.select2-container--default .select2-dropdown .select2-results li.select2-results__message
-{background: #ffeaa7 !important;color: #000 !important;}
+{background: #ffeaa7 !important;}
 
 
 
@@ -1613,9 +1583,9 @@ header.site-header .navbar .navbar-collapse:before{content: '';width: 0;height: 
 border-left: 6px solid transparent;border-right: 6px solid transparent;border-bottom: 6px solid #0468B1;
 position: absolute;bottom: 100%;right: 6px;}
 header.site-header .navbar .navbar-collapse{position: absolute;top: 100%;z-index: 1;background: #fff;right: 0px;
-border: 1px solid #0468B1;padding: 0 0;min-width: 200px;margin-top: 25px;}
+border: 1px solid #0468B1;padding: 5px 0;min-width: 200px;margin-top: 25px;}
 body header#masthead ul.navbar-nav > li {padding: 0;}
-body header#masthead ul.navbar-nav > li > a {padding: 10px 40px 10px 10px !important;}
+body header#masthead ul.navbar-nav > li > a {padding: 10px 20px !important;}
 body header#masthead ul.navbar-nav > li.mobile_menu{display: block;}
 
 body header#masthead ul.navbar-nav > li{border-bottom: 1px solid #ccc;}
@@ -1625,8 +1595,6 @@ body header#masthead ul.navbar-nav li a.dropdown-toggle:after{display: none;}
 body header#masthead ul.navbar-nav > li.open_lvl2_submenu > ul.dropdown-menu{display: block;margin: 0;}
 body header#masthead ul.navbar-nav > li > a {font-size: 14px !important;}
 
-body header#masthead ul.navbar-nav > li {padding: 0 !important;}
-body header#masthead ul.dropdown-menu > li > a {padding: 5px 10px;}
 
 
 header#masthead .nav_right ul.user_menu{display: none;}

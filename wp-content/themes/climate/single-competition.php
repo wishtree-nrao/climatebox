@@ -42,11 +42,7 @@ get_header(); ?>
 											
 											<?php if ( 'publish' === get_post_status()) { ?>
 												<div class="head_action">
-													<?php // Get URL for Current Lang
-													$submit_project = pll_get_post( 745 );
-													$submit_project_url = get_the_permalink($submit_project);
-													?>
-													<a class="btn btnBlue" href="<?php echo $submit_project_url; ?>"><?php pll_e('SUBMIT PROJECT'); ?></a>
+													<a class="btn btnBlue" href="<?php echo get_site_url(); ?>/submit-your-project/"><?php pll_e('SUBMIT PROJECT'); ?></a>
 												</div>
 											<?php } ?>
 

@@ -276,10 +276,6 @@ function um_submit_account_details( $args ) {
 			continue;
 		}
 
-		if ( $k == 'single_user_password' ) {
-			continue;
-		}
-
 		$changes[ $k ] = $v;
 	}
 
