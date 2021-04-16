@@ -27,7 +27,8 @@ add_action('init', function() {
   pll_register_string('climate', 'My Account'); // Header File
   pll_register_string('climate', 'Login'); // Header File
 
-  pll_register_string('climate', 'Download this Document'); // toolkit doc file
+  pll_register_string('climate', 'Download Climate Box Materials'); // toolkit doc file
+  pll_register_string('climate', 'Loading'); // toolkit doc file
 
   pll_register_string('climate', 'Learning Materials'); // For Tachers
   pll_register_string('climate', 'Video Lessons and Webinars'); // For Tachers
@@ -49,8 +50,8 @@ add_action('init', function() {
 
   pll_register_string('climate', 'Search by keywords'); // Temp - Textbook
   pll_register_string('climate', 'There are no textbooks'); // Temp - Textbook
-  pll_register_string('climate', 'Back to Textbooks list'); // Single - Textbook
-  pll_register_string('climate', 'Topics'); // Single - Textbook
+  pll_register_string('climate', 'Back to the Textbook main page'); // Single - Textbook
+  pll_register_string('climate', 'Parts'); // Single - Textbook
   pll_register_string('climate', 'More Quizzes'); // Single - Quiz
 
   //pll_register_string('climate', 'Next Quiz'); // Function File
@@ -107,6 +108,7 @@ add_action('init', function() {
 
   pll_register_string('climate', 'Error 404'); // Breadcrumb
   pll_register_string('climate', 'Home'); // Breadcrumb
+  pll_register_string('climate', 'Search Results for: ');
 
   //pll_register_string('climate', 'Languages'); // Function File
 
@@ -150,7 +152,6 @@ add_filter('acf/prepare_field', function ($field) {
 
 
 
-
 // ACF Toolkit Docs Page ///////////////////////////////////////
 add_action('acf/init', 'my_acf_op_init');
 function my_acf_op_init() {
@@ -186,7 +187,7 @@ function themeoption_js_admin() {
   ?>
 
   <script>
-    $(".theme-options_page_acf-options-url-redirection label:contains(EN)").closest( ".acf-field" ).css("background-color", "#fff9e6");
+   // $(".theme-options_page_acf-options-url-redirection label:contains(EN)").closest( ".acf-field" ).css("background-color", "#fff9e6");
   </script>
 
   <?php 
@@ -362,6 +363,22 @@ add_action('admin_head', 'custom_cssadmin');
 
 
 }
+
+
+
+
+// Change Sender Name for Email ///////////////////////////////////////
+
+// function wpb_sender_name( $original_email_from ) {
+
+// $websitename = get_bloginfo();
+// return $websitename;
+
+// }
+// add_filter( 'wp_mail_from', 'wpb_sender_email' );
+// add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
+
+
 
 
 
@@ -1404,21 +1421,17 @@ add_filter( 'manage_users_custom_column', 'new_modify_user_table_row', 10, 3 );
 function climate_title_filter( $where, $wp_query ){
     global $wpdb;
     if ( $search_term = $wp_query->get( 'climate_search_title' ) ) {
-        $where .= ' AND (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\')';
+        $where .= ' AND (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( trim($search_term) ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\')';
     }
     return $where;
 }
 function climate_search_title_tax( $where, $wp_query ){
     global $wpdb;
     if ( $search_term = $wp_query->get( 'climate_search_title_tax' ) ) {
-        $where .= ' AND ' . $wpdb->posts . '.post_type="learning_materials" OR (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\')';
+        $where .= ' AND ' . $wpdb->posts . '.post_type="learning_materials" OR (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( trim($search_term) ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( trim($search_term) ) ) . '%\')';
     }
     return $where;
 }
-
-
-
-
 
 // Yoast Seo Breadcrumbs ///////////////////////////////////////
 
@@ -1658,3 +1671,15 @@ if( is_singular('projects')){
 return $links;
 }
 
+add_action( 'um_on_login_before_redirect', 'my_user_login_extra', 10, 1 );
+function my_user_login_extra( $args ) {
+  wp_redirect( home_url() );
+  exit;
+}
+
+add_filter( 'um_login_form_button_two_url', 'my_login_form_button_two_url', 10, 2 );
+function my_login_form_button_two_url( $secondary_btn_url, $args ) {
+  $registration = pll_get_post( 38 );
+  $registration_url = get_the_permalink($registration);
+  return $registration_url;
+}

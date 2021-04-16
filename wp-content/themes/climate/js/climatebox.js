@@ -1,4 +1,14 @@
 jQuery(document).ready(function($) {
+	$(document).click(function(e) {
+
+	    // check that your clicked
+	    // element has no id=HeaderSearch
+	    // and is not child of HeaderSearch
+	    
+	    if (e.target.id != 'searchdiv' && !$('#searchdiv').find(e.target).length ) {
+	        $("#HeaderSearch").removeClass("show");
+	    }
+	});
 	jQuery(".showmore").live("click",function() {
 		console.log("test");
 		var contest = $(this).attr('data-contest');

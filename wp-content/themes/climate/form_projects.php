@@ -26,18 +26,26 @@ get_header(); ?>
 						<div class="fp_publish">
 							<div class="row">
 								<div class="col-md-12 col-lg-8">
+									
+									<?php // Get URL for Current Lang
+									$submitted_project = pll_get_post( 771 );
+									$submitted_project_url = get_the_permalink($submitted_project);
+									?>
+
+									<?php // echo $submitted_project_url; ?>
+
 									<?php while ( have_posts() ) : the_post(); ?>
 										<?php acf_form(array(
 											'post_id'       => 'new_post',
 											'post_title'	=> true,
 											'uploader' => 'basic',
 											'post_content'	=> false,
-											'return' => '/submitted-projects/',
+											'return' => $submitted_project_url,
 											'new_post'      => array(
 												'post_type'     => 'projects',
 												'post_status'   => 'publish'
 											),
-											'submit_value'  => 'Submit Project',
+											'submit_value'  => __("Submit Project", 'acf'),
 											'updated_message' => __("Project submitted successfully", 'acf')
 										)); ?>
 									<?php endwhile; ?>

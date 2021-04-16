@@ -20,7 +20,23 @@
 </head>
 
 <body <?php body_class( get_user_role() ); ?>>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7CN69RWR6"></script>
+
+    <script>
+
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag(){dataLayer.push(arguments);}
+
+      gtag('js', new Date());
+
+     
+
+      gtag('config', 'G-B7CN69RWR6');
+
+    </script>
     <?php 
 
     // WordPress 5.2 wp_body_open implementation
@@ -33,13 +49,13 @@
     ?>
 
     <div id="page" class="site">
-       <a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'wp-bootstrap-starter' ); ?></a>
-       <?php if(!is_page_template( 'blank-page.php' ) && !is_page_template( 'blank-page-with-container.php' )): ?>
-       <header id="masthead" class="site-header navbar-static-top <?php echo wp_bootstrap_starter_bg_class(); ?>" role="banner">
+     <a class="skip-link screen-reader-text" href="#content"><?php esc_html_e( 'Skip to content', 'wp-bootstrap-starter' ); ?></a>
+     <?php if(!is_page_template( 'blank-page.php' ) && !is_page_template( 'blank-page-with-container.php' )): ?>
+     <header id="masthead" class="site-header navbar-static-top <?php echo wp_bootstrap_starter_bg_class(); ?>" role="banner">
         <div class="container">
             <nav class="navbar navbar-expand-xl p-0">
                 <div class="navbar-brand">
-                   <div class="logo_wrapper">
+                 <div class="logo_wrapper">
                     <?php if ( get_theme_mod( 'wp_bootstrap_starter_logo' ) ): ?>
                         <a href="<?php echo esc_url( home_url( '/' )); ?>">
                             <img src="<?php echo esc_url(get_theme_mod( 'wp_bootstrap_starter_logo' )); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
@@ -70,21 +86,15 @@
 
                 <div class="nav_right">
 
-                    <div class="language_div">
-                        <?php // echo do_shortcode('[language-switcher]'); ?>
-                        <?php //echo do_shortcode('[gtranslate]'); ?>
-                        <?php // pll_the_languages( array( 'dropdown' => 1 ) ); ?>
-                    </div>
-                    <div class="dropdown_form">
+                    <div class="dropdown_form" id="searchdiv">
                         <button class="btnSearch" type="button" data-toggle="collapse" data-target="#HeaderSearch" aria-expanded="false" aria-controls="multiCollapseExample2">
                             <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/icons/search_icon.svg" />
                         </button>
                         <div class="dropdown_popup collapse multi-collapse" id="HeaderSearch">
-                            <form role="search" method="get" id="searchform"
-                            class="searchform" action="<?php echo home_url('/'); ?>">
+                            <form role="search" method="get" id="searchform" class="searchform" action="<?php echo home_url('/'); ?>">
                             <label class="screen-reader-text" for="s"><?php _x( 'Search for:', 'label' ); ?></label>
                             <input type="text" name="s" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php the_search_query(); ?>" />
-                            <input type='hidden' value='917' name='wpessid' />
+    
                             <input type="submit" value="<?php pll_e('Search'); ?>">
                         </form>
                     </div>
@@ -99,11 +109,17 @@
                             <i class="fas fa-user"></i>
                         </button>
                         <div class="dropdown_popup collapse multi-collapse" id="HeaderProfile">
+                            <?php // Get URL for Current Lang
+                            $account = pll_get_post( 44 );
+                            $account_url = get_the_permalink($account);
+                            // $logout = pll_get_post( 42 );
+                            // $logout_url = get_the_permalink($logout);
+                            ?>
                             <ul>
                                 <li class="username"><span><?php $display_name = um_user('display_name'); echo $display_name; ?></span></li>
                                 <?php /*<li><a href="<?php echo get_site_url(); ?>/user">My Profile</a></li>*/  ?>
-                                <li><a href="<?php echo get_site_url(); ?>/account"><?php pll_e('My Account'); ?></a></li>
-                                <li><a href="<?php echo get_site_url(); ?>/logout"><?php pll_e('Logout'); ?></a></li>
+                                <li><a href="<?php echo $account_url; ?>"><?php pll_e('My Account'); ?></a></li>
+                                <li><a href="<?php echo esc_url( wp_logout_url(home_url()) ); ?>"><?php pll_e('Logout'); ?></a></li>
                             </ul>
                         </div>
                     </div>
@@ -111,8 +127,12 @@
 
                 <?php }  else { ?>
 
+                 <?php // Get URL for Current Lang
+                 $login = pll_get_post( 36 );
+                 $login_url = get_the_permalink($login);
+                 ?>
                  <ul class="user_menu">
-                    <li><a href="<?php echo get_site_url(); ?>/login"><?php pll_e('Login'); ?></a></li>
+                    <li><a href="<?php echo $login_url; ?>"><?php pll_e('Login'); ?></a></li>
                 </ul>
 
             <?php  } ?>
@@ -126,17 +146,17 @@
 
 <div id="content" class="site-content">
 
-  <?php /*
-  if ( function_exists('yoast_breadcrumb') ) {
-    yoast_breadcrumb( '<div id="breadcrumbs" class="breadcrumbs"><div class="container"><div class="breadcrumbs_wrap">','</div></div></div>' );
-} */ ?>
-
-
-
 <div id="breadcrumbs" class="breadcrumbs">
     <div class="container">
         <div class="breadcrumbs_wrap">
-            <?php bcn_display($return = false, $linked = true, $reverse = false, $force = false) ?>
+            <?php // bcn_display($return = false, $linked = true, $reverse = false, $force = false) ?>
+            <?php // custom_breadcrumbs(); ?>
+            
+            <?php
+            if ( function_exists('yoast_breadcrumb') ) {
+              yoast_breadcrumb( '<p id="breadcrumbs">','</p>' );
+            }
+            ?>
         </div>
     </div>
 </div>

@@ -22,7 +22,13 @@
 
 									<?php $user = wp_get_current_user();
 									if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator', (array) $user->roles ) || in_array( 'administrator', (array) $user->roles ) || in_array( 'um_contest-admin', (array) $user->roles ) ) { ?>
-										<a class="btn btnBlue" href="<?php echo get_site_url(); ?>/submitted-projects/"><?php pll_e('Submitted Projects'); ?></a>
+
+										<?php // Get URL for Current Lang
+										$submitted_project = pll_get_post( 771 );
+										$submitted_project_url = get_the_permalink($submitted_project);
+										?>
+
+										<a class="btn btnBlue" href="<?php echo $submitted_project_url; ?>"><?php pll_e('Submitted Projects'); ?></a>
 									<?php } ?>
 
 									<?php 
@@ -47,9 +53,13 @@
 										$args['climate_search_title'] = $search;
 										
 									}
+									 // Get URL for Current Lang
+									$contests_Page = pll_get_post( 68 );
+									$contests_Page_url = get_the_permalink($contests_Page);
+									
 									
 									?>
-									<form class="search" method="get" action="<?php echo home_url('/school-contests/'); ?>">
+									<form class="search" method="get" action="<?php echo $contests_Page_url; ?>">
 										<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">
 										<input type="submit" value="search">
 									</form>
@@ -89,9 +99,9 @@
 											</div>
 
 											<div class="post_meta">
-												<p><?php pll_e('Published:'); ?> <?php $post_date = get_the_date( 'F j, Y' ); echo "<strong>" . $post_date . "</strong>"; ?></p>
+												<p><?php pll_e('Published:'); ?> <?php $post_date = get_the_date( 'M j, Y' ); echo "<strong>" . $post_date . "</strong>"; ?></p>
 
-												<p><?php pll_e('Due Date:'); ?> <strong><?php echo do_shortcode('[postexpirator dateformat="F j, Y" timeformat=""]'); ?></strong></p>
+												<p><?php pll_e('Due Date:'); ?> <strong><?php echo do_shortcode('[postexpirator dateformat="M j, Y" timeformat=""]'); ?></strong></p>
 											</div>
 
 											<?php if ( 'publish' === get_post_status()) { ?>

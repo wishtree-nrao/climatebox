@@ -9,11 +9,12 @@
 
 get_header(); ?>
 
-<?php if ( ! empty( $post->post_parent ) ) { ?>
+<?php /*    if ( ! empty( $post->post_parent ) ) { ?>
 	<div class="post_attachment_head" style="background-image: url('<?php echo get_the_post_thumbnail_url( $post->post_parent ); ?>');"></div>
 <?php } else { ?>
-	<div class="post_attachment_head no_img" style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/quiz_header_bg.png');"></div>
-<?php } ?>
+	<!-- <div class="post_attachment_head no_img" style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/quiz_header_bg.png');"></div> -->
+	<div class="post_attachment_head no_img" style="background-image: url('<?php echo get_the_post_thumbnail_url( $post->post_parent ); ?>');"></div>
+<?php } */  ?>
 
 
 <!-- Climate Box Toolkit Page -->
@@ -45,13 +46,18 @@ get_header(); ?>
 				<?php  ?>
 				<div id="TBsidebarWrap" class="sidebarWrap">
 					
-					<a class="btn btn_back" href="<?php echo get_site_url(); ?>/toolkit/textbooks/" title="<?php pll_e('Back to Textbooks list'); ?>"><i class="fas fa-chevron-left"></i> <?php pll_e('Back to Textbooks list'); ?></a>
+					<?php // Get URL for Current Lang
+					$textbooks = pll_get_post( 316 );
+					$textbooks_url = get_the_permalink($textbooks);
+					?>
+
+					<a class="btn btn_back" href="<?php echo $textbooks_url; ?>" title="<?php pll_e('Back to the Textbook main page'); ?>"><i class="fas fa-chevron-left"></i> <?php pll_e('Back to the Textbook main page'); ?></a>
 
 					<div id="TBsidebar" class="sidebar_left">
 						<div class="textbook_list">
 
 							<div class="toolkit_sidebar">
-								<h3 class="widget-title"><?php pll_e('Topics'); ?></h3>
+								<h3 class="widget-title"><?php pll_e('Parts'); ?></h3>
 
 								<div class="menu-textbook-menu-container">
 								<?php 
@@ -103,8 +109,8 @@ get_header(); ?>
 										'post_status' => 'publish',
 										'post_parent'    => $post_id,
 										'posts_per_page' => -1,
-										'orderby' => 'title',
-										'order'   => 'ASC',
+										'orderby' => 'menu_order',
+    									'order' => 'ASC',
 									);
 
 									$loop_1 = new WP_Query( $args_1 );

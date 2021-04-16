@@ -42,17 +42,24 @@
 							while ( $loop->have_posts() ) : $loop->the_post(); ?>
 
 								<div class="col-sm-6 col-md-4 col-lg-3 rand_clr">
-									<div class="post_litem quiz_item">
+									<div class="post_litem quiz_item <?php if( get_field('select_color') ): the_field('select_color'); endif; ?>">
 
 										<a rel="bookmark" href="<?php echo get_permalink(); ?>">
-											<?php  if ( has_post_thumbnail($post->ID)) {
-												$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
-												<div class="post_thumb">
+											<div class="post_thumb">
+												<?php  if ( has_post_thumbnail($post->ID)) {
+													$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+													
 													<?php // the_post_thumbnail('full'); ?>
 													<div class="post_image" 
 													style="background-image: url(<?php echo $image[0]; ?>);"></div>
-												</div>
-											<?php } ?>
+													
+												<?php } else { ?>
+
+													<div class="post_image" 
+													style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/placeholder.png');"></div>
+
+												<?php } ?>
+											</div>
 
 											<?php the_title( '<p class="title">', '</p>' ); ?>
 										</a>

@@ -42,7 +42,11 @@ get_header(); ?>
 											
 											<?php if ( 'publish' === get_post_status()) { ?>
 												<div class="head_action">
-													<a class="btn btnBlue" href="<?php echo get_site_url(); ?>/submit-your-project/"><?php pll_e('SUBMIT PROJECT'); ?></a>
+													<?php // Get URL for Current Lang
+													$submit_project = pll_get_post( 745 );
+													$submit_project_url = get_the_permalink($submit_project);
+													?>
+													<a class="btn btnBlue" href="<?php echo $submit_project_url; ?>"><?php pll_e('SUBMIT PROJECT'); ?></a>
 												</div>
 											<?php } ?>
 
@@ -53,12 +57,12 @@ get_header(); ?>
 
 							<div class="page_meta">
 								<span class="meta_date">
-									<?php $post_date = get_the_date( 'F j, Y' ); ?>
+									<?php $post_date = get_the_date( 'M j, Y' ); ?>
 									<strong><?php pll_e('Published Date:'); ?> </strong> <?php echo $post_date; ?>
 								</span>
 
 								<span class="meta_date">
-									<strong><?php pll_e('Due Date:'); ?> </strong> <?php echo do_shortcode('[postexpirator dateformat="F j, Y" timeformat=""]'); ?>
+									<strong><?php pll_e('Due Date:'); ?> </strong> <?php echo do_shortcode('[postexpirator dateformat="M j, Y" timeformat=""]'); ?>
 								</span>
 								
 								<span class="meta_status">

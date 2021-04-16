@@ -13,30 +13,41 @@ get_header();
 			<div class="col-sm-12 col-md-12">
 				<div class="post_content">
 
-					<?php /*<h1><?php echo get_the_title(); ?></h1>*/ ?>
-
 					<div class="row">
 						<div class="col-sm-12 col-md-8 col-lg-9">
 							<?php /*<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/search.svg" /> */ ?>
 							<ul class="nav nav-tabs" id="ExploreTab" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link active" id="ExploreTabNews-tab" href="<?php echo home_url($wp->request); ?>">
+									<?php // Get URL for Current Lang
+									$News = pll_get_post( 64 );
+									$News_url = get_the_permalink($News);
+									?>
+									<a class="nav-link active" id="ExploreTabNews-tab" href="<?php echo $News_url; ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/news_icon.svg" />
 										<span><?php pll_e('News'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" id="ExploreTabStories-tab" href="<?php echo home_url($wp->request.'/stories/'); ?>" >
+									<?php // Get URL for Current Lang
+									$Stories = pll_get_post( 1230 );
+									$Stories_url = get_the_permalink($Stories);
+									?>
+									<a class="nav-link" id="ExploreTabStories-tab" href="<?php echo $Stories_url; ?>" >
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/stories_icon.svg" />
 										<span><?php pll_e('Stories'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo home_url($wp->request.'/gallery/'); ?>">
+									<?php // Get URL for Current Lang
+									$Gallery = pll_get_post( 1249 );
+									$Gallery_url = get_the_permalink($Gallery);
+									?>
+									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo $Gallery_url; ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/gallery_icon.svg" />
 										<span><?php pll_e('Gallery'); ?></span>
 									</a>
 								</li>
+								<?php // echo home_url($wp->request.'/gallery/'); Redirect Method by Nidhi ?>
 							</ul>
 
 							<div class="tab-content" id="ExploreTabContent">
@@ -47,7 +58,7 @@ get_header();
 									$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1; 
 
 									$args = array(
-									    'post_type'=>'post', 
+										'post_type'=>'post', 
 										'posts_per_page' => 9,
 										'paged' => $paged,
 										'order'      => 'ASC',
@@ -61,7 +72,7 @@ get_header();
 										
 									}
 									?>
-									<form class="search_small" method="get" action="<?php echo home_url($wp->request); ?>">
+									<form class="search_small" method="get" action="<?php echo $News_url; ?>">
 										<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">
 										
 										<input type="submit" value="search">
@@ -69,7 +80,7 @@ get_header();
 									<?php
 
 									add_filter( 'posts_where', 'climate_title_filter', 10, 2 );
-									 
+
 									$loop = new WP_Query( $args );
 									remove_filter( 'posts_where', 'climate_title_filter', 10, 2 );
 									if ( $loop->have_posts() ) {
@@ -80,14 +91,22 @@ get_header();
 													<div class="post_litem pi_news w4post">
 														<a rel="bookmark" href="<?php echo get_permalink(); ?>">
 
-															<?php  if ( has_post_thumbnail($post->ID)) {
-																$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
-																<div class="post_thumb">
+															<div class="post_thumb">
+																<?php  if ( has_post_thumbnail($post->ID)) {
+																	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+
 																	<?php // the_post_thumbnail('full'); ?>
 																	<div class="post_image" 
 																	style="background-image: url(<?php echo $image[0]; ?>);"></div>
-																</div>
-															<?php } ?>
+
+																<?php } else { ?>
+
+																	<div class="post_image" 
+																	style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/placeholder.png');"></div>
+
+																<?php } ?>
+															</div>
+
 															<p class="title"><?php echo get_the_title();  ?></p>
 															<div class="post_content">
 																<?php $title = get_the_content(); 
@@ -106,24 +125,24 @@ get_header();
 												<div class="pagination">
 													<?php $total_pages = $loop->max_num_pages;
 
-													 if ($total_pages > 1){
+													if ($total_pages > 1){
 
 														$current_page = max(1, get_query_var('paged'));
-														 $big = 999999;
+														$big = 999999;
 														
 														echo paginate_links(array(
 															'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-	    													'format'  => '?paged=%#%',
+															'format'  => '?paged=%#%',
 															'current' => $current_page,
 															'total' => $total_pages,
 															'prev_text'    => __('« prev'),
 															'next_text'    => __('next »'),
 														));
-												     }?>
+													}?>
 
+												</div>
 											</div>
 										</div>
-									</div>
 										<?php
 
 									}else{

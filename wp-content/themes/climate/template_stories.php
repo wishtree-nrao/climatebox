@@ -19,19 +19,31 @@
 							<?php /*<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/search.svg" /> */ ?>
 							<ul class="nav nav-tabs" id="ExploreTab" role="tablist">
 								<li class="nav-item">
-									<a class="nav-link " id="ExploreTabNews-tab" href="<?php echo home_url('/explore/'); ?>">
+									<?php // Get URL for Current Lang
+									$News = pll_get_post( 64 );
+									$News_url = get_the_permalink($News);
+									?>
+									<a class="nav-link " id="ExploreTabNews-tab" href="<?php echo $News_url; ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/news_icon.svg" />
 										<span><?php pll_e('News'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link active" id="ExploreTabStories-tab" href="<?php echo home_url('/explore/stories/'); ?>">
+									<?php // Get URL for Current Lang
+									$Stories = pll_get_post( 1230 );
+									$Stories_url = get_the_permalink($Stories);
+									?>
+									<a class="nav-link active" id="ExploreTabStories-tab" href="<?php echo $Stories_url; ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/stories_icon.svg" />
 										<span><?php pll_e('Stories'); ?></span>
 									</a>
 								</li>
 								<li class="nav-item">
-									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo home_url('/explore/gallery/'); ?>">
+									<?php // Get URL for Current Lang
+									$Gallery = pll_get_post( 1249 );
+									$Gallery_url = get_the_permalink($Gallery);
+									?>
+									<a class="nav-link" id="ExploreTabGallery-tab" href="<?php echo $Gallery_url; ?>">
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/img/svg/gallery_icon.svg" />
 										<span><?php pll_e('Gallery'); ?></span>
 									</a>
@@ -53,7 +65,7 @@
 									$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1; 
 
 									$args = array(
-									    'post_type'=>'stories', 
+										'post_type'=>'stories', 
 										'posts_per_page' => 5,
 										'paged' => $paged,
 										'order'      => 'ASC',
@@ -67,7 +79,7 @@
 										
 									}
 									?>
-									<form class="search_small" method="get" action="<?php echo home_url('/explore/stories/'); ?>">
+									<form class="search_small" method="get" action="<?php echo $Stories_url; ?>">
 										<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">
 										
 										<input type="submit" value="search">
@@ -75,7 +87,7 @@
 									<?php
 
 									add_filter( 'posts_where', 'climate_title_filter', 10, 2 );
-									 
+									
 									$loop = new WP_Query( $args );
 									remove_filter( 'posts_where', 'climate_title_filter', 10, 2 );
 									if ( $loop->have_posts() ) {
@@ -92,16 +104,24 @@
 															<div class="row">
 																<div class="col-sm-5 col-md-6 col-lg-4">
 
-																<?php  if ( has_post_thumbnail($post->ID)) {
-																	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
 																	<div class="post_thumb">
-																		<?php // the_post_thumbnail('full'); ?>
-																		<div class="post_image" 
-																		style="background-image: url(<?php echo $image[0]; ?>);"></div>
+																		<?php  if ( has_post_thumbnail($post->ID)) {
+																			$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+
+																			<?php // the_post_thumbnail('full'); ?>
+																			<div class="post_image" 
+																			style="background-image: url(<?php echo $image[0]; ?>);"></div>
+
+																		<?php } else { ?>
+
+																			<div class="post_image" 
+																			style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/placeholder.png');"></div>
+
+																		<?php } ?>
 																	</div>
-																<?php } ?>
+																	
 																</div>
-															
+																
 																<div class="col-sm-7 col-md-6 col-lg-8">
 																	<p class="title"><?php echo get_the_title();  ?></p>
 																	<div class="post_content">
@@ -130,21 +150,21 @@
 													if ($total_pages > 1){
 
 														$current_page = max(1, get_query_var('paged'));
-														 $big = 999999;
+														$big = 999999;
 														
 														echo paginate_links(array(
 															'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-	    													'format'  => '?paged=%#%',
+															'format'  => '?paged=%#%',
 															'current' => $current_page,
 															'total' => $total_pages,
 															'prev_text'    => __('« prev'),
 															'next_text'    => __('next »'),
 														));
-												}?>
+													}?>
 
+												</div>
 											</div>
 										</div>
-									</div>
 										<?php
 
 									}else{

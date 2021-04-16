@@ -20,7 +20,8 @@ get_header(); ?>
 					if ( have_posts() ) : ?>
 
 						<header class="pagehead">
-							<h1><?php printf( esc_html__( 'Search Results for: %s', 'wp-bootstrap-starter' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
+							<h1><?php pll_e( 'Search Results for: ', 'climate' );
+							echo '<span>' . get_search_query() . '</span>' ; ?></h1>
 						</header><!-- .page-header -->
 
 						<div class="row">
