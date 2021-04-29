@@ -9,17 +9,6 @@
  * @since 1.8
  */
 class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
-	/**
-	 * Instance of a child class of PLL_Links_Model.
-	 *
-	 * @var PLL_Links_Model
-	 */
-	protected $links_model;
-
-	/**
-	 * @var PLL_Frontend_Links
-	 */
-	protected $links;
 
 	/**
 	 * Constructor: setups filters and actions
@@ -51,8 +40,6 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	 * Init the filters
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	public function pll_language_defined() {
 		// Translates our page on front and page for posts properties
@@ -73,8 +60,6 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	 * Translates the page_id query var when the site root page is requested
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	public function pll_home_requested() {
 		set_query_var( 'page_id', $this->curlang->page_on_front );
@@ -102,8 +87,9 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	 * @return bool|string modified url, false if redirection is canceled
 	 */
 	public function redirect_canonical( $redirect_url ) {
-		if ( is_page() && ! is_feed() && get_queried_object_id() == $this->curlang->page_on_front ) {
-			$url = is_paged() ? $this->links_model->add_paged_to_link( $this->links->get_home_url(), get_query_var( 'page' ) ) : $this->links->get_home_url();
+		global $wp_query;
+		if ( is_page() && ! is_feed() && isset( $wp_query->queried_object ) && $wp_query->queried_object->ID == $this->curlang->page_on_front ) {
+			$url = is_paged() ? $this->links_model->add_paged_to_link( $this->links->get_home_url(), $wp_query->query_vars['page'] ) : $this->links->get_home_url();
 
 			// Don't forget additional query vars
 			$query = wp_parse_url( $redirect_url, PHP_URL_QUERY );
@@ -120,14 +106,14 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	}
 
 	/**
-	 * Translates the url of the page on front and page for posts.
+	 * Translates the url of the page on front and page for posts
 	 *
 	 * @since 1.8
 	 *
-	 * @param string       $url               Not used.
-	 * @param PLL_Language $language          Language in which we want the translation.
-	 * @param int          $queried_object_id Id of the queried object.
-	 * @return string The translation url.
+	 * @param string $url               not used
+	 * @param object $language          language in which we want the translation
+	 * @param int    $queried_object_id id of the queried object
+	 * @return string
 	 */
 	public function pll_pre_translation_url( $url, $language, $queried_object_id ) {
 		if ( ! empty( $queried_object_id ) ) {
@@ -162,7 +148,7 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	 *
 	 * @since 2.3
 	 *
-	 * @param WP_Query $query The WP_Query object.
+	 * @param object $query
 	 * @return bool
 	 */
 	protected function is_front_page( $query ) {
@@ -175,9 +161,9 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	 *
 	 * @since 1.8
 	 *
-	 * @param PLL_Language|false $lang  The current language, false if it is not set yet.
-	 * @param WP_Query           $query The main WP query.
-	 * @return PLL_Language|false
+	 * @param bool|object $lang
+	 * @param object      $query
+	 * @return bool|object
 	 */
 	public function page_on_front_query( $lang, $query ) {
 		if ( ! empty( $lang ) || ! $this->page_on_front ) {
@@ -238,9 +224,9 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	 *
 	 * @since 1.8
 	 *
-	 * @param PLL_Language|false $lang  The current language, false if it is not set yet.
-	 * @param WP_Query           $query The main WP query.
-	 * @return PLL_Language|false
+	 * @param bool|object $lang
+	 * @param object      $query
+	 * @return bool|object
 	 */
 	public function page_for_posts_query( $lang, $query ) {
 		if ( empty( $lang ) && $this->page_for_posts ) {
@@ -260,15 +246,14 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 	}
 
 	/**
-	 * Get the queried page_id (if it exists ).
-	 *
-	 * If permalinks are used, WordPress does set and use `$query->queried_object_id` and sets `$query->query_vars['page_id']` to 0,
-	 * and does set and use `$query->query_vars['page_id']` if permalinks are not used :(.
+	 * Get queried page_id ( if exists )
+	 * If permalinks are used, WordPress does set and use $query->queried_object_id and sets $query->query_vars['page_id'] to 0
+	 * and does set and use $query->query_vars['page_id'] if permalinks are not used :(
 	 *
 	 * @since 1.5
 	 *
-	 * @param WP_Query $query Instance of WP_Query.
-	 * @return int The page_id.
+	 * @param object $query instance of WP_Query
+	 * @return int page_id
 	 */
 	protected function get_page_id( $query ) {
 		if ( ! empty( $query->query_vars['pagename'] ) && isset( $query->queried_object_id ) ) {
@@ -279,6 +264,6 @@ class PLL_Frontend_Static_Pages extends PLL_Static_Pages {
 			return $query->query_vars['page_id'];
 		}
 
-		return 0; // No page queried.
+		return 0; // No page queried
 	}
 }

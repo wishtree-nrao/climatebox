@@ -220,7 +220,7 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     }
 
     public function addEmailNotification($subsriptionId, $postId, $email, $subscriptionType, $confirm = 0) {
-        if (!WpdiscuzHelper::isUserCanFollowOrSubscribe($email)) {
+        if (strpos($email, "@example.com") !== false) {
             return false;
         }
         if ($subscriptionType !== self::SUBSCRIPTION_COMMENT) {
@@ -390,11 +390,6 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             $this->db->query($sql);
         }
     }
-
-	public function deleteSubscriptionsByEmail($email) {
-		$sql = $this->db->prepare("DELETE FROM `{$this->emailNotification}` WHERE `email` = %s;", trim($email));
-		$this->db->query($sql);
-	}
 
     public function deleteVotes($commnetId) {
         if ($cId = intval($commnetId)) {
@@ -792,13 +787,8 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
      * remove user related follows
      * @param type $email the user email who other users following
      */
-    public function deleteFollowersByEmail($email) {
-        $sql = $this->db->prepare("DELETE FROM `{$this->followUsers}` WHERE `user_email` = %s;", trim($email));
-        $this->db->query($sql);
-    }
-
     public function deleteFollowsByEmail($email) {
-        $sql = $this->db->prepare("DELETE FROM `{$this->followUsers}` WHERE `follower_email` = %s;", trim($email));
+        $sql = $this->db->prepare("DELETE FROM `{$this->followUsers}` WHERE `user_email` = %s;", trim($email));
         $this->db->query($sql);
     }
 
@@ -844,7 +834,7 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         $followerName = isset($args["follower_name"]) ? trim($args["follower_name"]) : "";
         $confirm = isset($args["confirm"]) ? intval($args["confirm"]) : 0;
 
-        if (!WpdiscuzHelper::isUserCanFollowOrSubscribe($followerEmail)) {
+        if (strpos($followerEmail, "@example.com") !== false) {
             return false;
         }
 
@@ -1011,13 +1001,6 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
     /* === /Synchronize Commenter Data === */
     /* === Rebuild Ratings === */
 
-    public function showRatingRebuildMsg() {
-        $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->postmeta}` WHERE `meta_key` = %s", self::POSTMETA_RATING_COUNT);
-		$ratingCount = intval($this->db->get_var($sql));
-		$separateCount = intval($this->db->get_var("SELECT COUNT(*) FROM `{$this->db->postmeta}` WHERE `meta_key` LIKE '" . self::POSTMETA_RATING_SEPARATE_AVG . "%'"));
-        return $ratingCount > 0 && $separateCount === 0;
-    }
-
     public function getRebuildRatingsCount() {
         $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->postmeta}` WHERE `meta_key` = %s", self::POSTMETA_RATING_COUNT);
         return intval($this->db->get_var($sql));
@@ -1034,17 +1017,11 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             if ($val) {
                 $newValues = [];
                 foreach ($val as $k => $v) {
-                    $sql = $this->db->prepare("SELECT COUNT(`cm`.`meta_id`) AS `count`, `cm`.`meta_value` FROM `{$this->db->commentmeta}` AS `cm` INNER JOIN `{$this->db->comments}` AS `c` ON `cm`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID` = %d AND `c`.`comment_approved` = '1' AND `cm`.`meta_key` = '%s' AND `cm`.`meta_value` IS NOT NULL AND `cm`.`meta_value` != 0 GROUP BY `cm`.`meta_value`", $value["post_id"], $k);
+                    $sql = $this->db->prepare("SELECT COUNT(`cm`.`meta_id`) AS `count`, `cm`.`meta_value` FROM `{$this->db->commentmeta}` AS `cm` INNER JOIN `{$this->db->comments}` AS `c` ON `cm`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID` = %d AND `cm`.`meta_key` = '%s' AND `cm`.`meta_value` IS NOT NULL AND `cm`.`meta_value` != 0 GROUP BY `cm`.`meta_value`", $value["post_id"], $k);
                     $values = $this->db->get_results($sql, ARRAY_A);
-                    $avg = 0;
-                    $c = 0;
                     foreach ($values as $newData) {
                         $newValues[$k][$newData["meta_value"]] = $newData["count"];
-                        $avg += $newData["meta_value"] * $newData["count"];
-                        $c += $newData["count"];
                     }
-                	update_post_meta($value["post_id"], self::POSTMETA_RATING_SEPARATE_AVG . $k, round($avg / $c, 1));
-                	update_post_meta($value["post_id"], self::POSTMETA_RATING_SEPARATE_COUNT . $k, $c);
                 }
                 update_post_meta($value["post_id"], self::POSTMETA_RATING_COUNT, $newValues, $val);
             }
@@ -1091,11 +1068,6 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
         $sql = $this->db->prepare("SELECT `id` FROM `{$this->feedbackForms}` WHERE `post_id` = %d AND `opened` = 1;", $post_id);
         return $this->db->get_col($sql);
     }
-
-	public function deleteFeedbackFormsForPost($post_id) {
-		$sql = $this->db->prepare("DELETE FROM `{$this->feedbackForms}` WHERE `post_id` = %d", $post_id);
-		$this->db->query($sql);
-	}
 
     /* === /Feedback Comments === */
     /* === User Votes === */

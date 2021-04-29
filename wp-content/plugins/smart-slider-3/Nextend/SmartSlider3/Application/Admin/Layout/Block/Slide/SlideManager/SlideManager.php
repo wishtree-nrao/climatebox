@@ -45,7 +45,7 @@ Js::addInline('new N2Classes.SlidesManager(' . json_encode($options) . ', ' . js
 Js::addGlobalInline('document.documentElement.setAttribute("data-slides", "' . count($slides) . '");');
 ?>
 
-<script>
+<script type="text/javascript">
     <?php
     if($this->hasBreadcrumbOpener()):
     ?>

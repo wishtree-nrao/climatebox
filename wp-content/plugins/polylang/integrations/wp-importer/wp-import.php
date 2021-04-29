@@ -9,11 +9,6 @@
  * @since 1.2
  */
 class PLL_WP_Import extends WP_Import {
-	/**
-	 * Stores post_translations terms.
-	 *
-	 * @var array
-	 */
 	public $post_translations = array();
 
 	/**

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - Yoast SEO - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-03-04 13:05:35+0000\n"
+"PO-Revision-Date: 2021-02-26 14:02:39+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,12 +10,6 @@ msgstr ""
 "X-Generator: GlotPress/3.0.0-alpha.2\n"
 "Language: ru\n"
 "Project-Id-Version: Plugins - Yoast SEO - Stable (latest release)\n"
-
-#. Translators: %1$s expands to 'Yoast SEO', %2$s to an opening anchor tag for
-#. a link leading to the Plugins page, and %3$s to a closing anchor tag.
-#: src/presenters/admin/auto-update-notification-presenter.php:38
-msgid "We see that you enabled automatic updates for WordPress. We recommend that you do this for %1$s as well. This way we can guarantee that WordPress and %1$s will continue to run smoothly together. %2$sGo to your plugins overview to enable auto-updates for %1$s.%3$s"
-msgstr "Мы видим, что вы включили автоматическое обновление для WordPress. Мы рекомендуем сделать это и для %1$s. Таким образом, мы можем гарантировать, что WordPress и %1$s  продолжат бесперебойно работать вместе. %2$sПерейдите к списку плагинов, чтобы включить автоматические обновления для%1$s.%3$s"
 
 #: src/presenters/admin/badge-presenter.php:63
 #: src/presenters/admin/badge-presenter.php:70
@@ -377,16 +371,16 @@ msgstr "Отключение XML-карт сайта в Yoast SEO не прив�
 
 #. translators: 1: expands to <a> that refers to the help page, 2: </a> closing
 #. tag.
-#: inc/class-addon-manager.php:673
+#: inc/class-addon-manager.php:668
 msgid "You can probably find an answer to your question in our %1$shelp center%2$s."
 msgstr "Возможно, вы найдёте ответ на свой вопрос в нашем %1$sСправочном центре%2$s."
 
-#: inc/class-addon-manager.php:670
+#: inc/class-addon-manager.php:665
 msgid "Need support?"
 msgstr "Нужна помощь?"
 
 #. translators: %s expands to a mailto support link.
-#: inc/class-addon-manager.php:676
+#: inc/class-addon-manager.php:671
 msgid "If you still need support and have an active subscription for this product, please email %s."
 msgstr "Если вам нужна помощь и у вас есть подписка на этот продукт, пожалуйста, напишите нам на %s."
 
@@ -2393,12 +2387,12 @@ msgid "days"
 msgstr "дни"
 
 #: languages/wordpress-seojs.php:659 languages/yoast-components.php:87
-#: js/dist/yoast/schema-blocks-1592.js:273
+#: js/dist/yoast/schema-blocks-1590.js:273
 msgid "hours"
 msgstr "часы"
 
 #: languages/wordpress-seojs.php:662 languages/yoast-components.php:90
-#: js/dist/yoast/schema-blocks-1592.js:273
+#: js/dist/yoast/schema-blocks-1590.js:273
 msgid "minutes"
 msgstr "минуты"
 
@@ -3730,7 +3724,7 @@ msgstr "Фильтровать по оценке читаемости"
 
 #. translators: %1$s expands to the product name. %2$s expands to a link to My
 #. Yoast
-#: inc/class-addon-manager.php:317
+#: inc/class-addon-manager.php:313
 msgid "You are not receiving updates or support! Fix this problem by adding this site and enabling %1$s for it in %2$s."
 msgstr "Вы не получаете обновления или поддержку! Решите эту проблему, добавив этот сайт и включив %1$s для него в %2$s."
 
@@ -4194,7 +4188,7 @@ msgstr "Тип сайта"
 #: admin/config-ui/fields/class-field-multiple-authors.php:23
 #: admin/views/tabs/metas/paper-content/media-content.php:19
 #: admin/class-yoast-form.php:790 admin/metabox/class-metabox.php:182
-#: admin/metabox/class-metabox.php:187 js/dist/yoast/schema-blocks-1592.js:273
+#: admin/metabox/class-metabox.php:187 js/dist/yoast/schema-blocks-1590.js:273
 msgid "Yes"
 msgstr "Да"
 
@@ -4500,7 +4494,7 @@ msgid "Problems"
 msgstr "Проблемы"
 
 #: admin/formatter/class-metabox-formatter.php:166
-#: js/dist/yoast/schema-blocks-1592.js:3
+#: js/dist/yoast/schema-blocks-1590.js:3
 msgid "Analysis"
 msgstr "Анализ"
 

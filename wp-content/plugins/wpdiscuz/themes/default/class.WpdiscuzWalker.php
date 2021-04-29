@@ -240,7 +240,7 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
             $replace[] = "<i class='far fa-comments'></i>";
             $replace[] = esc_html($this->options->phrases["wc_reply_to"]) . "&nbsp;";
             $replace[] = esc_url_raw($parentCommentLink);
-            $replace[] = esc_html(apply_filters("wpdiscuz_comment_author", $parentCommentUserName, $parentComment));
+            $replace[] = esc_html($parentCommentUserName);
             $showReplyTo = true;
         }
 
@@ -334,7 +334,7 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
             $search[] = "{FOLLOW_ICON}";
             $replace[] = "wpd-follow-link wpd_not_clicked " . $followClass;
             $replace[] = esc_attr($followTip);
-            $replace[] = $args["layout"] == 1 ? (!is_rtl() ? (wp_is_mobile() ? 'left' : 'right') : (wp_is_mobile() ? 'right' : 'left')) : "top";
+            $replace[] = $args["layout"] == 1 ? ( !is_rtl() ? ( wp_is_mobile() ? 'left' : 'right') : ( wp_is_mobile() ? 'right' : 'left') ) : "top";
             $replace[] = "<i class='fas fa-rss' aria-hidden='true'></i>";
         }
 
@@ -452,7 +452,7 @@ class WpdiscuzWalker extends Walker_Comment implements WpDiscuzConstants {
                     $search[] = "{TOGGLE_ICON}";
                     $replace[] = "wpd-toggle wpd-hidden wpd_not_clicked";
                     $replace[] = esc_html($this->options->phrases["wc_show_replies_text"]);
-                    $replace[] = "<span class='wpd-view-replies'><span class='wpd-view-replies-text'>" . esc_html($this->options->phrases["wc_show_replies_text"]) . "</span> ($countChildren)</span><i class='fas fa-chevron-down'></i>";
+                    $replace[] = "<span class='wpd-view-replies'>" . esc_html($this->options->phrases["wc_show_replies_text"]) . " ($countChildren)</span><i class='fas fa-chevron-down'></i>";
                     $showToggle = true;
                 }
             } else if ($comment->get_children(["post_id" => $args["post_id"]])) {

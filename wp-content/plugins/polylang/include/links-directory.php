@@ -11,19 +11,14 @@
  * @since 1.2
  */
 class PLL_Links_Directory extends PLL_Links_Permalinks {
-	/**
-	 * Relative path to the home url.
-	 *
-	 * @var string
-	 */
 	protected $home_relative;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 *
 	 * @since 1.2
 	 *
-	 * @param PLL_Model $model PLL_Model instance.
+	 * @param object $model PLL_Model instance
 	 */
 	public function __construct( &$model ) {
 		parent::__construct( $model );
@@ -41,8 +36,6 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * Called only at first object creation to avoid duplicating filters when switching blog
 	 *
 	 * @since 1.6
-	 *
-	 * @return void
 	 */
 	public function init() {
 		if ( did_action( 'setup_theme' ) ) {
@@ -56,14 +49,14 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	}
 
 	/**
-	 * Adds the language code in a url.
-	 * links_model interface.
+	 * Adds the language code in url
+	 * links_model interface
 	 *
 	 * @since 1.2
 	 *
-	 * @param string       $url  The url to modify.
-	 * @param PLL_Language $lang The language object.
-	 * @return string Modified url.
+	 * @param string $url  url to modify
+	 * @param object $lang language
+	 * @return string modified url
 	 */
 	public function add_language_to_link( $url, $lang ) {
 		if ( ! empty( $lang ) ) {
@@ -133,12 +126,12 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	}
 
 	/**
-	 * Returns the home url in a given language.
-	 * links_model interface.
+	 * Returns the home url
+	 * links_model interface
 	 *
 	 * @since 1.3.1
 	 *
-	 * @param PLL_Language $lang PLL_Language object.
+	 * @param object $lang PLL_Language object
 	 * @return string
 	 */
 	public function home_url( $lang ) {
@@ -151,8 +144,6 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	 * Optionally removes 'language' in permalinks so that we get http://www.myblog/en/ instead of http://www.myblog/language/en/
 	 *
 	 * @since 1.2
-	 *
-	 * @return void
 	 */
 	public function add_permastruct() {
 		// Language information always in front of the uri ( 'with_front' => false )
@@ -164,12 +155,12 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 	}
 
 	/**
-	 * Prepares the rewrite rules filters.
+	 * Prepares rewrite rules filters
 	 *
 	 * @since 0.8.1
 	 *
-	 * @param mixed $pre Not used as the filter is used as an action.
-	 * @return mixed
+	 * @param array $pre not used
+	 * @return unmodified $pre
 	 */
 	public function prepare_rewrite_rules( $pre ) {
 		// Don't modify the rules if there is no languages created yet
@@ -189,13 +180,13 @@ class PLL_Links_Directory extends PLL_Links_Permalinks {
 
 	/**
 	 * The rewrite rules !
-	 * Always make sure that the default language is at the end in case the language information is hidden for default language.
-	 * Thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct.
+	 * always make sure the default language is at the end in case the language information is hidden for default language
+	 * thanks to brbrbr http://wordpress.org/support/topic/plugin-polylang-rewrite-rules-not-correct
 	 *
 	 * @since 0.8.1
 	 *
-	 * @param string[] $rules Rewrite rules.
-	 * @return string[] Modified rewrite rules.
+	 * @param array $rules rewrite rules
+	 * @return array modified rewrite rules
 	 */
 	public function rewrite_rules( $rules ) {
 		$filter = str_replace( '_rewrite_rules', '', current_filter() );

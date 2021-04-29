@@ -9,11 +9,6 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
-	/**
-	 * Current language (used to filter the content).
-	 *
-	 * @var PLL_Language
-	 */
 	public $curlang;
 
 	/**
@@ -48,15 +43,9 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 * to filter the parent dropdown per post language in quick edit
 	 *
 	 * @since 1.7
-	 *
-	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
 		$screen = get_current_screen();
-
-		if ( empty( $screen ) ) {
-			return;
-		}
 
 		// Hierarchical taxonomies
 		if ( 'edit' == $screen->base && $taxonomies = get_object_taxonomies( $screen->post_type, 'object' ) ) {
@@ -72,11 +61,9 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 				$terms          = get_terms( $hierarchical_taxonomies, array( 'get' => 'all' ) );
 				$term_languages = array();
 
-				if ( is_array( $terms ) ) {
-					foreach ( $terms as $term ) {
-						if ( $lang = $this->model->term->get_language( $term->term_id ) ) {
-							$term_languages[ $lang->slug ][ $term->taxonomy ][] = $term->term_id;
-						}
+				foreach ( $terms as $term ) {
+					if ( $lang = $this->model->term->get_language( $term->term_id ) ) {
+						$term_languages[ $lang->slug ][ $term->taxonomy ][] = $term->term_id;
 					}
 				}
 
@@ -108,12 +95,11 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	}
 
 	/**
-	 * Filters posts, pages and media by language.
+	 * Filters posts, pages and media by language
 	 *
 	 * @since 0.1
 	 *
-	 * @param WP_Query $query WP_Query object.
-	 * @return void
+	 * @param object $query a WP_Query object
 	 */
 	public function parse_query( $query ) {
 		$pll_query = new PLL_Query( $query, $this->model );
@@ -124,24 +110,13 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 * Save language and translation when editing a post (post.php)
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	public function edit_post() {
 		if ( isset( $_POST['post_lang_choice'], $_POST['post_ID'] ) && $post_id = (int) $_POST['post_ID'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 			check_admin_referer( 'pll_language', '_pll_nonce' );
 
 			$post = get_post( $post_id );
-
-			if ( empty( $post ) ) {
-				return;
-			}
-
 			$post_type_object = get_post_type_object( $post->post_type );
-
-			if ( empty( $post_type_object ) ) {
-				return;
-			}
 
 			if ( current_user_can( $post_type_object->cap->edit_post, $post_id ) ) {
 				$this->model->post->set_language( $post_id, $this->model->get_language( sanitize_key( $_POST['post_lang_choice'] ) ) );
@@ -154,27 +129,17 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	}
 
 	/**
-	 * Saves a post language when inline editing or bulk editing.
-	 * Fixes the translations if necessary.
+	 * Save language when inline editing or bulk editing a post
+	 * Fix translations if necessary
 	 *
 	 * @since 2.3
 	 *
-	 * @param int          $post_id Post ID.
-	 * @param PLL_Language $lang    Language.
-	 * @return void
+	 * @param int    $post_id Post ID
+	 * @param object $lang    Language
 	 */
 	protected function inline_save_language( $post_id, $lang ) {
 		$post = get_post( $post_id );
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
 		$post_type_object = get_post_type_object( $post->post_type );
-
-		if ( empty( $post_type_object ) ) {
-			return;
-		}
 
 		if ( current_user_can( $post_type_object->cap->edit_post, $post_id ) ) {
 			$old_lang = $this->model->post->get_language( $post_id ); // Stores the old  language
@@ -201,8 +166,6 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 * Save language when bulk editing a post
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	public function bulk_edit_posts() {
 		if ( isset( $_GET['bulk_edit'], $_GET['inline_lang_choice'], $_REQUEST['post'] ) && -1 !== $_GET['inline_lang_choice'] ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -221,8 +184,6 @@ class PLL_Admin_Filters_Post extends PLL_Admin_Filters_Post_Base {
 	 * Save language when inline editing a post
 	 *
 	 * @since 2.3
-	 *
-	 * @return void
 	 */
 	public function inline_edit_post() {
 		check_admin_referer( 'inlineeditnonce', '_inline_edit' );

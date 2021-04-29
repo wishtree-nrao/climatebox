@@ -49,7 +49,7 @@ class ItemImageFrontend extends AbstractItemFrontend {
             $imageAttributes['title'] = $title;
         }
 
-        $html = Html::tag('img', Html::addExcludeLazyLoadAttributes($imageAttributes), false, false);
+        $html = Html::tag('img', Html::addExcludeLazyLoadAttributes($imageAttributes), false);
 
 
         $style = $owner->addStyle($this->data->get('style'), 'heading');

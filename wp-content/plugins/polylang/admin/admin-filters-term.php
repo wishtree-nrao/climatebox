@@ -9,50 +9,9 @@
  * @since 1.2
  */
 class PLL_Admin_Filters_Term {
-	/**
-	 * Stores the plugin options.
-	 *
-	 * @var array
-	 */
-	public $options;
-
-	/**
-	 * @var PLL_Model
-	 */
-	public $model;
-
-	/**
-	 * @var PLL_Admin_Links
-	 */
-	public $links;
-
-	/**
-	 * Language selected in the admin language filter.
-	 *
-	 * @var PLL_Language
-	 */
-	public $filter_lang;
-
-	/**
-	 * Preferred language to assign to the new terms.
-	 *
-	 * @var PLL_Language
-	 */
-	public $pref_lang;
-
-	/**
-	 * Stores the term name before creating a slug if needed.
-	 *
-	 * @var string
-	 */
-	protected $pre_term_name;
-
-	/**
-	 * Stores the current post_id when bulk editing posts.
-	 *
-	 * @var int
-	 */
-	protected $post_id;
+	public $links, $model, $options, $pref_lang;
+	protected $pre_term_name; // Used to store the term name before creating a slug if needed
+	protected $post_id; // Used to store the current post_id when bulk editing posts
 
 	/**
 	 * Constructor: setups filters and actions
@@ -97,8 +56,6 @@ class PLL_Admin_Filters_Term {
 	 * Adds the language field in the 'Categories' and 'Post Tags' panels
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function add_term_form() {
 		if ( isset( $_GET['taxonomy'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -113,7 +70,7 @@ class PLL_Admin_Filters_Term {
 			$post_type = $GLOBALS['post_type'];
 		}
 
-		if ( ! isset( $taxonomy, $post_type ) || ! taxonomy_exists( $taxonomy ) || ! post_type_exists( $post_type ) ) {
+		if ( empty( $taxonomy ) || ! taxonomy_exists( $taxonomy ) || ! post_type_exists( $post_type ) ) {
 			return;
 		}
 
@@ -160,12 +117,11 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/**
-	 * Adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels.
+	 * Adds the language field and translations tables in the 'Edit Category' and 'Edit Tag' panels
 	 *
 	 * @since 0.1
 	 *
-	 * @param WP_Term $tag The term being edited.
-	 * @return void
+	 * @param object $tag
 	 */
 	public function edit_term_form( $tag ) {
 		if ( isset( $_REQUEST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -176,7 +132,7 @@ class PLL_Admin_Filters_Term {
 			$post_type = $GLOBALS['post_type'];
 		}
 
-		if ( ! isset( $post_type ) || ! post_type_exists( $post_type ) ) {
+		if ( ! post_type_exists( $post_type ) ) {
 			return;
 		}
 
@@ -197,7 +153,7 @@ class PLL_Admin_Filters_Term {
 			array(
 				'name'     => 'term_lang_choice',
 				'value'    => 'term_id',
-				'selected' => $lang->term_id,
+				'selected' => $lang ? $lang->term_id : '',
 				'disabled' => $disabled,
 				'flag'     => true,
 			)
@@ -221,7 +177,9 @@ class PLL_Admin_Filters_Term {
 		);
 
 		echo '<tr id="term-translations" class="form-field">';
-		include __DIR__ . '/view-translations-term.php';
+		if ( $lang ) {
+			include __DIR__ . '/view-translations-term.php';
+		}
 		echo '</tr>' . "\n";
 	}
 
@@ -241,7 +199,7 @@ class PLL_Admin_Filters_Term {
 		if ( isset( $taxonomy, $_GET['from_tag'], $_GET['new_lang'] ) && taxonomy_exists( $taxonomy ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$term = get_term( (int) $_GET['from_tag'], $taxonomy ); // phpcs:ignore WordPress.Security.NonceVerification
 
-			if ( $term instanceof WP_Term && $id = $term->parent ) {
+			if ( $term && $id = $term->parent ) {
 				$lang = $this->model->get_language( sanitize_key( $_GET['new_lang'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 				if ( $parent = $this->model->term->get_translation( $id, $lang ) ) {
 					return str_replace( '"' . $parent . '"', '"' . $parent . '" selected="selected"', $output );
@@ -257,7 +215,6 @@ class PLL_Admin_Filters_Term {
 	 * @since 1.7
 	 *
 	 * @param int $post_id
-	 * @return void
 	 */
 	public function pre_post_update( $post_id ) {
 		if ( isset( $_GET['bulk_edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -272,7 +229,6 @@ class PLL_Admin_Filters_Term {
 	 *
 	 * @param int    $term_id
 	 * @param string $taxonomy
-	 * @return void
 	 */
 	protected function save_language( $term_id, $taxonomy ) {
 		global $wpdb;
@@ -367,20 +323,20 @@ class PLL_Admin_Filters_Term {
 	}
 
 	/**
-	 * Save translations from our form.
+	 * Save translations from our form
 	 *
 	 * @since 1.5
 	 *
-	 * @param int $term_id The term id of teh term being saved.
-	 * @return int[] The array of translated term ids.
+	 * @param int $term_id
+	 * @return array
 	 */
 	protected function save_translations( $term_id ) {
-		// Security check as 'wp_update_term' can be called from outside WP admin.
+		// Security check as 'wp_update_term' can be called from outside WP admin
 		check_admin_referer( 'pll_language', '_pll_nonce' );
 
 		$translations = array();
 
-		// Save translations after checking the translated term is in the right language ( as well as cast id to int ).
+		// Save translations after checking the translated term is in the right language ( as well as cast id to int )
 		if ( isset( $_POST['term_tr_lang'] ) ) {
 			foreach ( array_map( 'absint', $_POST['term_tr_lang'] ) as $lang => $tr_id ) {
 				$tr_lang = $this->model->term->get_language( $tr_id );
@@ -402,7 +358,6 @@ class PLL_Admin_Filters_Term {
 	 * @param int    $term_id
 	 * @param int    $tt_id    term taxonomy id
 	 * @param string $taxonomy
-	 * @return void
 	 */
 	public function save_term( $term_id, $tt_id, $taxonomy ) {
 		// Does nothing except on taxonomies which are filterable
@@ -410,15 +365,10 @@ class PLL_Admin_Filters_Term {
 			return;
 		}
 
-		$tax = get_taxonomy( $taxonomy );
-
-		if ( empty( $tax ) ) {
-			return;
-		}
-
 		// Capability check
 		// As 'wp_update_term' can be called from outside WP admin
 		// 2nd test for creating tags when creating / editing a post
+		$tax = get_taxonomy( $taxonomy );
 		if ( current_user_can( $tax->cap->edit_terms ) || ( isset( $_POST['tax_input'][ $taxonomy ] ) && current_user_can( $tax->cap->assign_terms ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$this->save_language( $term_id, $taxonomy );
 
@@ -484,8 +434,6 @@ class PLL_Admin_Filters_Term {
 	 * Ajax response for edit term form
 	 *
 	 * @since 0.2
-	 *
-	 * @return void
 	 */
 	public function term_lang_choice() {
 		check_ajax_referer( 'pll_language', '_pll_nonce' );
@@ -499,12 +447,14 @@ class PLL_Admin_Filters_Term {
 		$taxonomy  = sanitize_key( $_POST['taxonomy'] );
 		$post_type = sanitize_key( $_POST['post_type'] );
 
-		if ( empty( $lang ) || ! post_type_exists( $post_type ) || ! taxonomy_exists( $taxonomy ) ) {
+		if ( ! post_type_exists( $post_type ) || ! taxonomy_exists( $taxonomy ) ) {
 			wp_die( 0 );
 		}
 
 		ob_start();
-		include __DIR__ . '/view-translations-term.php';
+		if ( $lang ) {
+			include __DIR__ . '/view-translations-term.php';
+		}
 		$x = new WP_Ajax_Response( array( 'what' => 'translations', 'data' => ob_get_contents() ) );
 		ob_end_clean();
 
@@ -528,7 +478,7 @@ class PLL_Admin_Filters_Term {
 		// Tests copied from edit_tags.php
 		else {
 			$tax = get_taxonomy( $taxonomy );
-			if ( ! empty( $tax ) && ! is_null( $tax->labels->popular_items ) ) {
+			if ( ! is_null( $tax->labels->popular_items ) ) {
 				$args = array( 'taxonomy' => $taxonomy, 'echo' => false );
 				if ( current_user_can( $tax->cap->edit_terms ) ) {
 					$args = array_merge( $args, array( 'link' => 'edit' ) );
@@ -551,8 +501,6 @@ class PLL_Admin_Filters_Term {
 	 * Ajax response for input in translation autocomplete input box
 	 *
 	 * @since 1.5
-	 *
-	 * @return void
 	 */
 	public function ajax_terms_not_translated() {
 		check_ajax_referer( 'pll_language', '_pll_nonce' );
@@ -561,7 +509,6 @@ class PLL_Admin_Filters_Term {
 			wp_die( 0 );
 		}
 
-		/** @var string */
 		$s = wp_unslash( $_GET['term'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		$post_type = sanitize_key( $_GET['post_type'] );
 		$taxonomy  = sanitize_key( $_GET['taxonomy'] );
@@ -583,36 +530,31 @@ class PLL_Admin_Filters_Term {
 		}
 
 		// It is more efficient to use one common query for all languages as soon as there are more than 2.
-		$all_terms = get_terms( $taxonomy, 'hide_empty=0&lang=0&name__like=' . $s );
-		if ( is_array( $all_terms ) ) {
-			foreach ( $all_terms as $term ) {
-				$lang = $this->model->term->get_language( $term->term_id );
+		foreach ( get_terms( $taxonomy, 'hide_empty=0&lang=0&name__like=' . $s ) as $term ) {
+			$lang = $this->model->term->get_language( $term->term_id );
 
-				if ( $lang && $lang->slug == $translation_language->slug && ! $this->model->term->get_translation( $term->term_id, $term_language ) ) {
-					$terms[] = $term;
-				}
+			if ( $lang && $lang->slug == $translation_language->slug && ! $this->model->term->get_translation( $term->term_id, $term_language ) ) {
+				$terms[] = $term;
 			}
 		}
 
 		// Format the ajax response.
 		foreach ( $terms as $term ) {
-			if ( $term instanceof WP_Term ) {
-				$return[] = array(
-					'id'    => $term->term_id,
-					'value' => rtrim( // Trim the seperator added at the end by WP.
-						get_term_parents_list(
-							$term->term_id,
-							$term->taxonomy,
-							array(
-								'separator' => ' > ',
-								'link' => false,
-							)
-						),
-						' >'
+			$return[] = array(
+				'id'    => $term->term_id,
+				'value' => rtrim( // Trim the seperator added at the end by WP.
+					get_term_parents_list(
+						$term->term_id,
+						$term->taxonomy,
+						array(
+							'separator' => ' > ',
+							'link' => false,
+						)
 					),
-					'link'  => $this->links->edit_term_translation_link( $term->term_id, $term->taxonomy, $post_type ),
-				);
-			}
+					' >'
+				),
+				'link'  => $this->links->edit_term_translation_link( $term->term_id, $term->taxonomy, $post_type ),
+			);
 		}
 
 		wp_die( wp_json_encode( $return ) );
@@ -641,7 +583,6 @@ class PLL_Admin_Filters_Term {
 	 *
 	 * @param int $old_value
 	 * @param int $value
-	 * @return void
 	 */
 	public function update_option_default_category( $old_value, $value ) {
 		$default_cat_lang = $this->model->term->get_language( $value );
@@ -669,7 +610,6 @@ class PLL_Admin_Filters_Term {
 	 * @param int    $new_term_id
 	 * @param int    $term_taxonomy_id
 	 * @param string $taxonomy
-	 * @return void
 	 */
 	public function split_shared_term( $term_id, $new_term_id, $term_taxonomy_id, $taxonomy ) {
 		if ( ! $this->model->is_translated_taxonomy( $taxonomy ) ) {
@@ -682,12 +622,8 @@ class PLL_Admin_Filters_Term {
 			return;
 		}
 
-		$lang = $this->model->term->get_language( $term_id );
-		if ( empty( $lang ) ) {
-			return;
-		}
-
 		$avoid_recursion = true;
+		$lang = $this->model->term->get_language( $term_id );
 		$translations = array();
 
 		foreach ( $this->model->term->get_translations( $term_id ) as $key => $tr_id ) {

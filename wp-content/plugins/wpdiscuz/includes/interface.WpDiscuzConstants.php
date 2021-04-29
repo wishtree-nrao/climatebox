@@ -18,7 +18,6 @@ interface WpDiscuzConstants {
     const OPTION_SLUG_WIZARD_COMPLETED                = "wpdiscuz_wizard_completed";
     const OPTION_SLUG_WIZARD_AFTER_UPDATE             = "wpdiscuz_wizard_after_update";
     const OPTION_SLUG_WIZARD_SHOW_ADDONS_MSG          = "wpdiscuz_wizard_show_addons_msg";
-    const OPTION_SLUG_SHOW_RATING_REBUIL_MSG          = "wpdiscuz_show_rating_rebuild_message";
     /* === OPTIONS SLUGS === */
     const PAGE_WPDISCUZ                               = "wpdiscuz";
     const PAGE_SETTINGS                               = "wpdiscuz_options_page";
@@ -77,8 +76,6 @@ interface WpDiscuzConstants {
     const POSTMETA_STATISTICS                         = "_wpdiscuz_statistics";
     const POSTMETA_REACTED                            = "reacted";
     const POSTMETA_RATING_COUNT                       = "wpdiscuz_rating_count";
-	const POSTMETA_RATING_SEPARATE_AVG                = "wpdiscuz_post_rating_";
-	const POSTMETA_RATING_SEPARATE_COUNT              = "wpdiscuz_post_rating_count_";
     /* === USER CONTENT === */
     const TRS_USER_HASH                               = "wpdiscuz_user_hash_";
     /* === SOCIAL LOGIN */

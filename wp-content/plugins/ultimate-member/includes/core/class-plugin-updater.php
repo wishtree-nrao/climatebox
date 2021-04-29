@@ -172,7 +172,7 @@ if ( ! class_exists( 'um\core\Plugin_Updater' ) ) {
 					'title' => 'Unsplash',
 				),
 				'um-user-locations/um-user-locations.php'               => array(
-					'key'   => 'user_locations',
+					'key'   => 'user-locations',
 					'title' => 'User Locations',
 				),
 				'um-profile-tabs/um-profile-tabs.php'                   => array(

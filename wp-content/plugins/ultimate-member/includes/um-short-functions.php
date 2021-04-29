@@ -689,10 +689,6 @@ function um_user_submitted_registration_formatted( $style = false ) {
 	$output .= um_user_submited_display( 'timestamp', __( 'Date Submitted', 'ultimate-member' ) );
 	$output .= um_user_submited_display( 'form_id', __( 'Form', 'ultimate-member' ), $submitted_data );
 
-	if ( isset( $submitted_data['use_gdpr_agreement'] ) ) {
-		$output .= um_user_submited_display( 'use_gdpr_agreement', __( 'GDPR Applied', 'ultimate-member' ), $submitted_data );
-	}
-
 	if ( isset( $submitted_data ) && is_array( $submitted_data ) ) {
 
 		if ( isset( $submitted_data['form_id'] ) ) {
@@ -892,8 +888,7 @@ function um_user_submited_display( $k, $title, $data = array(), $style = true ) 
 	}
 
 	if ( $k == 'timestamp' ) {
-		$v = date( "d M Y H:i", $v );
-	} elseif ( $k == 'use_gdpr_agreement' ) {
+		$k = __( 'date submitted', 'ultimate-member' );
 		$v = date( "d M Y H:i", $v );
 	}
 
@@ -1555,14 +1550,8 @@ function um_can_view_field( $data ) {
 				if ( ! is_user_logged_in() ) {
 					$can_view = false;
 				} else {
-					if ( ! um_is_core_page( 'profile' ) ) {
-						if ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) {
-							$can_view = false;
-						}
-					} else {
-						if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
-							$can_view = false;
-						}
+					if ( ! um_is_user_himself() && ( empty( $current_user_roles ) || ( ! empty( $data['roles'] ) && count( array_intersect( $current_user_roles, $data['roles'] ) ) <= 0 ) ) ) {
+						$can_view = false;
 					}
 				}
 				break;
@@ -1891,7 +1880,7 @@ function um_youtube_id_from_url( $url ) {
 		([\w-]{10,12})  # Allow 10-12 for 11 char youtube id.
 		$%x';
 	$result = preg_match( $pattern, $url, $matches );
-	if ( false !== $result && isset( $matches[1] ) ) {
+	if (false !== $result) {
 		return $matches[1];
 	}
 

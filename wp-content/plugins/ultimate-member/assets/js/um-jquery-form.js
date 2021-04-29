@@ -364,7 +364,7 @@ $.fn.ajaxSubmit = function(options) {
                     el.prop('disabled', false);
                 }
                 else {
-                    el.prop('disabled', false);
+                    el.removeAttr('disabled');
                 }
             }
         }

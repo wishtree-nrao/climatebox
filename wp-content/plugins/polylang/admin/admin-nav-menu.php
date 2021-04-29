@@ -33,8 +33,6 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 	 * adds the language switcher metabox and create new nav menu locations
 	 *
 	 * @since 1.1
-	 *
-	 * @return void
 	 */
 	public function admin_init() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -57,8 +55,6 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 	 * Thanks to John Morris for his very interesting post http://www.johnmorrisonline.com/how-to-add-a-fully-functional-custom-meta-box-to-wordpress-navigation-menus/
 	 *
 	 * @since 1.1
-	 *
-	 * @return void
 	 */
 	public function lang_switch() {
 		global $_nav_menu_placeholder, $nav_menu_selected_id;
@@ -91,17 +87,15 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 	 * Prepares javascript to modify the language switcher menu item
 	 *
 	 * @since 1.1
-	 *
-	 * @return void
 	 */
 	public function admin_enqueue_scripts() {
 		$screen = get_current_screen();
-		if ( empty( $screen ) || 'nav-menus' !== $screen->base ) {
+		if ( 'nav-menus' != $screen->base ) {
 			return;
 		}
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_script( 'pll_nav_menu', plugins_url( '/js/build/nav-menu' . $suffix . '.js', POLYLANG_ROOT_FILE ), array( 'jquery' ), POLYLANG_VERSION );
+		wp_enqueue_script( 'pll_nav_menu', plugins_url( '/js/nav-menu' . $suffix . '.js', POLYLANG_FILE ), array( 'jquery' ), POLYLANG_VERSION );
 
 		$data = array(
 			'strings' => PLL_Switcher::get_switcher_options( 'menu', 'string' ), // The strings for the options
@@ -136,7 +130,6 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 	 *
 	 * @param int $menu_id not used
 	 * @param int $menu_item_db_id
-	 * @return void
 	 */
 	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0 ) {
 		if ( empty( $_POST['menu-item-url'][ $menu_item_db_id ] ) || '#pll_switcher' !== $_POST['menu-item-url'][ $menu_item_db_id ] ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -186,12 +179,12 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 	}
 
 	/**
-	 * Assign menu languages and translations based on ( temporary ) locations.
+	 * Assign menu languages and translations based on ( temporary ) locations
 	 *
 	 * @since 1.1
 	 *
-	 * @param mixed $mods Theme mods.
-	 * @return mixed
+	 * @param array $mods theme mods
+	 * @return unmodified $mods
 	 */
 	public function pre_update_option_theme_mods( $mods ) {
 		if ( current_user_can( 'edit_theme_options' ) && isset( $mods['nav_menu_locations'] ) ) {
@@ -260,7 +253,6 @@ class PLL_Admin_Nav_Menu extends PLL_Nav_Menu {
 	 * @since 1.7.3
 	 *
 	 * @param int $term_id nav menu id
-	 * @return void
 	 */
 	public function delete_nav_menu( $term_id ) {
 		if ( isset( $this->options['nav_menus'] ) ) {

@@ -31,22 +31,21 @@ class PLL_Translate_Option {
 	 * @since 2.9
 	 *
 	 * @param string $name Option name.
-	 * @param array  $keys Recursive array of option keys to translate in the form:
-	 *    @example array(
-	 *      'option_key_to_translate_1' => 1,
-	 *      'option_key_to_translate_2' => 1,
-	 *      'my_group' => array(
-	 *        'sub_key_to_translate_1' => 1,
-	 *        'sub_key_to_translate_2' => 1,
-	 *      ),
-	 *    )
+	 * @param object $keys Recursive array of option keys to translate in the form:
+	 *   array(
+	 *     'option_key_to_translate_1' => 1,
+	 *     'option_key_to_translate_2' => 1,
+	 *     'my_group' => array(
+	 *       'sub_key_to_translate_1' => 1,
+	 *       'sub_key_to_translate_2' => 1,
+	 *     ),
+	 *   )
+	 *   Note: only keys are interpreted. Any scalar can be used as values.
+	 * @param string $args {
+	 *   Optional. Array of arguments for registering the option.
 	 *
-	 *    Note: only keys are interpreted. Any scalar can be used as values.
-	 * @param array  $args {
-	 *    Optional. Array of arguments for registering the option.
-	 *
-	 *    @type string $context           The group in which the strings will be registered.
-	 *    @type string $sanitize_callback A callback function that sanitizes the option's value.
+	 *   @type string $context           The group in which the strings will be registered.
+	 *   @type string $sanitize_callback A callback function that sanitizes the option's value.
 	 * }
 	 */
 	public function __construct( $name, $keys = array(), $args = array() ) {
@@ -87,8 +86,8 @@ class PLL_Translate_Option {
 	 *
 	 * @since 1.0
 	 *
-	 * @param mixed      $values Either a string to translate or a list of strings to translate.
-	 * @param array|bool $key    Array of option keys to translate.
+	 * @param array|string $values Either a string to translate or a list of strings to translate.
+	 * @param array|bool   $key    Array of option keys to translate.
 	 * @return array|string Translated string(s)
 	 */
 	protected function translate_string_recursive( $values, $key ) {
@@ -137,9 +136,8 @@ class PLL_Translate_Option {
 	 *
 	 * @param string     $context The group in which the strings will be registered.
 	 * @param string     $option  Option name.
-	 * @param mixed      $values  Option value.
+	 * @param array      $values  Option value.
 	 * @param array|bool $key     Array of option keys to translate.
-	 * @return void
 	 */
 	protected function register_string_recursive( $context, $option, $values, $key ) {
 		if ( is_object( $values ) ) {
@@ -188,12 +186,11 @@ class PLL_Translate_Option {
 	 * @param mixed  $value     The new, unserialized option value.
 	 * @param mixed  $old_value The old (filtered) option value.
 	 * @param string $name      Option name.
-	 * @return mixed
 	 */
 	public function pre_update_option( $value, $old_value, $name ) {
 		// Stores the unfiltered old option value before it is updated in DB.
 		remove_filter( 'option_' . $name, array( $this, 'translate' ), 10, 2 );
-		$unfiltered_old_value = get_option( $name );
+		$this->old_value = get_option( $name );
 		add_filter( 'option_' . $name, array( $this, 'translate' ), 20, 2 );
 
 		// Load strings translations according to the admin language filter
@@ -204,7 +201,7 @@ class PLL_Translate_Option {
 		PLL()->load_strings_translations( $locale );
 
 		// Filters out the strings which would be updated to their translations and stores the updated strings.
-		$value = $this->check_value_recursive( $unfiltered_old_value, $value, $this->keys );
+		$value = $this->check_value_recursive( $this->old_value, $value, $this->keys );
 
 		return $value;
 	}
@@ -217,8 +214,6 @@ class PLL_Translate_Option {
 	 * the new strings with the old translations.
 	 *
 	 * @since 2.9
-	 *
-	 * @return void
 	 */
 	public function update_option() {
 		$curlang = pll_current_language();

@@ -383,20 +383,10 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				  ?>
 				 */
 				$movefile = apply_filters( 'um_upload_image_result', $movefile, $user_id, $field_data );
-				
-				/**
-				 * Resize and compress images uploaded by the field "Image Upload" without crop.
-				 * Resize and compress images uploaded on Activity wall and Group Discussion wall.
-				 * @since 2.1.16 2021-02-16
-				 */
-				if ( $field_key === 'wall_img_upload' || empty( $field_data['crop_data'] ) ) {
-					$this->stream_photo( $movefile, $movefile['file'], $movefile['url'], $field_key, $user_id );
-				}
 
 				$movefile['url'] = set_url_scheme( $movefile['url'] );
 
-				$path = $movefile['file'];
-				$movefile['file'] = $movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
+				$movefile['file_info']['basename'] = wp_basename( $movefile['file'] );
 
 				$file_type = wp_check_filetype( $movefile['file_info']['basename'] );
 
@@ -404,8 +394,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				$movefile['file_info']['original_name'] = $uploadedfile['name'];
 				$movefile['file_info']['ext'] = $file_type['ext'];
 				$movefile['file_info']['type'] = $file_type['type'];
-				$movefile['file_info']['size'] = filesize( $path );
+				$movefile['file_info']['size'] = filesize( $movefile['file'] );
 				$movefile['file_info']['size_format'] = size_format( $movefile['file_info']['size'] );
+				$movefile['file'] = $movefile['file_info']['basename'];
 
 
 				/**
@@ -492,7 +483,9 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 				 */
 				do_action( "um_after_upload_db_meta_{$field_key}", $this->user_id );
 
-				$transient = set_transient( "um_{$movefile['file']}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
+				$filename = wp_basename( $movefile['url'] );
+
+				$transient = set_transient( "um_{$filename}", $movefile['file_info'], 2 * HOUR_IN_SECONDS );
 				if ( empty( $transient ) ) {
 					update_user_meta( $this->user_id, "{$field_key}_metadata_temp", $movefile['file_info'] );
 				}
@@ -1122,25 +1115,19 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 		 * @param  string $coord
 		 * @param  array $crop
 		 *
-		 * @since   2.0.22
-		 * @version 2.1.16 2021-02-15
+		 * @since 2.0.22
 		 *
 		 * @return array
 		 */
-		public function stream_photo( $response, $image_path, $src, $key, $user_id, $coord = '', $crop = array() ) {
+		public function stream_photo( $response, $image_path, $src, $key, $user_id, $coord, $crop ) {
 
-			/**
-			 * Return an implementation that extends WP_Image_Editor
-			 * @see https://developer.wordpress.org/reference/classes/wp_image_editor/
-			 */
-			$image = wp_get_image_editor( $image_path );
+			$image = wp_get_image_editor( $image_path ); // Return an implementation that extends WP_Image_Editor
+
+			$quality = UM()->options()->get( 'image_compression' );
 
 			if ( ! is_wp_error( $image ) ) {
-				$quality = (int) UM()->options()->get( 'image_compression' );
-				$max_w = (int) UM()->options()->get( 'image_max_width' );
-
-				// Crop
 				if ( ! empty( $crop ) ) {
+
 					if ( ! is_array( $crop ) ) {
 						$crop = explode( ",", $crop );
 					}
@@ -1151,20 +1138,16 @@ if ( ! class_exists( 'um\core\Uploader' ) ) {
 					$src_h = $crop[3];
 
 					$image->crop( $src_x, $src_y, $src_w, $src_h );
-				}
 
-				// Resize
-				$dimensions = $image->get_size();
-				if ( $dimensions['width'] > $max_w ) {
-					$image->resize( $max_w, null );
-				}
-
-				// Quality
-				if ( $image->get_quality() > $quality ) {
-					$image->set_quality( $quality );
+					$max_w = UM()->options()->get( 'image_max_width' );
+					if ( $src_w > $max_w ) {
+						$image->resize( $max_w, $src_h );
+					}
 				}
 
 				$image->save( $image_path );
+
+				$image->set_quality( $quality );
 
 			} else {
 				wp_send_json_error( esc_js( __( "Unable to crop stream image file: {$image_path}", 'ultimate-member' ) ) );

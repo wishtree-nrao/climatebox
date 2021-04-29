@@ -6,28 +6,12 @@ if(!ctf_js_exists){
         window.ctf_init = function() {
             window.ctfObject = {};
             if ($('.ctf').length
-                && typeof $('.ctf').first().attr('data-ctf-flags') !== 'undefined') {
-                var flags = $('.ctf').first().attr('data-ctf-flags').split(',');
-
-                if (flags.indexOf('gdpr') > -1) {
-                    window.ctfObject.consentGiven = false;
-                    window.ctfObject.gdpr = true;
-                } else {
-                    window.ctfObject.consentGiven = true;
-                    window.ctfObject.gdpr = false;
-                }
-
-                if (flags.indexOf('locator') > -1) {
-                    var random = Math.floor(Math.random() * $('.ctf').length);
-                    window.ctfObject.locator = $('.ctf').length === 1 || (random === 1);
-                } else {
-                    window.ctfObject.locator = false;
-                }
-
+                && typeof $('.ctf').first().attr('ctf-gdpr') !== 'undefined') {
+                window.ctfObject.consentGiven = false;
+                window.ctfObject.gdpr = true;
             } else {
                 window.ctfObject.consentGiven = true;
                 window.ctfObject.gdpr = false;
-                window.ctfObject.locator = false;
             }
 
             if ($('.ctf').length <= $('.ctf_is_initialized').length) {
@@ -39,25 +23,6 @@ if(!ctf_js_exists){
             //Runs every time new tweets are loaded
             function ctfScripts($ctf) {
                 $ctf.addClass('ctf_is_initialized');
-
-                if (window.ctfObject.locator) {
-                    var feedID = typeof $ctf.attr('data-feed-id') ? $ctf.attr('data-feed-id') : 'ctf-single',
-                        postID = typeof $ctf.attr('data-postid') ? $ctf.attr('data-postid') : '';
-
-                    jQuery.ajax({
-                        url: ctf.ajax_url,
-                        type: 'post',
-                        data: {
-                            action: 'ctf_do_locator',
-                            atts: $ctf.attr('data-ctfshortcode'),
-                            feed_id: feedID,
-                            location: ctfLocationGuess($ctf),
-                            post_id: postID,
-                        },
-                        success: function (data) {
-                        }
-                    }); // ajax call
-                }
 
                 if (ctfCheckConsent()) {
                     ctfRemovePrivacyFeatures($ctf);
@@ -158,7 +123,7 @@ if(!ctf_js_exists){
 
                         function ctfHashReplacer(hash) {
                             //Remove white space at beginning of hash
-                            var replacementString = hash.trim();
+                            var replacementString = jQuery.trim(hash);
                             //If the hash is a hex code then don't replace it with a link as it's likely in the style attr, eg: "color: #ff0000"
                             if (/^#[0-9A-F]{6}$/i.test(replacementString)) {
                                 return replacementString;
@@ -176,7 +141,7 @@ if(!ctf_js_exists){
 
                         //Link @tags
                         function ctfReplaceTags(tag) {
-                            var replacementString = tag.trim();
+                            var replacementString = jQuery.trim(tag);
                             return ' <a href="https://twitter.com/' + replacementString.substring(1) + '" target="_blank" rel="nofollow">' + replacementString + '</a>';
                         }
 
@@ -209,7 +174,7 @@ if(!ctf_js_exists){
                 //Change colors of some items to match tweet text
                 $ctf.find('.ctf-author-name, .ctf-tweet-date, .ctf-author-screenname, .ctf-twitterlink, .ctf-author-box-link, .ctf-retweet-text, .ctf-quoted-tweet').css('color', $ctf.find('.ctf-tweet-text').css('color'));
 
-                $ctf.find('.ctf_more').off('click').on('click', function (e) {
+                $ctf.find('.ctf_more').unbind('click').bind('click', function (e) {
                     e.preventDefault();
                     $(this).hide().next('.ctf_remaining').show();
                 });
@@ -226,9 +191,6 @@ if(!ctf_js_exists){
                 $ctfMore.addClass('ctf-loading').append('<div class="ctf-loader"></div>');
                 $ctfMore.find('.ctf-loader').css('background-color', $ctfMore.css('color'));
 
-                var feedID = typeof $ctf.attr('data-feed-id') ? $ctf.attr('data-feed-id') : 'ctf-single',
-                    postID = typeof $ctf.attr('data-postid') ? $ctf.attr('data-postid') : '';
-
                 jQuery.ajax({
                     url: ctf.ajax_url,
                     type: 'post',
@@ -237,10 +199,7 @@ if(!ctf_js_exists){
                         last_id_data: lastIDData,
                         shortcode_data: shortcodeData,
                         num_needed: numNeeded,
-                        persistent_index: persistentIndex,
-                        feed_id: feedID,
-                        location: ctfLocationGuess($ctf),
-                        post_id: postID,
+                        persistent_index: persistentIndex
                     },
                     success: function (data) {
                         if (lastIDData !== '') {
@@ -323,21 +282,21 @@ if(!ctf_js_exists){
             ctf_init();
 
             // Cookie Notice by dFactory
-            $('#cookie-notice a').on('click',function() {
+            $('#cookie-notice a').click(function() {
                 setTimeout(function() {
                     ctfAterConsentToggled();
                 },1000);
             });
 
             // Cookie Notice by dFactory
-            $('#cookie-law-info-bar a').on('click',function() {
+            $('#cookie-law-info-bar a').click(function() {
                 setTimeout(function() {
                     ctfAterConsentToggled();
                 },1000);
             });
 
             // GDPR Cookie Consent by WebToffee
-            $('.cli-user-preference-checkbox').on('click',function(){
+            $('.cli-user-preference-checkbox').click(function(){
                 ctfAterConsentToggled();
             });
 
@@ -415,15 +374,10 @@ if(!ctf_js_exists){
             });
             $ctf.find('.ctf-no-consent').removeClass('ctf-no-consent');
             //Header profile pic hover
-            $ctf.find('.ctf-header .ctf-header-link').on('mouseenter mouseleave', function(e) {
-                switch(e.type) {
-                    case 'mouseenter':
-                        $ctf.find('.ctf-header .ctf-header-img-hover').fadeIn(200);
-                        break;
-                    case 'mouseleave':
-                        $ctf.find('.ctf-header .ctf-header-img-hover').stop().fadeOut(600);
-                        break;
-                }
+            $ctf.find('.ctf-header .ctf-header-link').hover(function () {
+                $ctf.find('.ctf-header .ctf-header-img-hover').fadeIn(200);
+            }, function () {
+                $ctf.find('.ctf-header .ctf-header-img-hover').stop().fadeOut(600);
             });
         }
 
@@ -503,21 +457,6 @@ if(!ctf_js_exists){
             }
 
             return "";
-        }
-        function ctfLocationGuess($feed) {
-            var location = 'content';
-
-            if ($feed.closest('footer').length) {
-                location = 'footer';
-            } else if ($feed.closest('.header').length
-                || $feed.closest('header').length) {
-                location = 'header';
-            } else if ($feed.closest('.sidebar').length
-                || $feed.closest('aside').length) {
-                location = 'sidebar';
-            }
-
-            return location;
         }
     })(jQuery);
 

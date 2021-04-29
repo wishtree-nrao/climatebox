@@ -12,10 +12,8 @@
 function um_admin_user_actions_hook( $actions, $user_id ) {
 	um_fetch_user( $user_id );
 
-	$role = get_role( UM()->roles()->get_priority_user_role( get_current_user_id() ) );
-	$can_edit_users = current_user_can( 'edit_users' ) && $role->has_cap( 'edit_users' );
-
-	if ( $can_edit_users ) {
+	//if ( UM()->roles()->um_current_user_can( 'edit', $user_id ) ) {
+	if ( current_user_can( 'manage_options' ) ) {
 
 		if ( um_user( 'account_status' ) == 'awaiting_admin_review' ) {
 			$actions['um_approve_membership'] = array( 'label' => __( 'Approve Membership', 'ultimate-member' ) );
@@ -48,7 +46,7 @@ function um_admin_user_actions_hook( $actions, $user_id ) {
 		$actions['um_delete'] = array( 'label' => __( 'Delete this user', 'ultimate-member' ) );
 	}
 
-	if ( current_user_can( 'manage_options' ) ) {
+	if ( current_user_can( 'delete_users' ) ) {
 		$actions['um_switch_user'] = array( 'label' => __( 'Login as this user', 'ultimate-member' ) );
 	}
 

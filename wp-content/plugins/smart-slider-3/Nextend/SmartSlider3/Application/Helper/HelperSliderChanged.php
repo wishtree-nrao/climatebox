@@ -41,7 +41,7 @@ class HelperSliderChanged {
         $changedSliders = array($sliderId);
 
         $xref = new ModelSlidersXRef($this);
-        foreach ($xref->getGroups($sliderId) as $row) {
+        foreach ($xref->getGroups($sliderId) AS $row) {
             if ($row['group_id'] > 0) {
                 $this->storage->set('sliderChanged', $row['group_id'], $value);
                 $changedSliders[] = $row['group_id'];
@@ -49,7 +49,7 @@ class HelperSliderChanged {
         }
         $sliderModel  = new ModelSliders($this);
         $relatedPosts = array();
-        foreach ($changedSliders as $id) {
+        foreach ($changedSliders AS $id) {
 
             do_action('smartslider3_slider_changed', $id);
 
@@ -63,7 +63,7 @@ class HelperSliderChanged {
                         "\n\r",
                         "\r"
                     ), "\n", $relatedPostsRaw));
-                    foreach ($relatedPostsRaw as $relatedPostID) {
+                    foreach ($relatedPostsRaw AS $relatedPostID) {
                         if ($relatedPostID > 0) {
                             $relatedPosts[] = $relatedPostID;
                         }
@@ -73,11 +73,11 @@ class HelperSliderChanged {
         }
         if (count($relatedPosts) > 0) {
             $relatedPosts = array_unique($relatedPosts);
-            foreach ($relatedPosts as $postID) {
+            foreach ($relatedPosts AS $postID) {
                 $post = WP_Post::get_instance($postID);
                 if ($post) {
                     do_action('edit_post', $postID, $post);
-                    do_action('save_post', $postID, $post, true);
+                    do_action('save_post', $postID, $post);
                 }
             }
         }

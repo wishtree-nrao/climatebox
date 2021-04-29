@@ -26,26 +26,23 @@ class PLL_MO extends MO {
 	}
 
 	/**
-	 * Writes a PLL_MO object into a custom post meta.
+	 * Writes a PLL_MO object into a custom post meta
 	 *
 	 * @since 1.2
 	 *
-	 * @param PLL_Language $lang The language in which we want to export strings.
-	 * @return void
+	 * @param object $lang The language in which we want to export strings
 	 */
 	public function export_to_db( $lang ) {
 		$this->add_entry( $this->make_entry( '', '' ) ); // Empty string translation, just in case
 
-		/*
-		 * It would be convenient to store the whole object but it would take a huge space in DB.
-		 * So let's keep only the strings in an array.
-		 * The strings are slashed to avoid breaking slashed strings in update_post_meta.
-		 * @see https://codex.wordpress.org/Function_Reference/update_post_meta#Character_Escaping.
-		 */
+		// Would be convenient to store the whole object but it would take a huge space in DB
+		// So let's keep only the strings in an array
 		$strings = array();
 		foreach ( $this->entries as $entry ) {
-			$strings[] = wp_slash( array( $entry->singular, $this->translate( $entry->singular ) ) );
+			$strings[] = array( $entry->singular, $this->translate( $entry->singular ) );
 		}
+
+		$strings = wp_slash( $strings ); // Avoid breaking slashed strings in update_post_meta. See https://codex.wordpress.org/Function_Reference/update_post_meta#Character_Escaping
 
 		if ( empty( $lang->mo_id ) ) {
 			$post = array(
@@ -61,12 +58,11 @@ class PLL_MO extends MO {
 	}
 
 	/**
-	 * Reads a PLL_MO object from a custom post meta.
+	 * Reads a PLL_MO object from a custom post meta
 	 *
 	 * @since 1.2
 	 *
-	 * @param PLL_Language $lang The language in which we want to get strings.
-	 * @return void
+	 * @param object $lang The language in which we want to get strings
 	 */
 	public function import_from_db( $lang ) {
 		if ( ! empty( $lang->mo_id ) ) {
@@ -80,11 +76,11 @@ class PLL_MO extends MO {
 	}
 
 	/**
-	 * Returns the post id of the post storing the strings translations.
+	 * Returns the post id of the post storing the strings translations
 	 *
 	 * @since 1.4
 	 *
-	 * @param PLL_Language $lang The language object.
+	 * @param object $lang
 	 * @return int
 	 */
 	public static function get_id( $lang ) {
@@ -105,8 +101,6 @@ class PLL_MO extends MO {
 	 * Invalidate the cache when adding a new language
 	 *
 	 * @since 2.0.5
-	 *
-	 * @return void
 	 */
 	public function clean_cache() {
 		wp_cache_delete( 'polylang_mo_ids' );
@@ -118,7 +112,6 @@ class PLL_MO extends MO {
 	 * @since 2.9
 	 *
 	 * @param string $string The source string to remove from the translations.
-	 * @return void
 	 */
 	public function delete_entry( $string ) {
 		unset( $this->entries[ $string ] );

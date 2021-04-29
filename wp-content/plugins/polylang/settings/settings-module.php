@@ -17,6 +17,8 @@ class PLL_Settings_Module {
 	public $options;
 
 	/**
+	 * Instance of PLL_Model.
+	 *
 	 * @var PLL_Model
 	 */
 	public $model;
@@ -159,8 +161,6 @@ class PLL_Settings_Module {
 	 * Activates the module
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	public function activate() {
 		if ( ! empty( $this->active_option ) ) {
@@ -173,8 +173,6 @@ class PLL_Settings_Module {
 	 * Deactivates the module
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	public function deactivate() {
 		if ( ! empty( $this->active_option ) ) {
@@ -187,8 +185,6 @@ class PLL_Settings_Module {
 	 * Protected method to display a configuration form
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	protected function form() {
 		// Child classes can provide a form
@@ -228,8 +224,6 @@ class PLL_Settings_Module {
 	 * Ajax method to save the options
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	public function save_options() {
 		check_ajax_referer( 'pll_options', '_pll_nonce' );
@@ -269,11 +263,11 @@ class PLL_Settings_Module {
 	}
 
 	/**
-	 * Get the row actions.
+	 * Get the row actions
 	 *
 	 * @since 1.8
 	 *
-	 * @return string[]
+	 * @return array
 	 */
 	protected function get_actions() {
 		$actions = array();
@@ -294,11 +288,11 @@ class PLL_Settings_Module {
 	}
 
 	/**
-	 * Get the actions links.
+	 * Get the actions links
 	 *
 	 * @since 1.8
 	 *
-	 * @return string[] Action links.
+	 * @return array
 	 */
 	public function get_action_links() {
 		return array_intersect_key( $this->action_links, array_flip( $this->get_actions() ) );
@@ -332,11 +326,11 @@ class PLL_Settings_Module {
 	}
 
 	/**
-	 * Get the buttons.
+	 * Get the buttons
 	 *
 	 * @since 1.9
 	 *
-	 * @return string[] An array of html fragment for the buttons.
+	 * @return array
 	 */
 	public function get_buttons() {
 		return $this->buttons;

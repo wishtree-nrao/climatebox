@@ -11,21 +11,12 @@
  * @since 1.2
  */
 class PLL_Choose_Lang_Url extends PLL_Choose_Lang {
-	/**
-	 * The name of the index file which is the entry point to all requests.
-	 * We need this before the global $wp_rewrite is created.
-	 * Also hardcoded in WP_Rewrite.
-	 *
-	 * @var string
-	 */
-	protected $index = 'index.php';
+	protected $index = 'index.php'; // Need this before $wp_rewrite is created, also hardcoded in wp-includes/rewrite.php
 
 	/**
 	 * Sets the language
 	 *
 	 * @since 1.8
-	 *
-	 * @return void
 	 */
 	public function init() {
 		parent::init();
@@ -41,8 +32,6 @@ class PLL_Choose_Lang_Url extends PLL_Choose_Lang {
 	 * Finds the language according to information found in the url
 	 *
 	 * @since 1.2
-	 *
-	 * @return void
 	 */
 	public function set_language_from_url() {
 		$host      = str_replace( 'www.', '', wp_parse_url( $this->links_model->home, PHP_URL_HOST ) ); // Remove www. for the comparison

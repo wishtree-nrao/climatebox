@@ -51,7 +51,6 @@ class ControllerGenerator extends AbstractControllerAdmin {
 
                 $sources = $generatorGroup->getSources();
                 if (empty($sources)) {
-                    Notification::error($generatorGroup->getError());
                     $this->redirect($this->getUrlGeneratorCreate($sliderID, $groupData['group_id']));
                 }
 

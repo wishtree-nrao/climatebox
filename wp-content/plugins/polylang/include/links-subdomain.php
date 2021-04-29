@@ -11,20 +11,14 @@
  * @since 1.2
  */
 class PLL_Links_Subdomain extends PLL_Links_Abstract_Domain {
-	/**
-	 * Stores whether the home url includes www. or not.
-	 * Either '://' or '://www.'.
-	 *
-	 * @var string
-	 */
 	protected $www;
 
 	/**
-	 * Constructor.
+	 * Constructor
 	 *
 	 * @since 1.7.4
 	 *
-	 * @param PLL_Model $model Instance of PLL_Model.
+	 * @param object $model PLL_Model instance
 	 */
 	public function __construct( &$model ) {
 		parent::__construct( $model );
@@ -32,14 +26,14 @@ class PLL_Links_Subdomain extends PLL_Links_Abstract_Domain {
 	}
 
 	/**
-	 * Adds the language code in a url.
-	 * links_model interface.
+	 * Adds the language code in url
+	 * links_model interface
 	 *
 	 * @since 1.2
 	 *
-	 * @param string       $url  The url to modify.
-	 * @param PLL_Language $lang The language object.
-	 * @return string Modified url.
+	 * @param string $url  url to modify
+	 * @param object $lang language
+	 * @return string modified url
 	 */
 	public function add_language_to_link( $url, $lang ) {
 		if ( ! empty( $lang ) && false === strpos( $url, '://' . $lang->slug . '.' ) ) {
@@ -74,11 +68,11 @@ class PLL_Links_Subdomain extends PLL_Links_Abstract_Domain {
 	}
 
 	/**
-	 * Get hosts managed on the website.
+	 * Get hosts managed on the website
 	 *
 	 * @since 1.5
 	 *
-	 * @return string[] The list of hosts.
+	 * @return array list of hosts
 	 */
 	public function get_hosts() {
 		$hosts = array();

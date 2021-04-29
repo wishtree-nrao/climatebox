@@ -4,7 +4,7 @@
  * @package Polylang
  */
 
-jQuery(
+jQuery( document ).ready(
 	function( $ ) {
 		// biography
 		// FIXME there is probably a more efficient way to do this

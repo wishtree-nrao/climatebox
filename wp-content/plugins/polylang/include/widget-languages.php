@@ -33,7 +33,6 @@ class PLL_Widget_Languages extends WP_Widget {
 	 *
 	 * @param array $args     Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
-	 * @return void
 	 */
 	public function widget( $args, $instance ) {
 		// Sets a unique id for dropdown.
@@ -100,12 +99,11 @@ class PLL_Widget_Languages extends WP_Widget {
 	}
 
 	/**
-	 * Displays the widget form.
+	 * Displays the widget form
 	 *
 	 * @since 0.4
 	 *
-	 * @param array $instance Current settings.
-	 * @return string
+	 * @param array $instance Current settings
 	 */
 	public function form( $instance ) {
 		// Default values
@@ -132,7 +130,5 @@ class PLL_Widget_Languages extends WP_Widget {
 				esc_attr( 'pll-' . $key )
 			);
 		}
-
-		return ''; // Because the parent class returns a string, however not used.
 	}
 }

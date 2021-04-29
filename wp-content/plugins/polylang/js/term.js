@@ -164,8 +164,7 @@ jQuery(
 		init_translations();
 
 		// ajax for changing the term's language
-		$( '#term_lang_choice' ).on(
-			'change',
+		$( '#term_lang_choice' ).change(
 			function() {
 				var value = $( this ).val();
 				var lang  = $( this ).children( 'option[value="' + value + '"]' ).attr( 'lang' );

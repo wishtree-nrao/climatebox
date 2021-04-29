@@ -279,8 +279,7 @@ body #content .um-directory a {
         justify-content: flex-start;
         align-items: baseline;
         flex-wrap: nowrap;
-        width: 100%;
-        position: relative; }
+        width: 100%; }
         .um-directory .um-member-directory-header .um-member-directory-header-row .um-search .um-search-filter .select2-container {
           float: left;
           width: 100% !important; }
