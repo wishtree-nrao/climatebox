@@ -62,7 +62,7 @@
 									$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1; 
 
 									$args = array(
-									    'post_type'=>'video_lessons', 
+										'post_type'=>'video_lessons', 
 										'posts_per_page' => 4,
 										'paged' => $paged,
 										'order'      => 'ASC',
@@ -76,7 +76,7 @@
 										
 									}
 									?>
-									<form class="search_small" method="get" action="<?php echo home_url('/guidelines-for-teachers/video-lessons-and-webinars/'); ?>">
+									<form class="search_small" method="get" action="<?php echo $VLW_Page_url; ?>">
 										<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">
 										
 										<input type="submit" value="search">
@@ -84,7 +84,7 @@
 									<?php
 
 									add_filter( 'posts_where', 'climate_title_filter', 10, 2 );
-									 
+
 									$loop = new WP_Query( $args );
 									remove_filter( 'posts_where', 'climate_title_filter', 10, 2 );
 									if ( $loop->have_posts() ) {
@@ -98,14 +98,25 @@
 												<div class="col-sm-6 col-md-4 col-lg-3">
 													<div class="post_litem vl_wbnr w4post">
 														<a rel="bookmark" href="<?php echo get_permalink(); ?>">
-															<?php  if ( has_post_thumbnail($post->ID)) {
+															
+															
+																<?php  if ( has_post_thumbnail($post->ID)) {
 																	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+																	
+																	<?php // the_post_thumbnail('full'); ?>
 																	<div class="post_thumb">
-																		<?php // the_post_thumbnail('full'); ?>
-																		<div class="post_image" 
-																		style="background-image: url(<?php echo $image[0]; ?>);"></div>
+																	<div class="post_image" 
+																	style="background-image: url(<?php echo $image[0]; ?>);"></div>
 																	</div>
+																<?php } else { ?>
+																	<div class="post_thumb no_thumb">
+																	<div class="post_image" 
+																	style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/no_image.jpg');"></div>
+																	</div>
+
 																<?php } ?>
+															
+
 															<p class="title"><?php echo get_the_title();  ?></p>
 															<span class="entry-date"><?php echo get_the_date(); ?></span>
 															<button class="btn btn_link"><?php pll_e('View'); ?></button>
@@ -127,28 +138,28 @@
 													if ($total_pages > 1){
 
 														$current_page = max(1, get_query_var('paged'));
-														 $big = 999999;
+														$big = 999999;
 														
 														echo paginate_links(array(
 															'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-	    													'format'  => '?paged=%#%',
+															'format'  => '?paged=%#%',
 															'current' => $current_page,
 															'total' => $total_pages,
 															'prev_text'    => __('« prev'),
 															'next_text'    => __('next »'),
 														));
-												}?>
+													}?>
 
+												</div>
 											</div>
 										</div>
-									</div>
 										<?php
 
 									}else{
 										?>
 										<div class="alert alert-warning" role="alert">
-												<?php pll_e('There are no Video Lessons and Webinars'); ?>
-											</div>
+											<?php pll_e('There are no Video Lessons and Webinars'); ?>
+										</div>
 										<?php
 									}
 									wp_reset_postdata();
@@ -156,7 +167,6 @@
 									?>
 									
 									
-									<?php// echo do_shortcode("[postlist id=660]");?>
 
 								</div><!-- Video Lessons and Webinars -->
 

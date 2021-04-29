@@ -53,9 +53,13 @@
 										$args['climate_search_title'] = $search;
 										
 									}
+									 // Get URL for Current Lang
+									$contests_Page = pll_get_post( 68 );
+									$contests_Page_url = get_the_permalink($contests_Page);
+									
 									
 									?>
-									<form class="search" method="get" action="<?php echo home_url('/school-contests/'); ?>">
+									<form class="search" method="get" action="<?php echo $contests_Page_url; ?>">
 										<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">
 										<input type="submit" value="search">
 									</form>
@@ -95,9 +99,9 @@
 											</div>
 
 											<div class="post_meta">
-												<p><?php pll_e('Published:'); ?> <?php $post_date = get_the_date( 'F j, Y' ); echo "<strong>" . $post_date . "</strong>"; ?></p>
+												<p><?php pll_e('Published:'); ?> <?php $post_date = get_the_date( 'M j, Y' ); echo "<strong>" . $post_date . "</strong>"; ?></p>
 
-												<p><?php pll_e('Due Date:'); ?> <strong><?php echo do_shortcode('[postexpirator dateformat="F j, Y" timeformat=""]'); ?></strong></p>
+												<p><?php pll_e('Due Date:'); ?> <strong><?php echo do_shortcode('[postexpirator dateformat="M j, Y" timeformat=""]'); ?></strong></p>
 											</div>
 
 											<?php if ( 'publish' === get_post_status()) { ?>
@@ -146,7 +150,7 @@
 						?>
 						<div class="col-sm-12 col-md-12">
 							<div class="alert alert-warning" role="alert">
-								<?php pll_e('There are no contest'); ?>
+								<?php pll_e('There are no contests available.'); ?>
 							</div>
 						</div>
 						<?php

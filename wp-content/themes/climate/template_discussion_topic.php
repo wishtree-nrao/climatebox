@@ -39,9 +39,9 @@
 											?>
 											<div class="head_action">
 												<?php // Get URL for Current Lang
-													$submitted_question = pll_get_post( 986 );
-													$submitted_question_url = get_the_permalink($submitted_question);
-													?>
+												$submitted_question = pll_get_post( 986 );
+												$submitted_question_url = get_the_permalink($submitted_question);
+												?>
 												<a class="btn btnBlue" href="<?php echo $submitted_question_url; ?>"><?php pll_e('Submitted Questions'); ?></a>
 											</div>
 											<?php
@@ -72,14 +72,23 @@
 												<a rel="bookmark" href="<?php echo get_permalink(); ?>">
 													<div class="row">
 														<div class="col-sm-4 col-md-4 col-lg-3">
-															<?php  if ( has_post_thumbnail($post->ID)) {
-																$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
-																<div class="post_thumb">
+
+															<div class="post_thumb">
+																<?php  if ( has_post_thumbnail($post->ID)) {
+																	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+																	
 																	<?php // the_post_thumbnail('full'); ?>
 																	<div class="post_image" 
 																	style="background-image: url(<?php echo $image[0]; ?>);"></div>
-																</div>
-															<?php } ?>
+																	
+																<?php } else { ?>
+
+																	<div class="post_image" 
+																	style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/placeholder.png');"></div>
+
+																<?php } ?>
+															</div>
+															
 														</div>
 
 														<div class="col-sm-8 col-md-8 col-lg-9">
@@ -122,6 +131,14 @@
 														'next_text'    => __('next »'),
 													));
 												}    
+											}else{
+												?>
+												<div class="col-sm-12 col-md-12">
+													<div class="alert alert-warning" role="alert">
+														<?php pll_e('There are no discussion topics available.'); ?>
+													</div>
+												</div>
+												<?php
 											}
 											wp_reset_postdata();
 											?>
@@ -135,7 +152,7 @@
 					<?php } else { ?>
 
 						<div class="alert alert-danger" role="alert">
-							<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>
+							<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>   <?php pll_e('Please login to the portal to see page details.'); ?>
 						</div>
 
 					<?php } ?>

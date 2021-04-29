@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: climate\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-19 11:31+0000\n"
+"POT-Creation-Date: 2021-03-23 05:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -66,10 +66,14 @@ msgid "Discussion Material Page"
 msgstr ""
 
 #. %s: Name of current post
-#: single-discussion_topic.php:97 single-video_lessons.php:142 single.php:142
-#: template-parts/content-page.php:69
+#: single-discussion_topic.php:86 single.php:133
+#: template-parts/content-page.php:39
 #, php-format
 msgid "Edit %s"
+msgstr ""
+
+#: functions.php:1971
+msgid "Error 404"
 msgstr ""
 
 #. Name of the template
@@ -82,6 +86,10 @@ msgstr ""
 
 #. Name of the template
 msgid "Gallery Page"
+msgstr ""
+
+#: functions.php:1756
+msgid "Home"
 msgstr ""
 
 #. URI of the theme
@@ -136,10 +144,10 @@ msgid "One thought on &ldquo;%1$s&rdquo;"
 msgstr ""
 
 #: single-mapposter.php:48 single-quiz_listing.php:35
-#: single-discussion_topic.php:84 single-rl_gallery.php:48
-#: single-video_lessons.php:97 single-competition.php:96
-#: single-textbooks.php:212 single.php:97 template-parts/content.php:57
-#: template-parts/content-notitle.php:18 template-parts/content-page.php:57
+#: single-discussion_topic.php:73 single-rl_gallery.php:48
+#: single-competition.php:96 single-textbooks.php:211 single.php:88
+#: template-parts/content.php:50 template-parts/content-notitle.php:18
+#: template-parts/content-page.php:27
 msgid "Pages:"
 msgstr ""
 
@@ -165,7 +173,12 @@ msgid ""
 "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
 msgstr ""
 
-#: header.php:52
+#: search.php:23
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: header.php:36
 msgid "Skip to content"
 msgstr ""
 

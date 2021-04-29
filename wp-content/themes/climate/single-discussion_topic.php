@@ -9,14 +9,18 @@
 
 get_header(); ?>
 
+
+<?php /* Stay this client want to revert the change */ ?>
+
 <?php $user = wp_get_current_user();
-if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator', (array) $user->roles ) || in_array( 'administrator', (array) $user->roles ) ) { ?>
+
+if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator', (array) $user->roles ) || in_array( 'administrator', (array) $user->roles ) ) { /* ?>
 
 	<?php if (has_post_thumbnail( $post->ID ) ) { ?>
 		<div class="post_attachment_head" style="background-image: url('<?php echo get_the_post_thumbnail_url(); ?>');"></div>
 	<?php } else { ?>
 		<div class="post_attachment_head" style="background-image: url('<?php echo get_the_post_thumbnail_url(); ?>');"></div>
-	<?php } ?>
+	<?php } */  ?>
 
 <?php } else { ?>
 
@@ -63,6 +67,13 @@ if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator',
 								</div>
 
 								<?php // } ?>
+
+								
+								<?php  if (has_post_thumbnail( $post->ID ) ) { ?>
+									<div class="post_attach_body" style="background-image: url('<?php echo get_the_post_thumbnail_url(); ?>');"></div>
+								<?php } else { ?>
+									<div class="post_attach_body" style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/placeholder.png');"></div>
+								<?php }  ?>
 
 
 								<div class="entry-content">
@@ -115,7 +126,7 @@ if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator',
 		<?php } else { ?>
 
 			<div class="alert alert-danger" role="alert">
-				<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>
+				<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>  <?php pll_e('Please login to the portal to see page details.'); ?>
 			</div>
 
 		<?php } ?>

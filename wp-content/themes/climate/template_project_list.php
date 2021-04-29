@@ -34,11 +34,14 @@ $user = wp_get_current_user();
 										<?php // Get URL for Current Lang
 										$contests = pll_get_post( 68 );
 										$contests_url = get_the_permalink($contests);
+
+										$projects = pll_get_post( 771 );
+										$projects_url = get_the_permalink($projects);
 										?>
 
 										<a class="btn btnBlue" href="<?php echo $contests_url; ?>"><?php pll_e('See Contest List'); ?></a>
 								
-										<form class="search" method="get" action="<?php echo home_url('/school-contests/submitted-projects/'); ?>">
+										<form class="search" method="get" action="<?php echo $projects_url; ?>">
 											<input type="text" name="search" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php echo $search; ?>">
 										
 											<input type="submit" value="search">
@@ -151,7 +154,7 @@ $user = wp_get_current_user();
 						
 						<div class="row">
 							<?php
-
+							$m = 0;	
 							$argscompetitions = array(
 								'post_type'=>'competition', 
 							);
@@ -190,6 +193,7 @@ $user = wp_get_current_user();
 
 									$loop = new WP_Query( $args );
 									if ( $loop->have_posts() ) {
+										$m++;
 										?>
 										<div class="col-sm-12 col-md-12 col-lg-12">
 											<h5 class="contest-title"><?php echo $competition->post_title ; ?></h5>
@@ -282,16 +286,22 @@ $user = wp_get_current_user();
 							);
 
 						}
-						$loop = new WP_Query( $args );
-						if ( $loop->have_posts() ) {
-						}else{
 
+
+
+						$loop = new WP_Query( $args );
+
+						// print_r($competitions);
+
+						if ( empty($loop->have_posts()) || empty($competitions) || $m == 0) {
 							?>
+
 							<div class="col-sm-12 col-md-12">
 								<div class="alert alert-warning" role="alert">
 									<?php pll_e('There are no projects submitted'); ?>
 								</div>
 							</div>
+							
 						<?php } ?>
 
 					</div>
@@ -303,7 +313,7 @@ $user = wp_get_current_user();
 				 } else { ?>
 
 					<div class="alert alert-danger" role="alert">
-						<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>
+						<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>   <?php pll_e('Please login to the portal to see page details.'); ?>
 					</div>
 
 				<?php } ?>

@@ -38,11 +38,7 @@ function header_scroll() {
 }
 
 
-jQuery(document).click(function(e) {
-	if (!jQuery(e.target).is('.dropdown_popup')) {
-    	jQuery('#masthead .collapse:not(#HeaderSearch):not(.navbar-collapse)').collapse('hide');
-    }
-});
+
 
 
 // Add DropArrow in Mobile Menu
@@ -52,6 +48,17 @@ container.find("li.menu-item-has-children > .lvl2_click").click(function (e) {
 	var menu = jQuery(this).parent(".menu-item").toggleClass("open_lvl2_submenu");
 	jQuery(".menu-item", container).not(menu).removeClass("open_lvl2_submenu");
 	e.preventDefault();
+});
+
+
+
+// Close Mobile Menu
+jQuery(document).click(function(){
+	jQuery("#main-nav").removeClass('show');
+});
+
+jQuery("ul.navbar-nav").click(function(e){
+	e.stopPropagation();
 });
 
 

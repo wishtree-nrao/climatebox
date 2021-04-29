@@ -32,7 +32,7 @@ get_header(); ?>
 									$submitted_project_url = get_the_permalink($submitted_project);
 									?>
 
-									<?php // echo $submitted_project_url; ?>
+									
 
 									<?php while ( have_posts() ) : the_post(); ?>
 										<?php acf_form(array(
@@ -56,7 +56,7 @@ get_header(); ?>
 					<?php } else { ?>
 
 						<div class="alert alert-danger" role="alert">
-							<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>
+							<?php pll_e('Sorry, but you do not have permission to view this content.'); ?> <?php pll_e('Please login to the portal to see page details.'); ?>
 						</div>
 
 					<?php } ?>

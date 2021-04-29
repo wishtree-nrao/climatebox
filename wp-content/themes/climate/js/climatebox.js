@@ -1,12 +1,21 @@
 jQuery(document).ready(function($) {
-	jQuery(".showmore").live("click",function() {
-		console.log("test");
+	$(document).click(function(e) {
+
+	    // check that your clicked
+	    // element has no id=HeaderSearch
+	    // and is not child of HeaderSearch
+	    
+	    if (e.target.id != 'searchdiv' && !$('#searchdiv').find(e.target).length ) {
+	        $("#HeaderSearch").removeClass("show");
+	    }
+	});
+	jQuery(".pagination").on("click",".showmore",function() {
 		var contest = $(this).attr('data-contest');
 		$(".newprojects-"+contest).show();
 		$(".more-"+contest).hide();
 		$(".less-"+contest).show();
 	});
-	jQuery(".classmore").live("click",function() {
+	jQuery(".pagination").on("click",".classmore",function() {
 		var contest = $(this).attr('data-contest');
 		var paged = $(this).attr('data-paged');
 		var totalpages = $(this).attr('data-total-pages'); 

@@ -38,7 +38,7 @@ get_header(); ?>
 </div><!-- .row -->
 </div><!-- .container -->
 
-
 <?php
+
 get_sidebar();
 get_footer();

@@ -132,13 +132,6 @@ get_header(); ?>
 									
 							<?php } ?>
 
-							<?php
-							the_post_navigation( array(
-					            'prev_text'                  => pll__( 'Prev' ),
-					            'next_text'                  => pll__( 'Next' ),
-					        ) );
-							?>
-
 
 							<?php if ( get_edit_post_link() && !$enable_vc ) : ?>
 								<footer class="entry-footer">

@@ -12,14 +12,21 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class('post_litem'); ?>>
 	<div class="post-thumbnail">
 		<a href="<?php the_permalink(); ?>">
-			<?php  if ( has_post_thumbnail($post->ID)) {
-				$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
-				<div class="post_thumb">
+			<div class="post_thumb">
+				<?php  if ( has_post_thumbnail($post->ID)) {
+					$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+					
 					<?php // the_post_thumbnail('full'); ?>
 					<div class="post_image" 
 					style="background-image: url(<?php echo $image[0]; ?>);"></div>
-				</div>
-			<?php } ?>
+					
+				<?php } else { ?>
+
+					<div class="post_image" 
+					style="background-image: url('<?php echo get_stylesheet_directory_uri(); ?>/img/placeholder.png');"></div>
+
+				<?php } ?>
+			</div>
 		</a>
 	</div>
 	<header class="entry-header">

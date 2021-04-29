@@ -1,6 +1,4 @@
 <?php
-// Author: Naimesh Rao
-
 
 // Remove Link ?=ver ///////////////////////////////////////
 
@@ -12,33 +10,11 @@ add_filter('the_generator', 'webbkod_remove_version');
 remove_action('wp_head', 'wp_generator');
 
 
-
 // Upload File Size Media ///////////////////////////////////////
 
-@ini_set( 'upload_max_size' , '64M' );
-@ini_set( 'post_max_size', '64M');
+@ini_set( 'upload_max_size' , '30M' );
+@ini_set( 'post_max_size', '30M');
 @ini_set( 'max_execution_time', '300' );
-
-
-
-// Search Highlight Text ///////////////////////////////////////
-/*
-function search_excerpt_highlight() {
-    $excerpt = get_the_excerpt();
-    $keys = implode('|', explode(' ', get_search_query()));
-    $excerpt = preg_replace('/(' . $keys .')/iu', '<strong class="search-highlight">\0</strong>', $excerpt);
-
-    echo '<p>' . $excerpt . '</p>';
-}
-
-function search_title_highlight() {
-    $title = get_the_title();
-    $keys = implode('|', explode(' ', get_search_query()));
-    $title = preg_replace('/(' . $keys .')/iu', '<strong class="search-highlight">\0</strong>', $title);
-
-    echo $title;
-}
-*/
 
 
 // Polylang String ///////////////////////////////////////
@@ -51,7 +27,8 @@ add_action('init', function() {
   pll_register_string('climate', 'My Account'); // Header File
   pll_register_string('climate', 'Login'); // Header File
 
-  pll_register_string('climate', 'Download this Document'); // toolkit doc file
+  pll_register_string('climate', 'Download Climate Box Materials'); // toolkit doc file
+  pll_register_string('climate', 'Loading'); // toolkit doc file
 
   pll_register_string('climate', 'Learning Materials'); // For Tachers
   pll_register_string('climate', 'Video Lessons and Webinars'); // For Tachers
@@ -73,8 +50,8 @@ add_action('init', function() {
 
   pll_register_string('climate', 'Search by keywords'); // Temp - Textbook
   pll_register_string('climate', 'There are no textbooks'); // Temp - Textbook
-  pll_register_string('climate', 'Back to Textbooks list'); // Single - Textbook
-  pll_register_string('climate', 'Topics'); // Single - Textbook
+  pll_register_string('climate', 'Back to the Textbook main page'); // Single - Textbook
+  pll_register_string('climate', 'Parts'); // Single - Textbook
   pll_register_string('climate', 'More Quizzes'); // Single - Quiz
 
   //pll_register_string('climate', 'Next Quiz'); // Function File
@@ -120,6 +97,8 @@ add_action('init', function() {
   pll_register_string('climate', 'Attachments'); // Common in File
   pll_register_string('climate', 'Category:'); // Common in File
   pll_register_string('climate', 'Sorry, but you do not have permission to view this content.'); // Common in File
+   pll_register_string('climate', 'Please login to the portal to see page details.');
+
 
   pll_register_string('climate', 'Oops!'); // 404
   pll_register_string('climate', 'This is not the page you are looking for.'); // 404
@@ -131,6 +110,27 @@ add_action('init', function() {
 
   pll_register_string('climate', 'Error 404'); // Breadcrumb
   pll_register_string('climate', 'Home'); // Breadcrumb
+  pll_register_string('climate', 'Search Results for: ');
+
+  pll_register_string('climate', 'Arabic');
+  pll_register_string('climate', 'Armenian');
+  pll_register_string('climate', 'Belarussian');
+  pll_register_string('climate', 'English');
+  pll_register_string('climate', 'French');
+  pll_register_string('climate', 'Kazakh');
+  pll_register_string('climate', 'Kyrgyz');
+  pll_register_string('climate', 'Romanian');
+  pll_register_string('climate', 'Russian');
+  pll_register_string('climate', 'Spanish');
+  pll_register_string('climate', 'Tajik');
+  pll_register_string('climate', 'Turkmen');
+  pll_register_string('climate', 'Uzbek');
+
+  pll_register_string('climate', 'Prev');
+  pll_register_string('climate', 'Next');
+
+
+  //pll_register_string('climate', 'Languages'); // Function File
 
 });
 
@@ -141,6 +141,15 @@ add_action('init', function () {
     $fields = acf_get_fields($group['ID']);
     if (is_array($fields) && count($fields)) {
       foreach ($fields as &$field) {
+        if($field['type'] == 'message'){
+          pll_register_string('form_field_group'.$group['ID'].'_label_'.$field['field_6023c4b7b6338'], $field['message'], 'acf_form_fields');
+        }
+
+        if($field['type'] == 'repeater'){
+          pll_register_string('form_field_group'.$group['ID'].'_label_'.$field['field_602f8db3a643c'], $field['button_label'], 'acf_form_fields');
+          pll_register_string('climate', $field['sub_fields'][0]['label'], 'acf_form_fields');  
+
+        }
         pll_register_string('form_field_group'.$group['ID'].'_label_'.$field['name'], $field['label'], 'acf_form_fields');
       }
     }
@@ -149,11 +158,17 @@ add_action('init', function () {
 
 add_filter('acf/prepare_field', function ($field) {
   if (!is_admin()) {
+    if($field['type'] == 'message'){
+         $field['message'] = pll__( $field['message']);
+    }
+    if($field['type'] == 'repeater'){
+         $field['button_label'] = pll__( $field['button_label']);
+         $field['sub_fields'][0]['label'] = pll__( $field['sub_fields'][0]['label']);
+    }
     $field['label'] = pll__($field['label']);
   }
   return $field;
 }, 10, 1);
-
 
 
 
@@ -184,14 +199,6 @@ function my_acf_op_init() {
       'capability'    => 'edit_toolkit_docs',
     ));
 
-    // $child_2 = acf_add_options_sub_page(array(
-    //   'page_title'  => __('Theme URL Redirection for Language'),
-    //   'menu_title'  => __('URL Redirection'),
-    //   'updated_message' => __("Theme Post Updated", 'acf'),
-    //   'parent_slug' => $parent['menu_slug'],
-    //   'capability'    => 'edit_url_redirection',
-    // ));
-
   }
 }
 
@@ -200,23 +207,12 @@ function themeoption_js_admin() {
   ?>
 
   <script>
-    $(".theme-options_page_acf-options-url-redirection label:contains(EN)").closest( ".acf-field" ).css("background-color", "#fff9e6");
+   // $(".theme-options_page_acf-options-url-redirection label:contains(EN)").closest( ".acf-field" ).css("background-color", "#fff9e6");
   </script>
 
   <?php 
 }
 add_action('wp_print_scripts', 'themeoption_js_admin');
-
-
-
-
-// Content Permissions meta box in CPT Edit ///////////////////////////////////////
-// add_action( 'add_meta_boxes', function() {
-
-//  remove_meta_box( 'members-cp', 'competition', 'advanced' );
-
-// }, 11 );
-
 
 
 
@@ -292,110 +288,117 @@ add_action( 'admin_init', function () {
 }
 
 
-
 });
 
-
  
-
 
 // Custom CSS in WP-ADMIN ///////////////////////////////////////
 add_action('admin_head', 'custom_cssadmin');
 
-function custom_cssadmin() {
+    function custom_cssadmin() {
 
-echo '<style>
+    echo '<style>
 
-    /* Common Admin CSS Change */
-  .notice.notice-error.jquery-migrate-dashboard-notice,
-  .notice.notice-warning.yoast-notification
-  {display:none;}
+        /* Common Admin CSS Change */
+      .notice.notice-error.jquery-migrate-dashboard-notice,
+      .notice.notice-warning.yoast-notification
+      {display:none;}
 
-  /* Edditor Controls */
-  .mce-tinymce .mce-container .mce-widget.mce-btn[aria-label="Add Quiz"]{display:none;}
-  .mce-tinymce .mce-container .mce-widget.mce-btn[aria-label="Select a part of text and ask readers for feedback (inline commenting)"]
-  {display:none;}
+      /* Edditor Controls */
+      .mce-tinymce .mce-container .mce-widget.mce-btn[aria-label="Add Quiz"]{display:none;}
+      .mce-tinymce .mce-container .mce-widget.mce-btn[aria-label="Select a part of text and ask readers for feedback (inline commenting)"]
+      {display:none;}
 
-  .wp-editor-tools #forminator-generate-shortcode{display:none;}
-  .wp-editor-tools #rl-insert-modal-gallery-button{display:none;}
+      .wp-editor-tools #forminator-generate-shortcode{display:none;}
+      .wp-editor-tools #rl-insert-modal-gallery-button{display:none;}
 
-  /*Quiz Maker*/
-  /*.ays-quiz-tabs-wrapper .pro_features{display: none;}*/
+      /*Quiz Maker*/
+      /*.ays-quiz-tabs-wrapper .pro_features{display: none;}*/
 
-  </style>';
+      </style>';
 
 
-// um_contest-admin User CSS
-$user = wp_get_current_user();
-if ( in_array( 'um_contest-admin', (array) $user->roles ) ) {
+    // um_contest-admin User CSS
+    $user = wp_get_current_user();
+    if ( in_array( 'um_contest-admin', (array) $user->roles ) ) {
 
-echo '<style>
+    echo '<style>
 
-    /* Common Admin CSS Change */
-    ul#adminmenu li#menu-comments, ul#adminmenu li#menu-posts-w4pl, ul#adminmenu li#menu-posts-w4pl,
-    ul#adminmenu li#toplevel_page_wpcf7, ul#adminmenu li#toplevel_page_vc-welcome,
-    ul#adminmenu li#menu-tools
-    {display:none;}
+        /* Common Admin CSS Change */
+        ul#adminmenu li#menu-comments, ul#adminmenu li#menu-posts-w4pl, ul#adminmenu li#menu-posts-w4pl,
+        ul#adminmenu li#toplevel_page_wpcf7, ul#adminmenu li#toplevel_page_vc-welcome,
+        ul#adminmenu li#menu-tools
+        {display:none;}
 
-    #wpadminbar ul li#wp-admin-bar-comments, #wpadminbar ul li#wp-admin-bar-new-content
-    {display:none;}
+        #wpadminbar ul li#wp-admin-bar-comments, #wpadminbar ul li#wp-admin-bar-new-content
+        {display:none;}
 
-    .yoast-notification{display:none;}
+        .yoast-notification{display:none;}
 
-  </style>';
+      </style>';
+    }
+
+    // um_toolkit-admin User CSS
+    $user = wp_get_current_user();
+    if ( in_array( 'um_toolkit-admin', (array) $user->roles ) ) {
+
+      echo '<style>
+
+          /* Admin CSS Change */ 
+          .ays-quiz-category-form .only_pro, .ays-quiz-tab-content .only_pro{display: none;}
+
+          .ays-quiz-category-form .ays-quiz-tab-content .add-quiz-image,
+          .ays-quiz-tab-content .add-question-image,
+          .ays-quiz-category-form .ays-quiz-tab-content #wp-ays-quiz-description-wrap
+          {display: none;}
+
+          .ays-quiz-tab-content .ays-add-answer{display:none;}
+          .ays-quiz-tab-content a.ays-delete-answer{pointer-events: none;opacity: 0.2;}
+
+          body[class*="questions"] .select2-container .select2-dropdown .select2-results ul li{display:none;}
+
+          .ays-notice-banner{display:none;}
+
+          /*Hide Unused Tab*/
+          .ays-top-tab-wrapper a[data-tab="tab2"], .ays-top-tab-wrapper a[data-tab="tab3"],
+          .ays-top-tab-wrapper a[data-tab="tab5"],
+          .ays-top-tab-wrapper a[data-tab="tab6"], .ays-top-tab-wrapper a[data-tab="tab7"],
+          .ays-top-tab-wrapper a[data-tab="tab8"], .ays-top-tab-wrapper a[data-tab="tab9"]
+          {display:none;}
+
+          #ays-question-form .nav-tab-wrapper a[data-tab="tab2"]
+          {display:none;}
+
+          #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li{display:none;}
+
+          #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(2),
+          #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(3),
+          #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(4),
+          #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(5)
+          {display:block;}
+
+        </style>';
+    }
+
+
+
 }
 
-// um_toolkit-admin User CSS
-$user = wp_get_current_user();
-if ( in_array( 'um_toolkit-admin', (array) $user->roles ) ) {
-
-echo '<style>
-
-    /* Admin CSS Change */ 
-    .ays-quiz-category-form .only_pro, .ays-quiz-tab-content .only_pro{display: none;}
-
-    .ays-quiz-category-form .ays-quiz-tab-content .add-quiz-image,
-    .ays-quiz-tab-content .add-question-image,
-    .ays-quiz-category-form .ays-quiz-tab-content #wp-ays-quiz-description-wrap
-    {display: none;}
-
-    .ays-quiz-tab-content .ays-add-answer{display:none;}
-    .ays-quiz-tab-content a.ays-delete-answer{pointer-events: none;opacity: 0.2;}
-
-    body[class*="questions"] .select2-container .select2-dropdown .select2-results ul li{display:none;}
-
-    .ays-notice-banner{display:none;}
-
-    /*Hide Unused Tab*/
-    .ays-top-tab-wrapper a[data-tab="tab2"], .ays-top-tab-wrapper a[data-tab="tab3"],
-    .ays-top-tab-wrapper a[data-tab="tab5"],
-    .ays-top-tab-wrapper a[data-tab="tab6"], .ays-top-tab-wrapper a[data-tab="tab7"],
-    .ays-top-tab-wrapper a[data-tab="tab8"], .ays-top-tab-wrapper a[data-tab="tab9"]
-    {display:none;}
-
-    #ays-question-form .nav-tab-wrapper a[data-tab="tab2"]
-    {display:none;}
-
-    #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li{display:none;}
-
-    #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(2),
-    #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(3),
-    #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(4),
-    #adminmenu li.menu-top#toplevel_page_quiz-maker ul.wp-submenu li:nth-child(5)
-    {display:block;}
-
-  </style>';
-}
 
 
 
-}
+// Change Sender Name for Email ///////////////////////////////////////
+
+// function wpb_sender_name( $original_email_from ) {
+
+// $websitename = get_bloginfo();
+// return $websitename;
+
+// }
+// add_filter( 'wp_mail_from', 'wpb_sender_email' );
+// add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
 
 
-// UM Emails Background Color Change ///////////////////////////////////////
-// add_filter("um_email_template_body_attrs", function( $css_atts ){
-//    return 'style="background: #fff;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;"';
-// });
 
 
 
@@ -416,17 +419,7 @@ function send_mails_on_publish_topic( $new_status, $old_status, $post )
 
     $link           =   get_permalink( $post );
     $post_name      =   get_the_title( $post );
-    //$logo           =   get_stylesheet_directory_uri() . '/img/undp_logo_blue.png';
 
-    //$html = get_template_part( 'email_disc_topic' );
-
-    // $html = "<html><body>
-    // <p>Hellow ,</p>
-    // <p>New Discussion Topic Created</p>
-    // <p><a href=$link>$fromName</a></p>
-    // <p>Thank You</p>
-    // </body>
-    // </html>";
 
     $html = '<body bgcolor="#f2f2f2" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
 
@@ -498,7 +491,6 @@ function send_mails_on_publish_topic( $new_status, $old_status, $post )
 </body>';
 
 
-    $headers[] = "From: UNDP Climate Box <help@climate-box-dev.wishtreetech.com>"; // $fromName
     $headers[] ="Content-Type: text/html";
 
     foreach ( $subscribers as $subscriber )
@@ -515,34 +507,25 @@ add_action( 'transition_post_status', 'send_mails_on_addquestion', 10, 3 );
 
 function send_mails_on_addquestion( $new_status, $old_status, $post )
 {
-    if ( 'publish' !== $new_status or 'publish' === $old_status
-        or 'submit_question' !== get_post_type( $post ) )
-        return;
+  if ( 'publish' !== $new_status or 'publish' === $old_status
+    or 'submit_question' !== get_post_type( $post ) )
+    return;
 
-    $from_email     =   'wordpress@' . $sitename;
-    $subscribers    =   get_users( array ( 'role' => 'um_moderator' ) );
-    $emails         =   array ();
-    $subject        =   'Added A Question : ' . get_bloginfo();
-    $fromName       =   get_bloginfo();
-	$current_user = wp_get_current_user();
+  $from_email     =   'wordpress@' . $sitename;
+  $subscribers    =   get_users( array ( 'role' => 'um_moderator' ) );
+  $emails         =   array ();
+  $subject        =   'Added A Question : ' . get_bloginfo();
+  $fromName       =   get_bloginfo();
+  $current_user = wp_get_current_user();
 
-    $link          =   get_permalink( $post );
-    $post_name      =   get_the_title( $post );
-    $author         = 	$current_user->display_name;  // get_the_author( $post );
-    $loginurl       =   get_site_url();
-   //$loginurl       =   get_site_url().'/teachers-discussion/submitted-questions/';
+  $link          =   get_permalink( $post );
+  $post_name      =   get_the_title( $post );
+  $author         = 	$current_user->display_name;  // get_the_author( $post );
+  $loginurl       =   get_site_url();
+  //$loginurl       =   get_site_url().'/teachers-discussion/submitted-questions/';
+  //$logo           =   get_stylesheet_directory_uri() . '/img/undp_logo_blue.png';
+  //$html = get_template_part( 'email_disc_topic' );
 
-    //$logo           =   get_stylesheet_directory_uri() . '/img/undp_logo_blue.png';
-
-    //$html = get_template_part( 'email_disc_topic' );
-
-    // $html = "<html><body>
-    // <p>Hellow ,</p>
-    // <p>New Discussion Topic Created</p>
-    // <p><a href=$link>$fromName</a></p>
-    // <p>Thank You</p>
-    // </body>
-    // </html>";
 
     $html = '<body bgcolor="#f2f2f2" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
 
@@ -618,7 +601,6 @@ function send_mails_on_addquestion( $new_status, $old_status, $post )
 </body>';
 
 
-    $headers[] = "From: UNDP Climate Box <help@climate-box-dev.wishtreetech.com>"; // $fromName
     $headers[] ="Content-Type: text/html";
 
     foreach ( $subscribers as $subscriber )
@@ -633,13 +615,7 @@ function send_mails_on_addquestion( $new_status, $old_status, $post )
 // Next Post Link ///////////////////////////////////////
 function next_shortcode($atts) {
 
-//global $wp;  
-//$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-//$link_text =  __('Next Quiz');
-//$link_text =  'Next Quiz';
-
-return '<a href="/?random=1" class="next_quiz">'. __("Next Quiz","acf") .' <i class="fas fa-chevron-right"></i></a>'; 
+  return '<a href="/?random=1" class="next_quiz">'. __("Next Quiz","acf") .' <i class="fas fa-chevron-right"></i></a>'; 
 
 }
 
@@ -672,36 +648,6 @@ function random_template() {
  exit;
 }
 }
-
-
-
-
-
-// function remove_menus(){
-
-// $roles = wp_get_current_user()->roles;
- 
-// if( !in_array('editor',$roles)){
-// return;
-// }
- 
-// remove_menu_page( 'index.php' ); //Dashboard
-// remove_menu_page( 'edit.php' ); //Posts
-// remove_menu_page( 'upload.php' ); //Media
-// remove_menu_page( 'edit-comments.php' ); //Comments
-// remove_menu_page( 'themes.php' ); //Appearance
-// remove_menu_page( 'plugins.php' ); //Plugins
-// remove_menu_page( 'users.php' ); //Users
-// remove_menu_page( 'tools.php' ); //Tools
-// remove_menu_page( 'options-general.php' ); //Settings
-// remove_menu_page( 'edit.php?post_type=page' ); //Pages
-// remove_menu_page('edit.php?post_type=testimonial'); // Custom post type 1
-// remove_menu_page('edit.php?post_type=homeslider'); // Custom post type 2
-// }
-// add_action( 'admin_menu', 'remove_menus' , 100 );
-
-
-
 
 
 
@@ -751,19 +697,7 @@ add_filter('admin_body_class', function($classes) {
 });
 
 
-
-// ACF URL Redirection code for Languages ///////////////////////////////////////
-//add_action('init','climatebox_urls');
-// function climatebox_urls($page) {
-
-//   $lang = get_bloginfo("language"); 
-//   $getpage = get_field($page."-".$lang);
-//   $url = get_permalink(  $getpage);
-//   return $url;
-
-// }
-
-
+ 
 
 
 // ACF Custom Query to Remove Draft Post from Post Object [ps_select_contest] ///////////////////////////////////////
@@ -900,44 +834,14 @@ add_action( 'widgets_init', 'webbkod_widgets_init' );
 
 /* ========================= [[ Pst Label to News ]] ========================= */
 
-// REMOVE CODE on Delivery
-// function revcon_change_post_label() {
-//     global $menu;
-//     global $submenu;
-//     $menu[5][0] = 'News';
-//     $submenu['edit.php'][5][0] = 'News';
-//     $submenu['edit.php'][10][0] = 'Add News';
-//     $submenu['edit.php'][16][0] = 'News Tags';
-// }
-// function revcon_change_post_object() {
-//     global $wp_post_types;
-//     $labels = &$wp_post_types['post']->labels;
-//     $labels->name = 'News';
-//     $labels->singular_name = 'News';
-//     $labels->add_new = 'Add News';
-//     $labels->add_new_item = 'Add News';
-//     $labels->edit_item = 'Edit News';
-//     $labels->new_item = 'News';
-//     $labels->view_item = 'View News';
-//     $labels->search_items = 'Search News';
-//     $labels->not_found = 'No News found';
-//     $labels->not_found_in_trash = 'No News found in Trash';
-//     $labels->all_items = 'All News';
-//     $labels->menu_name = 'News';
-//     $labels->name_admin_bar = 'News';
-// }
-
-// add_action( 'admin_menu', 'revcon_change_post_label' );
-// add_action( 'init', 'revcon_change_post_object' );
-
 add_filter( 'post_type_labels_post', 'change_post_labels' );
 
 function change_post_labels( $args ) {
-        foreach( $args as $key => $label ){
-            $args->{$key} = str_replace( [ __( 'Posts' ), __( 'Post' ) ], __( 'News' ), $label );
-        }
+  foreach( $args as $key => $label ){
+    $args->{$key} = str_replace( [ __( 'Posts' ), __( 'Post' ) ], __( 'News' ), $label );
+  }
 
-        return $args;
+  return $args;
 }
 
 
@@ -1016,8 +920,6 @@ add_filter('upload_mimes', 'cc_mime_types');
 
 
 
-
-
 /* ========================= [[ Pagination ]] ========================= */
 function custom_pagination($numpages = '', $pagerange = '', $paged='') {
 
@@ -1073,220 +975,82 @@ echo "</div>";
 
 
 
-
-
-// add_action( 'wp_ajax_demo_load_my_posts', 'demo_load_my_posts' );
-// add_action( 'wp_ajax_nopriv_demo_load_my_posts', 'demo_load_my_posts' );
-// function demo_load_my_posts() {
-
-//     global $wpdb;
-    
-//     $msg = '';
-    
-//     if( isset( $_POST['data']['page'] ) ){
-//         // Always sanitize the posted fields to avoid SQL injections
-//         $page = sanitize_text_field($_POST['data']['page']); // The page we are currently at
-//         $name = sanitize_text_field($_POST['data']['th_name']); // The name of the column name we want to sort
-//         $sort = sanitize_text_field($_POST['data']['th_sort']); // The order of our sort (DESC or ASC)
-//         $cur_page = $page;
-//         $page -= 1;
-//         $per_page = 15; // Number of items to display per page
-//         $previous_btn = true;
-//         $next_btn = true;
-//         $first_btn = true;
-//         $last_btn = true;
-//         $start = $page * $per_page;
-        
-//         // The table we are querying from  
-//         $posts = $wpdb->prefix . "posts";
-        
-//         $where_search = '';
-        
-//         // Check if there is a string inputted on the search box
-//         if( ! empty( $_POST['data']['search']) ){
-//             // If a string is inputted, include an additional query logic to our main query to filter the results
-//             $where_search = ' AND (post_title LIKE "%%' . $_POST['data']['search'] . '%%" OR post_content LIKE "%%' . $_POST['data']['search'] . '%%") ';
-//         }
-        
-//         // Retrieve all the posts
-//         $all_posts = $wpdb->get_results($wpdb->prepare("
-//             SELECT * FROM $posts WHERE post_type = 'post' AND post_status = 'publish' $where_search
-//             ORDER BY $name $sort LIMIT %d, %d", $start, $per_page ) );
-        
-//         $count = $wpdb->get_var($wpdb->prepare("
-//             SELECT COUNT(ID) FROM " . $posts . " WHERE post_type = 'post' AND post_status = 'publish' $where_search", array() ) );
-        
-//         // Check if our query returns anything.
-//         if( $all_posts ):
-//             $msg .= '<table class = "table table-striped table-hover table-file-list">';
-            
-//             // Iterate thru each item
-//             foreach( $all_posts as $key => $post ):
-//                 $msg .= '
-//                 <tr>
-//                 <td width = "25%"><a href = "' . get_permalink( $post->ID ) . '">' . $post->post_title . '</a></td>
-//                 <td width = "60%">' . $post->post_excerpt . '</td>
-//                 <td width = "15%">' . $post->post_date . '</td>
-//                 </tr>';        
-//             endforeach;
-            
-//             $msg .= '</table>';
-            
-//         // If the query returns nothing, we throw an error message
-//         else:
-//             $msg .= '<p class = "bg-danger">No posts matching your search criteria were found.</p>';
-            
-//         endif;
-
-//         $msg = "<div class='cvf-universal-content'>" . $msg . "</div><br class = 'clear' />";
-        
-//         $no_of_paginations = ceil($count / $per_page);
-
-//         if ($cur_page >= 7) {
-//             $start_loop = $cur_page - 3;
-//             if ($no_of_paginations > $cur_page + 3)
-//                 $end_loop = $cur_page + 3;
-//             else if ($cur_page <= $no_of_paginations && $cur_page > $no_of_paginations - 6) {
-//                 $start_loop = $no_of_paginations - 6;
-//                 $end_loop = $no_of_paginations;
-//             } else {
-//                 $end_loop = $no_of_paginations;
-//             }
-//         } else {
-//             $start_loop = 1;
-//             if ($no_of_paginations > 7)
-//                 $end_loop = 7;
-//             else
-//                 $end_loop = $no_of_paginations;
-//         }
-        
-//         $pag_container .= "
-//         <div class='cvf-universal-pagination'>
-//         <ul>";
-
-//         if ($first_btn && $cur_page > 1) {
-//             $pag_container .= "<li p='1' class='active'>First</li>";
-//         } else if ($first_btn) {
-//             $pag_container .= "<li p='1' class='inactive'>First</li>";
-//         }
-
-//         if ($previous_btn && $cur_page > 1) {
-//             $pre = $cur_page - 1;
-//             $pag_container .= "<li p='$pre' class='active'>Previous</li>";
-//         } else if ($previous_btn) {
-//             $pag_container .= "<li class='inactive'>Previous</li>";
-//         }
-//         for ($i = $start_loop; $i <= $end_loop; $i++) {
-
-//             if ($cur_page == $i)
-//                 $pag_container .= "<li p='$i' class = 'selected' >{$i}</li>";
-//             else
-//                 $pag_container .= "<li p='$i' class='active'>{$i}</li>";
-//         }
-        
-//         if ($next_btn && $cur_page < $no_of_paginations) {
-//             $nex = $cur_page + 1;
-//             $pag_container .= "<li p='$nex' class='active'>Next</li>";
-//         } else if ($next_btn) {
-//             $pag_container .= "<li class='inactive'>Next</li>";
-//         }
-
-//         if ($last_btn && $cur_page < $no_of_paginations) {
-//             $pag_container .= "<li p='$no_of_paginations' class='active'>Last</li>";
-//         } else if ($last_btn) {
-//             $pag_container .= "<li p='$no_of_paginations' class='inactive'>Last</li>";
-//         }
-
-//         $pag_container = $pag_container . "
-//         </ul>
-//         </div>";
-        
-//         echo
-//         '<div class = "cvf-pagination-content">' . $msg . '</div>' .
-//         '<div class = "cvf-pagination-nav">' . $pag_container . '</div>';
-        
-//     }
-    
-//     exit();
-    
-// }
-
 add_action( 'wp_ajax_climatebox_search_projects', 'climatebox_search_projects' );
 add_action( 'wp_ajax_nopriv_climatebox_search_projects', 'climatebox_search_projects' );
 function climatebox_search_projects() {
-    global $wpdb;
-    global $current_user;
- 	$authorID = $current_user->ID;
-    $user = wp_get_current_user();
+  global $wpdb;
+  global $current_user;
+  $authorID = $current_user->ID;
+  $user = wp_get_current_user();
 
-    $paged = $_POST['paged'];
+  $paged = $_POST['paged'];
 
-    if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator', (array) $user->roles ) ) { 
-		$args = array(
-			'post_type'=>'projects', 
-			'posts_per_page' => 4,
-			'paged' => $paged,
-			'post_parent' => 0,
-			'author' => $authorID,
-			'meta_key' => 'ps_select_contest',
-			'meta_value' => $_POST['contest'],
-		);
+  if ( in_array( 'um_teacher', (array) $user->roles ) || in_array( 'um_moderator', (array) $user->roles ) ) { 
+    $args = array(
+     'post_type'=>'projects', 
+     'posts_per_page' => 4,
+     'paged' => $paged,
+     'post_parent' => 0,
+     'author' => $authorID,
+     'meta_key' => 'ps_select_contest',
+     'meta_value' => $_POST['contest'],
+   );
 
-	} elseif ( in_array( 'administrator', (array) $user->roles ) || in_array( 'um_contest-admin', (array) $user->roles ) ) {
+  } elseif ( in_array( 'administrator', (array) $user->roles ) || in_array( 'um_contest-admin', (array) $user->roles ) ) {
 
-		$args = array(
-			'post_type'=>'projects', 
-			'posts_per_page' => 4,
-			'paged' => $paged,
-			'post_parent' => 0,
-			'meta_key' => 'ps_select_contest',
-			'meta_value' =>  $_POST['contest'],
-		);
+    $args = array(
+     'post_type'=>'projects', 
+     'posts_per_page' => 4,
+     'paged' => $paged,
+     'post_parent' => 0,
+     'meta_key' => 'ps_select_contest',
+     'meta_value' =>  $_POST['contest'],
+   );
 
-	}
+  }
 
 
-	$loop = new WP_Query( $args );
-	if ( $loop->have_posts() ) {
-			$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1; ?>
+  $loop = new WP_Query( $args );
+  if ( $loop->have_posts() ) {
+   $paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1; ?>
 
-			<?php while ( $loop->have_posts() ) : $loop->the_post(); ?>
+   <?php while ( $loop->have_posts() ) : $loop->the_post(); ?>
 
-				<div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 newprojects-<?php echo  $_POST['contest'] ?>">
-					<div class="post_litem project_item">
-						<a rel="bookmark" href="<?php echo get_permalink(); ?>">
-							<?php the_title( '<p class="title">', '</p>' ); ?>
+    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3 newprojects-<?php echo  $_POST['contest'] ?>">
+     <div class="post_litem project_item">
+      <a rel="bookmark" href="<?php echo get_permalink(); ?>">
+       <?php the_title( '<p class="title">', '</p>' ); ?>
 
-							<div class="post_meta">
-								<p><?php $post_date = get_the_date( 'F j, Y' ); echo $post_date; ?></p>
-							</div>
+       <div class="post_meta">
+        <p><?php $post_date = get_the_date( 'F j, Y' ); echo $post_date; ?></p>
+      </div>
 
-							<?php $featured_post = get_field('ps_select_contest');
-							if( $featured_post ): ?>
-								<p class="contest_name"><?php echo esc_html( $featured_post->post_title ); ?></p>
-							<?php endif; ?>
+      <?php $featured_post = get_field('ps_select_contest');
+      if( $featured_post ): ?>
+        <p class="contest_name"><?php echo esc_html( $featured_post->post_title ); ?></p>
+      <?php endif; ?>
 
-							<?php // <button class="btn btn_link"><i class="fas fa-eye"></i> View</button> ?>
-						</a>
-					</div>
-				</div>
+      <?php // <button class="btn btn_link"><i class="fas fa-eye"></i> View</button> ?>
+    </a>
+  </div>
+</div>
 
-				<?php
-			endwhile; ?>
-			
+<?php
+endwhile; ?>
 
-		<?php 
-	}
-    die();
+
+<?php 
+}
+die();
 }
 
 function wpdocs_myselective_css_or_js( $hook ) {
-    if( current_user_can('um_moderator')){
-        echo '<style>.menu-icon-post,.menu-icon-rl_gallery{display:none;}</style>';
-    }
-    
+  if( current_user_can('um_moderator')){
+    echo '<style>.menu-icon-post,.menu-icon-rl_gallery{display:none;} .users-php .row-actions .view, .users-php .row-actions .frontend_profile, .users-php .row-actions .view_info{display:none}</style>';
+  }
+
 }
- 
+
 add_action( 'admin_enqueue_scripts', 'wpdocs_myselective_css_or_js' ); 
 
 function cptui_register_my_taxes_materials_category() {
@@ -1296,58 +1060,58 @@ function cptui_register_my_taxes_materials_category() {
      */
 
     $labels = [
-        "name" => __( "Materials Categories", "custom-post-type-ui" ),
-        "singular_name" => __( "Materials Category", "custom-post-type-ui" ),
-        "menu_name" => __( "Categories", "custom-post-type-ui" ),
-        "all_items" => __( "All Categories", "custom-post-type-ui" ),
-        "edit_item" => __( "Edit Category", "custom-post-type-ui" ),
-        "view_item" => __( "View Category", "custom-post-type-ui" ),
-        "update_item" => __( "Update Materials Category name", "custom-post-type-ui" ),
-        "add_new_item" => __( "Add new Materials Category", "custom-post-type-ui" ),
-        "new_item_name" => __( "New Materials Category name", "custom-post-type-ui" ),
-        "parent_item" => __( "Parent Materials Category", "custom-post-type-ui" ),
-        "parent_item_colon" => __( "Parent Materials Category:", "custom-post-type-ui" ),
-        "search_items" => __( "Search Materials Categories", "custom-post-type-ui" ),
-        "popular_items" => __( "Popular Materials Categories", "custom-post-type-ui" ),
-        "separate_items_with_commas" => __( "Separate Materials Categories with commas", "custom-post-type-ui" ),
-        "add_or_remove_items" => __( "Add or remove Materials Categories", "custom-post-type-ui" ),
-        "choose_from_most_used" => __( "Choose from the most used Materials Categories", "custom-post-type-ui" ),
-        "not_found" => __( "No Materials Categories found", "custom-post-type-ui" ),
-        "no_terms" => __( "No Materials Categories", "custom-post-type-ui" ),
-        "items_list_navigation" => __( "Materials Categories list navigation", "custom-post-type-ui" ),
-        "items_list" => __( "Materials Categories list", "custom-post-type-ui" ),
-        "back_to_items" => __( "Back to Materials Categories", "custom-post-type-ui" ),
+      "name" => __( "Materials Categories", "acf" ),
+      "singular_name" => __( "Materials Category", "acf" ),
+      "menu_name" => __( "Categories", "acf" ),
+      "all_items" => __( "All Categories", "acf" ),
+      "edit_item" => __( "Edit Category", "acf" ),
+      "view_item" => __( "View Category", "acf" ),
+      "update_item" => __( "Update Materials Category name", "acf" ),
+      "add_new_item" => __( "Add new Materials Category", "acf" ),
+      "new_item_name" => __( "New Materials Category name", "acf" ),
+      "parent_item" => __( "Parent Materials Category", "acf" ),
+      "parent_item_colon" => __( "Parent Materials Category:", "acf" ),
+      "search_items" => __( "Search Materials Categories", "acf" ),
+      "popular_items" => __( "Popular Materials Categories", "acf" ),
+      "separate_items_with_commas" => __( "Separate Materials Categories with commas", "acf" ),
+      "add_or_remove_items" => __( "Add or remove Materials Categories", "acf" ),
+      "choose_from_most_used" => __( "Choose from the most used Materials Categories", "acf" ),
+      "not_found" => __( "No Materials Categories found", "acf" ),
+      "no_terms" => __( "No Materials Categories", "acf" ),
+      "items_list_navigation" => __( "Materials Categories list navigation", "acf" ),
+      "items_list" => __( "Materials Categories list", "acf" ),
+      "back_to_items" => __( "Back to Materials Categories", "acf" ),
     ];
 
     $args = [
-        "label" => __( "Materials Categories", "custom-post-type-ui" ),
-        "labels" => $labels,
-        'capabilities'      => array(
-            'manage_terms'  => 'edit_users',
-            'edit_terms'    => 'edit_users',
-            'delete_terms'  => 'edit_users',
-            'assign_terms'  => 'edit_users'
-        ),
-        "public" => true,
-        "publicly_queryable" => true,
-        "hierarchical" => false,
-        "show_ui" => true,
-        "show_in_menu" => true,
-        "show_in_nav_menus" => true,
-        "query_var" => true,
-        "rewrite" => [ 'slug' => 'materials_category', 'with_front' => true, ],
-        "show_admin_column" => true,
-        "show_in_rest" => true,
-        "rest_base" => "materials_category",
-        "rest_controller_class" => "WP_REST_Terms_Controller",
-        'meta_box_cb'       => 'materials_category_meta_box',
-        "show_in_quick_edit" => true,
-            ];
+      "label" => __( "Materials Categories", "acf" ),
+      "labels" => $labels,
+      'capabilities'      => array(
+        'manage_terms'  => 'edit_users',
+        'edit_terms'    => 'edit_users',
+        'delete_terms'  => 'edit_users',
+        'assign_terms'  => 'edit_users'
+      ),
+      "public" => true,
+      "publicly_queryable" => true,
+      "hierarchical" => false,
+      "show_ui" => true,
+      "show_in_menu" => true,
+      "show_in_nav_menus" => true,
+      "query_var" => true,
+      "rewrite" => [ 'slug' => 'materials_category', 'with_front' => true, ],
+      "show_admin_column" => true,
+      "show_in_rest" => true,
+      "rest_base" => "materials_category",
+      "rest_controller_class" => "WP_REST_Terms_Controller",
+      'meta_box_cb'       => 'materials_category_meta_box',
+      "show_in_quick_edit" => true,
+    ];
     register_taxonomy( "materials_category", [ "learning_materials" ], $args );
-}
-add_action( 'init', 'cptui_register_my_taxes_materials_category' );
+  }
+  add_action( 'init', 'cptui_register_my_taxes_materials_category' );
 
-function materials_category_meta_box( $post ) {
+  function materials_category_meta_box( $post ) {
     $terms = get_terms( 'materials_category', array( 'hide_empty' => false ) );
 
     $post  = get_post();
@@ -1355,28 +1119,28 @@ function materials_category_meta_box( $post ) {
     $name  = '';
 
     if ( ! is_wp_error( $rating ) ) {
-        if ( isset( $rating[0] ) && isset( $rating[0]->name ) ) {
-            $name = $rating[0]->name;
-        }
+      if ( isset( $rating[0] ) && isset( $rating[0]->name ) ) {
+        $name = $rating[0]->name;
+      }
     }
 
     foreach ( $terms as $term ) {
-?>
-        <label title='<?php esc_attr_e( $term->name ); ?>'>
-            <input type="radio" name="materials_category" value="<?php esc_attr_e( $term->name ); ?>" <?php checked( $term->name, $name ); ?>>
-            <span><?php esc_html_e( $term->name ); ?></span>
-        </label><br>
-<?php
+      ?>
+      <label title='<?php esc_attr_e( $term->name ); ?>'>
+        <input type="radio" name="materials_category" value="<?php esc_attr_e( $term->name ); ?>" <?php checked( $term->name, $name ); ?>>
+        <span><?php esc_html_e( $term->name ); ?></span>
+      </label><br>
+      <?php
     }
-}
+  }
 
-function save_materials_category_meta_box( $post_id ) {
+  function save_materials_category_meta_box( $post_id ) {
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return;
+      return;
     }
 
     if ( ! isset( $_POST['materials_category'] ) ) {
-        return;
+      return;
     }
 
     $rating = sanitize_text_field( $_POST['materials_category'] );
@@ -1384,138 +1148,138 @@ function save_materials_category_meta_box( $post_id ) {
     // A valid rating is required, so don't let this get published without one
     if ( empty( $rating ) ) {
         // unhook this function so it doesn't loop infinitely
-        remove_action( 'save_post_learning_materials', 'save_materials_category_meta_box' );
+      remove_action( 'save_post_learning_materials', 'save_materials_category_meta_box' );
 
-        $postdata = array(
-            'ID'          => $post_id,
-            'post_status' => 'draft',
-        );
-        wp_update_post( $postdata );
+      $postdata = array(
+        'ID'          => $post_id,
+        'post_status' => 'draft',
+      );
+      wp_update_post( $postdata );
     } else {
-        $term = get_term_by( 'name', $rating, 'materials_category' );
-        if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
-            wp_set_object_terms( $post_id, $term->term_id, 'materials_category', false );
-        }
+      $term = get_term_by( 'name', $rating, 'materials_category' );
+      if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
+        wp_set_object_terms( $post_id, $term->term_id, 'materials_category', false );
+      }
     }
-}
-add_action( 'save_post_learning_materials', 'save_materials_category_meta_box' );
+  }
+  add_action( 'save_post_learning_materials', 'save_materials_category_meta_box' );
 
-function cptui_register_my_taxes_key_topics() {
+  function cptui_register_my_taxes_key_topics() {
 
     /**
      * Taxonomy: Key Topics.
      */
 
     $labels = [
-        "name" => __( "Key Topics", "custom-post-type-ui" ),
-        "singular_name" => __( "Key Topic", "custom-post-type-ui" ),
-        "menu_name" => __( "Key Topics", "custom-post-type-ui" ),
-        "all_items" => __( "All Key Topics", "custom-post-type-ui" ),
-        "edit_item" => __( "Edit Key Topic", "custom-post-type-ui" ),
-        "view_item" => __( "View Key Topic", "custom-post-type-ui" ),
-        "update_item" => __( "Update Key Topic name", "custom-post-type-ui" ),
-        "add_new_item" => __( "Add new Key Topic", "custom-post-type-ui" ),
-        "new_item_name" => __( "New Key Topic name", "custom-post-type-ui" ),
-        "parent_item" => __( "Parent Key Topic", "custom-post-type-ui" ),
-        "parent_item_colon" => __( "Parent Key Topic:", "custom-post-type-ui" ),
-        "search_items" => __( "Search Key Topics", "custom-post-type-ui" ),
-        "popular_items" => __( "Popular Key Topics", "custom-post-type-ui" ),
-        "separate_items_with_commas" => __( "Separate Key Topics with commas", "custom-post-type-ui" ),
-        "add_or_remove_items" => __( "Add or remove Key Topics", "custom-post-type-ui" ),
-        "choose_from_most_used" => __( "Choose from the most used Key Topics", "custom-post-type-ui" ),
-        "not_found" => __( "No Key Topics found", "custom-post-type-ui" ),
-        "no_terms" => __( "No Key Topics", "custom-post-type-ui" ),
-        "items_list_navigation" => __( "Key Topics list navigation", "custom-post-type-ui" ),
-        "items_list" => __( "Key Topics list", "custom-post-type-ui" ),
-        "back_to_items" => __( "Back to Key Topics", "custom-post-type-ui" ),
+      "name" => __( "Key Topics", "acf" ),
+      "singular_name" => __( "Key Topic", "acf" ),
+      "menu_name" => __( "Key Topics", "acf" ),
+      "all_items" => __( "All Key Topics", "acf" ),
+      "edit_item" => __( "Edit Key Topic", "acf" ),
+      "view_item" => __( "View Key Topic", "acf" ),
+      "update_item" => __( "Update Key Topic name", "acf" ),
+      "add_new_item" => __( "Add new Key Topic", "acf" ),
+      "new_item_name" => __( "New Key Topic name", "acf" ),
+      "parent_item" => __( "Parent Key Topic", "acf" ),
+      "parent_item_colon" => __( "Parent Key Topic:", "acf" ),
+      "search_items" => __( "Search Key Topics", "acf" ),
+      "popular_items" => __( "Popular Key Topics", "acf" ),
+      "separate_items_with_commas" => __( "Separate Key Topics with commas", "acf" ),
+      "add_or_remove_items" => __( "Add or remove Key Topics", "acf" ),
+      "choose_from_most_used" => __( "Choose from the most used Key Topics", "acf" ),
+      "not_found" => __( "No Key Topics found", "acf" ),
+      "no_terms" => __( "No Key Topics", "acf" ),
+      "items_list_navigation" => __( "Key Topics list navigation", "acf" ),
+      "items_list" => __( "Key Topics list", "acf" ),
+      "back_to_items" => __( "Back to Key Topics", "acf" ),
     ];
 
     $args = [
-        "label" => __( "Key Topics", "custom-post-type-ui" ),
-        "labels" => $labels,
-        'capabilities'      => array(
-            'manage_terms'  => 'edit_users',
-            'edit_terms'    => 'edit_users',
-            'delete_terms'  => 'edit_users',
-            'assign_terms'  => 'edit_users'
-        ),
-        "public" => true,
-        "publicly_queryable" => true,
-        "hierarchical" => true,
-        "show_ui" => true,
-        "show_in_menu" => true,
-        "show_in_nav_menus" => true,
-        "query_var" => true,
-        "rewrite" => [ 'slug' => 'key_topics', 'with_front' => true, ],
-        "show_admin_column" => false,
-        "show_in_rest" => true,
-        "rest_base" => "key_topics",
-        "rest_controller_class" => "WP_REST_Terms_Controller",
-        "show_in_quick_edit" => false,
-            ];
+      "label" => __( "Key Topics", "acf" ),
+      "labels" => $labels,
+      'capabilities'      => array(
+        'manage_terms'  => 'edit_users',
+        'edit_terms'    => 'edit_users',
+        'delete_terms'  => 'edit_users',
+        'assign_terms'  => 'edit_users'
+      ),
+      "public" => true,
+      "publicly_queryable" => true,
+      "hierarchical" => true,
+      "show_ui" => true,
+      "show_in_menu" => true,
+      "show_in_nav_menus" => true,
+      "query_var" => true,
+      "rewrite" => [ 'slug' => 'key_topics', 'with_front' => true, ],
+      "show_admin_column" => false,
+      "show_in_rest" => true,
+      "rest_base" => "key_topics",
+      "rest_controller_class" => "WP_REST_Terms_Controller",
+      "show_in_quick_edit" => false,
+    ];
     register_taxonomy( "key_topics", [ "learning_materials" ], $args );
-}
-add_action( 'init', 'cptui_register_my_taxes_key_topics' );
+  }
+  add_action( 'init', 'cptui_register_my_taxes_key_topics' );
 
-function cptui_register_my_taxes_lm_language() {
+  function cptui_register_my_taxes_lm_language() {
 
     /**
      * Taxonomy: Languages.
      */
 
     $labels = [
-        "name" => __( "Languages", "custom-post-type-ui" ),
-        "singular_name" => __( "Language", "custom-post-type-ui" ),
-        "menu_name" => __( "Languages", "custom-post-type-ui" ),
-        "all_items" => __( "All Languages", "custom-post-type-ui" ),
-        "edit_item" => __( "Edit Language", "custom-post-type-ui" ),
-        "view_item" => __( "View Language", "custom-post-type-ui" ),
-        "update_item" => __( "Update Language name", "custom-post-type-ui" ),
-        "add_new_item" => __( "Add new Language", "custom-post-type-ui" ),
-        "new_item_name" => __( "New Language name", "custom-post-type-ui" ),
-        "parent_item" => __( "Parent Language", "custom-post-type-ui" ),
-        "parent_item_colon" => __( "Parent Language:", "custom-post-type-ui" ),
-        "search_items" => __( "Search Languages", "custom-post-type-ui" ),
-        "popular_items" => __( "Popular Languages", "custom-post-type-ui" ),
-        "separate_items_with_commas" => __( "Separate Languages with commas", "custom-post-type-ui" ),
-        "add_or_remove_items" => __( "Add or remove Languages", "custom-post-type-ui" ),
-        "choose_from_most_used" => __( "Choose from the most used Languages", "custom-post-type-ui" ),
-        "not_found" => __( "No Languages found", "custom-post-type-ui" ),
-        "no_terms" => __( "No Languages", "custom-post-type-ui" ),
-        "items_list_navigation" => __( "Languages list navigation", "custom-post-type-ui" ),
-        "items_list" => __( "Languages list", "custom-post-type-ui" ),
-        "back_to_items" => __( "Back to Languages", "custom-post-type-ui" ),
+      "name" => __( "Languages", "acf" ),
+      "singular_name" => __( "Language", "acf" ),
+      "menu_name" => __( "Languages", "acf" ),
+      "all_items" => __( "All Languages", "acf" ),
+      "edit_item" => __( "Edit Language", "acf" ),
+      "view_item" => __( "View Language", "acf" ),
+      "update_item" => __( "Update Language name", "acf" ),
+      "add_new_item" => __( "Add new Language", "acf" ),
+      "new_item_name" => __( "New Language name", "acf" ),
+      "parent_item" => __( "Parent Language", "acf" ),
+      "parent_item_colon" => __( "Parent Language:", "acf" ),
+      "search_items" => __( "Search Languages", "acf" ),
+      "popular_items" => __( "Popular Languages", "acf" ),
+      "separate_items_with_commas" => __( "Separate Languages with commas", "acf" ),
+      "add_or_remove_items" => __( "Add or remove Languages", "acf" ),
+      "choose_from_most_used" => __( "Choose from the most used Languages", "acf" ),
+      "not_found" => __( "No Languages found", "acf" ),
+      "no_terms" => __( "No Languages", "acf" ),
+      "items_list_navigation" => __( "Languages list navigation", "acf" ),
+      "items_list" => __( "Languages list", "acf" ),
+      "back_to_items" => __( "Back to Languages", "acf" ),
     ];
 
     $args = [
-        "label" => __( "Languages", "custom-post-type-ui" ),
-        'capabilities'      => array(
-            'manage_terms'  => 'edit_users',
-            'edit_terms'    => 'edit_users',
-            'delete_terms'  => 'edit_users',
-            'assign_terms'  => 'edit_users'
-        ),
-        "labels" => $labels,
-        "public" => true,
-        "publicly_queryable" => true,
-        "hierarchical" => false,
-        "show_ui" => true,
-        "show_in_menu" => true,
-        "show_in_nav_menus" => true,
-        "query_var" => true,
-        "rewrite" => [ 'slug' => 'lm_language', 'with_front' => true, ],
-        "show_admin_column" => false,
-        "show_in_rest" => true,
-        "rest_base" => "lm_language",
-        "rest_controller_class" => "WP_REST_Terms_Controller",
-        "show_in_quick_edit" => false,
-        'meta_box_cb'       => 'lm_language_meta_box',
-            ];
+      "label" => __( "Languages", "acf" ),
+      'capabilities'      => array(
+        'manage_terms'  => 'edit_users',
+        'edit_terms'    => 'edit_users',
+        'delete_terms'  => 'edit_users',
+        'assign_terms'  => 'edit_users'
+      ),
+      "labels" => $labels,
+      "public" => true,
+      "publicly_queryable" => true,
+      "hierarchical" => false,
+      "show_ui" => true,
+      "show_in_menu" => true,
+      "show_in_nav_menus" => true,
+      "query_var" => true,
+      "rewrite" => [ 'slug' => 'lm_language', 'with_front' => true, ],
+      "show_admin_column" => false,
+      "show_in_rest" => true,
+      "rest_base" => "lm_language",
+      "rest_controller_class" => "WP_REST_Terms_Controller",
+      "show_in_quick_edit" => false,
+      'meta_box_cb'       => 'lm_language_meta_box',
+    ];
     register_taxonomy( "lm_language", [ "learning_materials" ], $args );
-}
-add_action( 'init', 'cptui_register_my_taxes_lm_language' );
+  }
+  add_action( 'init', 'cptui_register_my_taxes_lm_language' );
 
-function lm_language_meta_box( $post ) {
+  function lm_language_meta_box( $post ) {
     $terms = get_terms( 'lm_language', array( 'hide_empty' => false ) );
 
     $post  = get_post();
@@ -1523,28 +1287,28 @@ function lm_language_meta_box( $post ) {
     $name  = '';
 
     if ( ! is_wp_error( $rating ) ) {
-        if ( isset( $rating[0] ) && isset( $rating[0]->name ) ) {
-            $name = $rating[0]->name;
-        }
+      if ( isset( $rating[0] ) && isset( $rating[0]->name ) ) {
+        $name = $rating[0]->name;
+      }
     }
 
     foreach ( $terms as $term ) {
-?>
-        <label title='<?php esc_attr_e( $term->name ); ?>'>
-            <input type="radio" name="lm_language" value="<?php esc_attr_e( $term->name ); ?>" <?php checked( $term->name, $name ); ?>>
-            <span><?php esc_html_e( $term->name ); ?></span>
-        </label><br>
-<?php
+      ?>
+      <label title='<?php esc_attr_e( $term->name ); ?>'>
+        <input type="radio" name="lm_language" value="<?php esc_attr_e( $term->name ); ?>" <?php checked( $term->name, $name ); ?>>
+        <span><?php esc_html_e( $term->name ); ?></span>
+      </label><br>
+      <?php
     }
-}
+  }
 
-function save_lm_language_meta_box( $post_id ) {
+  function save_lm_language_meta_box( $post_id ) {
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return;
+      return;
     }
 
     if ( ! isset( $_POST['lm_language'] ) ) {
-        return;
+      return;
     }
 
     $rating = sanitize_text_field( $_POST['lm_language'] );
@@ -1552,38 +1316,38 @@ function save_lm_language_meta_box( $post_id ) {
     // A valid rating is required, so don't let this get published without one
     if ( empty( $rating ) ) {
         // unhook this function so it doesn't loop infinitely
-        remove_action( 'save_post_learning_materials', 'save_lm_language_meta_box' );
+      remove_action( 'save_post_learning_materials', 'save_lm_language_meta_box' );
 
-        $postdata = array(
-            'ID'          => $post_id,
-            'post_status' => 'draft',
-        );
-        wp_update_post( $postdata );
+      $postdata = array(
+        'ID'          => $post_id,
+        'post_status' => 'draft',
+      );
+      wp_update_post( $postdata );
     } else {
-        $term = get_term_by( 'name', $rating, 'lm_language' );
-        if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
-            wp_set_object_terms( $post_id, $term->term_id, 'lm_language', false );
-        }
+      $term = get_term_by( 'name', $rating, 'lm_language' );
+      if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
+        wp_set_object_terms( $post_id, $term->term_id, 'lm_language', false );
+      }
     }
-}
-add_action( 'save_post_learning_materials', 'save_lm_language_meta_box' );
+  }
+  add_action( 'save_post_learning_materials', 'save_lm_language_meta_box' );
 
-function climate_usermeta_form_field_notes( $user )
-{
+  function climate_usermeta_form_field_notes( $user )
+  {
     ?>
-   
+
     <table class="form-table">
-        <tr>
-            <th>
-                <label for="notes">Notes</label>
-            </th>
-            <td>
-                <textarea class="regular-text ltr" id="notes" name="notes"><?= esc_attr( get_user_meta( $user->ID, 'notes', true ) ) ?></textarea>
-            </td>
-        </tr>
+      <tr>
+        <th>
+          <label for="notes">Notes</label>
+        </th>
+        <td>
+          <textarea class="regular-text ltr" id="notes" name="notes"><?= esc_attr( get_user_meta( $user->ID, 'notes', true ) ) ?></textarea>
+        </td>
+      </tr>
     </table>
     <?php
-}
+  }
   
 /**
  * The save action.
@@ -1677,379 +1441,265 @@ add_filter( 'manage_users_custom_column', 'new_modify_user_table_row', 10, 3 );
 function climate_title_filter( $where, $wp_query ){
     global $wpdb;
     if ( $search_term = $wp_query->get( 'climate_search_title' ) ) {
-        $where .= ' AND (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\')';
+        $where .= ' AND (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( trim($search_term) ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\')';
     }
     return $where;
 }
 function climate_search_title_tax( $where, $wp_query ){
     global $wpdb;
     if ( $search_term = $wp_query->get( 'climate_search_title_tax' ) ) {
-        $where .= ' AND ' . $wpdb->posts . '.post_type="learning_materials" OR (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( $search_term ) ) . '%\')';
+        $where .= ' AND ' . $wpdb->posts . '.post_type="learning_materials" OR (' . $wpdb->posts . '.post_title LIKE \'%' . esc_sql( like_escape( trim($search_term) ) ) . '%\'  OR ' . $wpdb->posts . '.post_content LIKE \'%' . esc_sql( like_escape( trim($search_term) ) ) . '%\')';
     }
     return $where;
 }
 
+// Yoast Seo Breadcrumbs ///////////////////////////////////////
+
+add_filter( 'wpseo_breadcrumb_links', 'unbox_yoast_seo_breadcrumb_append_link' );
+function unbox_yoast_seo_breadcrumb_append_link( $links ) {
+ global $post;
+
+ // News Single Page Breadcrumb
+ if( is_singular('post')){
+
+  $News = pll_get_post( 64 );
+  $News_url = get_the_permalink($News);
+
+  $breadcrumb[1] = array(
+   'url' => $News_url,
+   'text' => get_the_title($News),
+ );
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Stories Single Page Breadcrumb
+if( is_singular('stories')){
+  $News = pll_get_post( 64 );
+  $News_url = get_the_permalink($News);
+
+  $breadcrumb[1] = array(
+   'url' => $News_url,
+   'text' => get_the_title($News),
+ );
+
+  $Stories = pll_get_post( 1230 );
+  $Stories_url = get_the_permalink($Stories);
+
+  $breadcrumb[2] = array(
+   'url' => $Stories_url,
+   'text' => get_the_title($Stories),
+ );
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Gallery Single Page Breadcrumb
+if( is_singular('rl_gallery')){
+  $News = pll_get_post( 64 );
+  $News_url = get_the_permalink($News);
+
+  $breadcrumb[1] = array(
+   'url' => $News_url,
+   'text' => get_the_title($News),
+ );
+
+  $Gallery = pll_get_post( 1249 );
+  $Gallery_url = get_the_permalink($Gallery);
+
+  $breadcrumb[2] = array(
+   'url' => $Gallery_url,
+   'text' => get_the_title($Gallery),
+ );
+
+  array_splice($links,1,-1, $breadcrumb); 
+}
+
+// Textbooks Single Page Breadcrumb
+if( is_singular('textbooks')){
+  $Climate = pll_get_post( 54 );
+  $Climate_url = get_the_permalink($Climate);
+
+  $breadcrumb[1] = array(
+   'url' => $Climate_url,
+   'text' => get_the_title($Climate),
+ );
+
+  $Textbooks = pll_get_post( 316 );
+  $Textbooks_url = get_the_permalink($Textbooks);
+
+  $breadcrumb[2] = array(
+   'url' => $Textbooks_url,
+   'text' => get_the_title($Textbooks),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Quiz Single Page Breadcrumb
+if( is_singular('quiz_listing')){
+  $Climate = pll_get_post( 54 );
+  $Climate_url = get_the_permalink($Climate);
+
+  $breadcrumb[1] = array(
+   'url' => $Climate_url,
+   'text' => get_the_title($Climate),
+ );
+
+  $Quiz = pll_get_post( 394 );
+  $Quiz_url = get_the_permalink($Quiz);
+
+  $breadcrumb[2] = array(
+   'url' => $Quiz_url,
+   'text' => get_the_title($Quiz),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Map & Poster Single Page Breadcrumb
+if( is_singular('mapposter')){
+  $Climate = pll_get_post( 54 );
+  $Climate_url = get_the_permalink($Climate);
+
+  $breadcrumb[1] = array(
+   'url' => $Climate_url,
+   'text' => get_the_title($Climate),
+ );
+
+  $MandP = pll_get_post( 319 );
+  $MandP_url = get_the_permalink($MandP);
+
+  $breadcrumb[2] = array(
+   'url' => $MandP_url,
+   'text' => get_the_title($MandP),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Learning Materials Single Page Breadcrumb
+if( is_singular('learning_materials')){
+  $Teachers = pll_get_post( 66 );
+  $Teachers_url = get_the_permalink($Teachers);
+
+  $breadcrumb[1] = array(
+   'url' => $Teachers_url,
+   'text' => get_the_title($Teachers),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Video Lessons Single Page Breadcrumb
+if( is_singular('video_lessons')){
+  $Teachers = pll_get_post( 66 );
+  $Teachers_url = get_the_permalink($Teachers);
+
+  $breadcrumb[1] = array(
+   'url' => $Teachers_url,
+   'text' => get_the_title($Teachers),
+ );
+
+  $VandL = pll_get_post( 1269 );
+  $VandL_url = get_the_permalink($VandL);
+
+  $breadcrumb[2] = array(
+   'url' => $VandL_url,
+   'text' => get_the_title($VandL),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Discussion Material Single Page Breadcrumb
+if( is_singular('discussion_material')){
+  $Teachers = pll_get_post( 66 );
+  $Teachers_url = get_the_permalink($Teachers);
+
+  $breadcrumb[1] = array(
+   'url' => $Teachers_url,
+   'text' => get_the_title($Teachers),
+ );
+
+  $dmat = pll_get_post( 1276 );
+  $dmat_url = get_the_permalink($dmat);
+
+  $breadcrumb[2] = array(
+   'url' => $dmat_url,
+   'text' => get_the_title($dmat),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Discussion Topic Single Page Breadcrumb
+if( is_singular('discussion_topic')){
+  $Teachers = pll_get_post( 66 );
+  $Teachers_url = get_the_permalink($Teachers);
+
+  $breadcrumb[1] = array(
+   'url' => $Teachers_url,
+   'text' => get_the_title($Teachers),
+ );
+
+  $dtopic = pll_get_post( 626 );
+  $dtopic_url = get_the_permalink($dtopic);
+
+  $breadcrumb[2] = array(
+   'url' => $dtopic_url,
+   'text' => get_the_title($dtopic),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Contest Single Page Breadcrumb
+if( is_singular('competition')){
+  $Contest = pll_get_post( 68 );
+  $Contest_url = get_the_permalink($Contest);
+
+  $breadcrumb[1] = array(
+   'url' => $Contest_url,
+   'text' => get_the_title($Contest),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
+
+// Projects Single Page Breadcrumb
+if( is_singular('projects')){
+  $Contest = pll_get_post( 68 );
+  $Contest_url = get_the_permalink($Contest);
+
+  $breadcrumb[1] = array(
+   'url' => $Contest_url,
+   'text' => get_the_title($Contest),
+ );
+
+  $projects = pll_get_post( 771 );
+  $projects_url = get_the_permalink($projects);
+
+  $breadcrumb[2] = array(
+   'url' => $projects_url,
+   'text' => get_the_title($projects),
+ );
+
+  array_splice($links,1,0, $breadcrumb); 
+}
 
 
 
+return $links;
+}
 
-// Custom Breadcrumbs ///////////////////////////////////////
+add_action( 'um_on_login_before_redirect', 'my_user_login_extra', 10, 1 );
+function my_user_login_extra( $args ) {
+  wp_redirect( home_url() );
+  exit;
+}
 
-// if ( ! function_exists( 'ct_climate_breadcrumbs' ) ) {
-//   function ct_climate_breadcrumbs( $args = array() ) {
-
-//     if ( is_front_page() ) {
-//       return;
-//     }
-//     if ( get_theme_mod( 'ct_climate_show_breadcrumbs_setting' ) == 'no' ) {
-//       return;
-//     }
-
-//     global $post;
-//     $defaults  = array(
-//       'separator_icon'      => '&gt;',
-//       'breadcrumbs_id'      => 'breadcrumbs',
-//       'breadcrumbs_classes' => 'breadcrumb-trail breadcrumbs',
-//       'home_title'          => esc_html__( 'Home', 'acf' )
-//     );
-//     $args      = apply_filters( 'ct_climate_breadcrumbs_args', wp_parse_args( $args, $defaults ) );
-//     $separator = '<span class="separator"> ' . esc_html( $args['separator_icon'] ) . ' </span>';
-
-//     /***** Begin Markup *****/
-
-//     // Open the breadcrumbs
-//     $html = '<div id="' . esc_attr( $args['breadcrumbs_id'] ) . '" class="' . esc_attr( $args['breadcrumbs_classes'] ) . '">';
-
-//     // Add Homepage link & separator (always present)
-//     $html .= '<span class="item-home"><a class="bread-link bread-home" href="' . get_home_url() . '" title="' . esc_attr( $args['home_title'] ) . '">' . esc_html( $args['home_title'] ) . '</a></span>';
-//     $html .= $separator;
-
-//     // Post
-//     if ( is_singular( 'post' ) ) {
-      
-//       $category = get_the_category( $post->ID );
-//       $category_values = array_values( $category );
-//       $last_category = end( $category_values );
-//       $cat_parents = rtrim( get_category_parents( $last_category->term_id, true, ',' ), ',' );
-//       $cat_parents = explode( ',', $cat_parents );
-
-//       foreach ( $cat_parents as $parent ) {
-//         $html .= '<span class="item-cat">' . wp_kses( $parent, wp_kses_allowed_html( 'a' ) ) . '</span>';
-//         $html .= $separator;
-//       }
-//       $html .= '<span class="item-current item-' . $post->ID . '"><span class="bread-current bread-' . $post->ID . '" title="' . esc_attr( get_the_title() ) . '">' . wp_strip_all_tags( get_the_title() ) . '</span></span>';
-//     } elseif ( is_singular( 'page' ) ) {
-
-//       if ( $post->post_parent ) {
-//         $parents = get_post_ancestors( $post->ID );
-//         $parents = array_reverse( $parents );
-
-//         foreach ( $parents as $parent ) {
-//           $html .= '<span class="item-parent item-parent-' . esc_attr( $parent ) . '"><a class="bread-parent bread-parent-' . esc_attr( $parent ) . '" href="' . esc_url( get_permalink( $parent ) ) . '" title="' . esc_attr( get_the_title( $parent ) ) . '">' . wp_strip_all_tags( get_the_title( $parent ) ) . '</a></span>';
-//           $html .= $separator;
-//         }
-//       }
-//       $html .= '<span class="item-current item-' . $post->ID . '"><span title="' . esc_attr( get_the_title() ) . '"> ' . wp_strip_all_tags( get_the_title() ) . '</span></span>';
-//     } elseif ( is_singular( 'attachment' ) ) {
-
-//       $parent_id        = $post->post_parent;
-//       $parent_title     = get_the_title( $parent_id );
-//       $parent_permalink = esc_url( get_permalink( $parent_id ) );
-
-//       $html .= '<span class="item-parent"><a class="bread-parent" href="' . esc_url( $parent_permalink ) . '" title="' . esc_attr( $parent_title ) . '">' . wp_strip_all_tags( $parent_title ) . '</a></span>';
-//       $html .= $separator;
-//       $html .= '<span class="item-current item-' . $post->ID . '"><span title="' . esc_attr( get_the_title() ) . '"> ' . wp_strip_all_tags( get_the_title() ) . '</span></span>';
-//     } elseif ( is_singular() ) {
-
-//       $post_type         = get_post_type( $post->ID );
-//       $post_type_object  = get_post_type_object( $post_type );
-//       $post_type_archive = get_post_type_archive_link( $post_type );
-
-//       $html .= '<span class="item-cat item-custom-post-type-' . esc_attr( $post_type ) . '"><a class="bread-cat bread-custom-post-type-' . esc_attr( $post_type ) . '" href="' . esc_url( $post_type_archive ) . '" title="' . esc_attr( $post_type_object->labels->name ) . '">' . wp_strip_all_tags( $post_type_object->labels->name ) . '</a></span>';
-//       $html .= $separator;
-//       $html .= '<span class="item-current item-' . $post->ID . '"><span class="bread-current bread-' . $post->ID . '" title="' . $post->post_title . '">' . wp_strip_all_tags( $post->post_title ) . '</span></span>';
-//     } elseif ( is_category() ) {
-
-//       $parent = get_queried_object()->category_parent;
-
-//       if ( $parent !== 0 ) {
-
-//         $parent_category = get_category( $parent );
-//         $category_link   = get_category_link( $parent );
-
-//         $html .= '<span class="item-parent item-parent-' . esc_attr( $parent_category->slug ) . '"><a class="bread-parent bread-parent-' . esc_attr( $parent_category->slug ) . '" href="' . esc_url( $category_link ) . '" title="' . esc_attr( $parent_category->name ) . '">' . esc_html( $parent_category->name ) . '</a></span>';
-//         $html .= $separator;
-//       }
-//       $html .= '<span class="item-current item-cat"><span class="bread-current bread-cat" title="' . $post->ID . '">' . single_cat_title( '', false ) . '</span></span>';
-//     } elseif ( is_tag() ) {
-//       $html .= '<span class="item-current item-tag"><span class="bread-current bread-tag">' . single_tag_title( '', false ) . '</span></span>';
-//     } elseif ( is_author() ) {
-//       $html .= '<span class="item-current item-author"><span class="bread-current bread-author">' . get_queried_object()->display_name . '</span></span>';
-//     } elseif ( is_day() ) {
-//       $html .= '<span class="item-current item-day"><span class="bread-current bread-day">' . get_the_date() . '</span></span>';
-//     } elseif ( is_month() ) {
-//       $html .= '<span class="item-current item-month"><span class="bread-current bread-month">' . get_the_date( 'F Y' ) . '</span></span>';
-//     } elseif ( is_year() ) {
-//       $html .= '<span class="item-current item-year"><span class="bread-current bread-year">' . get_the_date( 'Y' ) . '</span></span>';
-//     } elseif ( is_archive() ) {
-//       $custom_tax_name = get_queried_object()->name;
-//       $html .= '<span class="item-current item-archive"><span class="bread-current bread-archive">' . esc_html( $custom_tax_name ) . '</span></span>';
-//     } elseif ( is_search() ) {
-//       $html .= '<span class="item-current item-search"><span class="bread-current bread-search">'. esc_html( __("Search results for:", "acf") ) . ' ' . get_search_query() . '</span></span>';
-//     } elseif ( is_404() ) {
-//       $html .= '<span>' . esc_html__( 'Error 404', 'acf' ) . '</span>';
-//     } elseif ( is_home() ) {
-//       $html .= '<span>' . esc_html( get_the_title( get_option( 'page_for_posts' ) ) ) . '</span>';
-//     }
-
-//     $html .= '</div>';
-//     $html = apply_filters( 'ct_climate_breadcrumbs_filter', $html );
-
-//     echo wp_kses_post( $html );
-//   }
-// }
-
-
-
-
-
-
-
-// Breadcrumbs
-function custom_breadcrumbs() {
-       
-    // Settings
-    $separator          = '&gt;';
-    $breadcrums_id      = 'breadcrumbs';
-    $breadcrums_class   = 'breadcrumbs_ul';
-    $home_title         = esc_html__( 'Home', 'acf' );
-
-    // If you have any custom post types with custom taxonomies, put the taxonomy name below (e.g. product_cat)
-    $custom_taxonomy    = 'product_cat';
-       
-    // Get the query & post information
-    global $post,$wp_query;
-       
-    // Do not display on the homepage
-    if ( !is_front_page() ) {
-       
-        // Build the breadcrums
-        echo '<ul id="' . $breadcrums_id . '" class="' . $breadcrums_class . '">';
-           
-        // Home page
-        echo '<li class="item-home"><a class="bread-link bread-home" href="' . get_home_url() . '" title="' . $home_title . '">' . $home_title . '</a></li>';
-        //echo '<li class="separator separator-home"> ' . $separator . ' </li>';
-           
-        if ( is_archive() && !is_tax() && !is_category() && !is_tag() ) {
-              
-            echo '<li class="item-current item-archive"><strong class="bread-current bread-archive">' . post_type_archive_title($prefix, false) . '</strong></li>';
-              
-        } else if ( is_archive() && is_tax() && !is_category() && !is_tag() ) {
-              
-            // If post is a custom post type
-            $post_type = get_post_type();
-              
-            // If it is a custom post type display name and link
-            if($post_type != 'post') {
-                  
-                $post_type_object = get_post_type_object($post_type);
-                $post_type_archive = get_post_type_archive_link($post_type);
-              
-                echo '<li class="item-cat item-custom-post-type-' . $post_type . '"><a class="bread-cat bread-custom-post-type-' . $post_type . '" href="' . $post_type_archive . '" title="' . $post_type_object->labels->name . '">' . $post_type_object->labels->name . '</a></li>';
-                //echo '<li class="separator"> ' . $separator . ' </li>';
-              
-            }
-              
-            $custom_tax_name = get_queried_object()->name;
-            echo '<li class="item-current item-archive"><strong class="bread-current bread-archive">' . $custom_tax_name . '</strong></li>';
-              
-        } else if ( is_single() ) {
-              
-            // If post is a custom post type
-            $post_type = get_post_type();
-              
-            // If it is a custom post type display name and link
-            if($post_type != 'post') {
-                  
-                $post_type_object = get_post_type_object($post_type);
-                $post_type_archive = get_post_type_archive_link($post_type);
-              
-                echo '<li class="item-cat item-custom-post-type-' . $post_type . '"><a class="bread-cat bread-custom-post-type-' . $post_type . '" href="' . $post_type_archive . '" title="' . $post_type_object->labels->name . '">' . $post_type_object->labels->name . '</a></li>';
-                //echo '<li class="separator"> ' . $separator . ' </li>';
-              
-            }
-
-            // Added by Naimesh Rao
-            if($post_type == 'textbooks') {
-
-              // echo "test";
-
-            }
-              
-            // Get post category info
-            $category = get_the_category();
-             
-            if(!empty($category)) {
-              
-                // Get last category post is in
-                $last_category = end(array_values($category));
-                  
-                // Get parent any categories and create array
-                $get_cat_parents = rtrim(get_category_parents($last_category->term_id, true, ','),',');
-                $cat_parents = explode(',',$get_cat_parents);
-                  
-                // Loop through parent categories and store in variable $cat_display
-                $cat_display = '';
-                foreach($cat_parents as $parents) {
-                    $cat_display .= '<li class="item-cat">'.$parents.'</li>';
-                    //$cat_display .= '<li class="separator"> ' . $separator . ' </li>';
-                }
-             
-            }
-              
-            // If it's a custom post type within a custom taxonomy
-            $taxonomy_exists = taxonomy_exists($custom_taxonomy);
-            if(empty($last_category) && !empty($custom_taxonomy) && $taxonomy_exists) {
-                   
-                $taxonomy_terms = get_the_terms( $post->ID, $custom_taxonomy );
-                $cat_id         = $taxonomy_terms[0]->term_id;
-                $cat_nicename   = $taxonomy_terms[0]->slug;
-                $cat_link       = get_term_link($taxonomy_terms[0]->term_id, $custom_taxonomy);
-                $cat_name       = $taxonomy_terms[0]->name;
-               
-            }
-              
-            // Check if the post is in a category
-            if(!empty($last_category)) {
-                echo $cat_display;
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
-                  
-            // Else if post is in a custom taxonomy
-            } else if(!empty($cat_id)) {
-                  
-                echo '<li class="item-cat item-cat-' . $cat_id . ' item-cat-' . $cat_nicename . '"><a class="bread-cat bread-cat-' . $cat_id . ' bread-cat-' . $cat_nicename . '" href="' . $cat_link . '" title="' . $cat_name . '">' . $cat_name . '</a></li>';
-                //echo '<li class="separator"> ' . $separator . ' </li>';
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
-              
-            } else {
-                  
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '" title="' . get_the_title() . '">' . get_the_title() . '</strong></li>';
-                  
-            }
-              
-        } else if ( is_category() ) {
-               
-            // Category page
-            echo '<li class="item-current item-cat"><strong class="bread-current bread-cat">' . single_cat_title('', false) . '</strong></li>';
-               
-        } else if ( is_page() ) {
-               
-            // Standard page
-            if( $post->post_parent ){
-                   
-                // If child page, get parents 
-                $anc = get_post_ancestors( $post->ID );
-                   
-                // Get parents in the right order
-                $anc = array_reverse($anc);
-                   
-                // Parent page loop
-                if ( !isset( $parents ) ) $parents = null;
-                foreach ( $anc as $ancestor ) {
-                    $parents .= '<li class="item-parent item-parent-' . $ancestor . '"><a class="bread-parent bread-parent-' . $ancestor . '" href="' . get_permalink($ancestor) . '" title="' . get_the_title($ancestor) . '">' . get_the_title($ancestor) . '</a></li>';
-                    //$parents .= '<li class="separator separator-' . $ancestor . '"> ' . $separator . ' </li>';
-                }
-                   
-                // Display parent pages
-                echo $parents;
-                   
-                // Current page
-                echo '<li class="item-current item-' . $post->ID . '"><strong title="' . get_the_title() . '"> ' . get_the_title() . '</strong></li>';
-                   
-            } else {
-                   
-                // Just display current page if not parents
-                echo '<li class="item-current item-' . $post->ID . '"><strong class="bread-current bread-' . $post->ID . '"> ' . get_the_title() . '</strong></li>';
-                   
-            }
-               
-        } else if ( is_tag() ) {
-               
-            // Tag page
-               
-            // Get tag information
-            $term_id        = get_query_var('tag_id');
-            $taxonomy       = 'post_tag';
-            $args           = 'include=' . $term_id;
-            $terms          = get_terms( $taxonomy, $args );
-            $get_term_id    = $terms[0]->term_id;
-            $get_term_slug  = $terms[0]->slug;
-            $get_term_name  = $terms[0]->name;
-               
-            // Display the tag name
-            echo '<li class="item-current item-tag-' . $get_term_id . ' item-tag-' . $get_term_slug . '"><strong class="bread-current bread-tag-' . $get_term_id . ' bread-tag-' . $get_term_slug . '">' . $get_term_name . '</strong></li>';
-           
-        } elseif ( is_day() ) {
-               
-            // Day archive
-               
-            // Year link
-            echo '<li class="item-year item-year-' . get_the_time('Y') . '"><a class="bread-year bread-year-' . get_the_time('Y') . '" href="' . get_year_link( get_the_time('Y') ) . '" title="' . get_the_time('Y') . '">' . get_the_time('Y') . ' Archives</a></li>';
-            //echo '<li class="separator separator-' . get_the_time('Y') . '"> ' . $separator . ' </li>';
-               
-            // Month link
-            echo '<li class="item-month item-month-' . get_the_time('m') . '"><a class="bread-month bread-month-' . get_the_time('m') . '" href="' . get_month_link( get_the_time('Y'), get_the_time('m') ) . '" title="' . get_the_time('M') . '">' . get_the_time('M') . ' Archives</a></li>';
-            //echo '<li class="separator separator-' . get_the_time('m') . '"> ' . $separator . ' </li>';
-               
-            // Day display
-            echo '<li class="item-current item-' . get_the_time('j') . '"><strong class="bread-current bread-' . get_the_time('j') . '"> ' . get_the_time('jS') . ' ' . get_the_time('M') . ' Archives</strong></li>';
-               
-        } else if ( is_month() ) {
-               
-            // Month Archive
-               
-            // Year link
-            echo '<li class="item-year item-year-' . get_the_time('Y') . '"><a class="bread-year bread-year-' . get_the_time('Y') . '" href="' . get_year_link( get_the_time('Y') ) . '" title="' . get_the_time('Y') . '">' . get_the_time('Y') . ' Archives</a></li>';
-            //echo '<li class="separator separator-' . get_the_time('Y') . '"> ' . $separator . ' </li>';
-               
-            // Month display
-            echo '<li class="item-month item-month-' . get_the_time('m') . '"><strong class="bread-month bread-month-' . get_the_time('m') . '" title="' . get_the_time('M') . '">' . get_the_time('M') . ' Archives</strong></li>';
-               
-        } else if ( is_year() ) {
-               
-            // Display year archive
-            echo '<li class="item-current item-current-' . get_the_time('Y') . '"><strong class="bread-current bread-current-' . get_the_time('Y') . '" title="' . get_the_time('Y') . '">' . get_the_time('Y') . ' Archives</strong></li>';
-               
-        } else if ( is_author() ) {
-               
-            // Auhor archive
-               
-            // Get the author information
-            global $author;
-            $userdata = get_userdata( $author );
-               
-            // Display author name
-            echo '<li class="item-current item-current-' . $userdata->user_nicename . '"><strong class="bread-current bread-current-' . $userdata->user_nicename . '" title="' . $userdata->display_name . '">' . 'Author: ' . $userdata->display_name . '</strong></li>';
-           
-        } else if ( get_query_var('paged') ) {
-               
-            // Paginated archives
-            echo '<li class="item-current item-current-' . get_query_var('paged') . '"><strong class="bread-current bread-current-' . get_query_var('paged') . '" title="Page ' . get_query_var('paged') . '">'.__('Page') . ' ' . get_query_var('paged') . '</strong></li>';
-               
-        } else if ( is_search() ) {
-           
-            // Search results page
-            echo '<li class="item-current item-current-' . get_search_query() . '"><strong class="bread-current bread-current-' . get_search_query() . '" title="Search results for: ' . get_search_query() . '">Search results for: ' . get_search_query() . '</strong></li>';
-           
-        } elseif ( is_404() ) {
-               
-            // 404 page
-            echo '<li>' . esc_html__( 'Error 404', 'acf' ) . '</li>';
-
-        } 
-       
-        echo '</ul>';
-           
-    }
-       
+add_filter( 'um_login_form_button_two_url', 'my_login_form_button_two_url', 10, 2 );
+function my_login_form_button_two_url( $secondary_btn_url, $args ) {
+  $registration = pll_get_post( 38 );
+  $registration_url = get_the_permalink($registration);
+  return $registration_url;
 }

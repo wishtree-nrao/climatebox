@@ -166,46 +166,7 @@ get_header(); ?>
 
 												<div class="col-sm-7 col-md-7 col-lg-9">
 													<div class="value">
-														<?php/*  $file = get_field('file_upload_1'); 
-														if( $file ): ?>
-															<div class="file">
-																<a target="_blank" href="<?php echo $file['url']; ?>">
-																	<i class="fas fa-paperclip"></i>
-																	<?php echo $file['filename']; ?>
-																</a>
-															</div>
-														<?php endif; ?>
-
-														<?php $file = get_field('file_upload_2'); 
-														if( $file ): ?>
-															<div class="file">
-																<a target="_blank" href="<?php echo $file['url']; ?>">
-																	<i class="fas fa-paperclip"></i>
-																	<?php echo $file['filename']; ?>
-																</a>
-															</div>
-														<?php endif; ?>
-
-														<?php $file = get_field('file_upload_3'); 
-														if( $file ): ?>
-															<div class="file">
-																<a target="_blank" href="<?php echo $file['url']; ?>">
-																	<i class="fas fa-paperclip"></i>
-																	<?php echo $file['filename']; ?>
-																</a>
-															</div>
-														<?php endif; ?>
 														
-
-														<?php $file = get_field('file_upload_3'); 
-														if( $file ): ?>
-															<div class="file">
-																<a target="_blank" href="<?php echo $file['url']; ?>">
-																	<i class="fas fa-paperclip"></i>
-																	<?php echo $file['filename']; ?>
-																</a>
-															</div>
-														<?php endif; */ ?>
 
 														<?php if( have_rows('ps_project_documents') ): while ( have_rows('ps_project_documents') ) : the_row(); ?>
 															<?php $file = get_sub_field('ps_doc_file'); ?>
@@ -251,9 +212,7 @@ get_header(); ?>
 
 								</div><!-- .entry-content -->
 
-								<footer class="entry-footer">
-									<?php wp_bootstrap_starter_entry_footer(); ?>
-								</footer><!-- .entry-footer -->
+								
 							</article><!-- #post-## -->
 
 						<?php // the_post_navigation();
@@ -269,7 +228,7 @@ get_header(); ?>
 	<?php } else { ?>
 
 		<div class="alert alert-danger" role="alert">
-			<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>
+			<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>   <?php pll_e('Please login to the portal to see page details.'); ?>
 		</div>
 
 	<?php } ?>

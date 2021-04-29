@@ -67,7 +67,7 @@
 									$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1; 
 
 									$args = array(
-									    'post_type'=>'rl_gallery', 
+										'post_type'=>'rl_gallery', 
 										'posts_per_page' => 10,
 										'paged' => $paged,
 										'order'      => 'ASC',
@@ -85,24 +85,26 @@
 											while ( $loop->have_posts() ) : $loop->the_post(); 
 												?>
 												<div class="col-sm-6 col-md-6 col-lg-4">
-												
+
 													<div class="post_litem pi_gallery w4post">
 														<a rel="bookmark" href="<?php echo get_permalink(); ?>">
 															
-															<?php  if ( has_post_thumbnail($post->ID)) {
-																	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
-																	<div class="post_thumb">
-																		<?php // the_post_thumbnail('full'); ?>
-																		<div class="post_image" 
-																		style="background-image: url(<?php echo $image[0]; ?>);"></div>
-																	</div>
-																<?php } ?>
-																<p class="title"><?php echo get_the_title();  ?></p>
-																<button class="btn btn_link"><?php pll_e('View'); ?></button>
-															</a>
-														</div>
+															<?php 
+															// $featured_img_url = get_the_post_thumbnail_url($post->ID, 'full');
+															?>
+
+															<div class="post_thumb gallery_thumb">
+																<div class="post_image">
+																	<?php the_post_thumbnail(); ?>
+																</div>
+															</div>
+
+															<p class="title"><?php echo get_the_title();  ?></p>
+															<button class="btn btn_link"><?php pll_e('View'); ?></button>
+														</a>
 													</div>
-												
+												</div>
+
 												<?php
 
 											endwhile
@@ -117,28 +119,28 @@
 													if ($total_pages > 1){
 
 														$current_page = max(1, get_query_var('paged'));
-														 $big = 999999;
-														
+														$big = 999999;
+
 														echo paginate_links(array(
 															'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-	    													'format'  => '?paged=%#%',
+															'format'  => '?paged=%#%',
 															'current' => $current_page,
 															'total' => $total_pages,
 															'prev_text'    => __('« prev'),
 															'next_text'    => __('next »'),
 														));
-												}?>
+													}?>
 
+												</div>
 											</div>
 										</div>
-									</div>
 										<?php
 
 									}else{
 										?>
 										<div class="alert alert-warning" role="alert">
-												<?php pll_e('There are no gallery'); ?>
-											</div>
+											<?php pll_e('There are no gallery'); ?>
+										</div>
 										<?php
 									}
 									wp_reset_postdata();
@@ -205,7 +207,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 						</div><!-- Sidebar Column -->
 
 

@@ -20,7 +20,23 @@
 </head>
 
 <body <?php body_class( get_user_role() ); ?>>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B7CN69RWR6"></script>
+
+    <script>
+
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag(){dataLayer.push(arguments);}
+
+      gtag('js', new Date());
+
+     
+
+      gtag('config', 'G-B7CN69RWR6');
+
+    </script>
     <?php 
 
     // WordPress 5.2 wp_body_open implementation
@@ -70,21 +86,15 @@
 
                 <div class="nav_right">
 
-                    <div class="language_div">
-                        <?php // echo do_shortcode('[language-switcher]'); ?>
-                        <?php //echo do_shortcode('[gtranslate]'); ?>
-                        <?php // pll_the_languages( array( 'dropdown' => 1 ) ); ?>
-                    </div>
-                    <div class="dropdown_form">
+                    <div class="dropdown_form" id="searchdiv">
                         <button class="btnSearch" type="button" data-toggle="collapse" data-target="#HeaderSearch" aria-expanded="false" aria-controls="multiCollapseExample2">
                             <img src="<?php echo get_stylesheet_directory_uri(); ?>/img/icons/search_icon.svg" />
                         </button>
                         <div class="dropdown_popup collapse multi-collapse" id="HeaderSearch">
-                            <form role="search" method="get" id="searchform"
-                            class="searchform" action="<?php echo home_url('/'); ?>">
+                            <form role="search" method="get" id="searchform" class="searchform" action="<?php echo home_url('/'); ?>">
                             <label class="screen-reader-text" for="s"><?php _x( 'Search for:', 'label' ); ?></label>
                             <input type="text" name="s" placeholder="<?php pll_e('Search content here...'); ?>" value="<?php the_search_query(); ?>" />
-                            <input type='hidden' value='917' name='wpessid' />
+    
                             <input type="submit" value="<?php pll_e('Search'); ?>">
                         </form>
                     </div>
@@ -109,7 +119,7 @@
                                 <li class="username"><span><?php $display_name = um_user('display_name'); echo $display_name; ?></span></li>
                                 <?php /*<li><a href="<?php echo get_site_url(); ?>/user">My Profile</a></li>*/  ?>
                                 <li><a href="<?php echo $account_url; ?>"><?php pll_e('My Account'); ?></a></li>
-                                <li><a href="<?php echo get_site_url(); ?>/logout"><?php pll_e('Logout'); ?></a></li>
+                                <li><a href="<?php echo esc_url( wp_logout_url(home_url()) ); ?>"><?php pll_e('Logout'); ?></a></li>
                             </ul>
                         </div>
                     </div>
@@ -136,18 +146,17 @@
 
 <div id="content" class="site-content">
 
-  <?php /*
-  if ( function_exists('yoast_breadcrumb') ) {
-    yoast_breadcrumb( '<div id="breadcrumbs" class="breadcrumbs"><div class="container"><div class="breadcrumbs_wrap">','</div></div></div>' );
-} */ ?>
-
-
-
 <div id="breadcrumbs" class="breadcrumbs">
     <div class="container">
         <div class="breadcrumbs_wrap">
             <?php // bcn_display($return = false, $linked = true, $reverse = false, $force = false) ?>
-            <?php custom_breadcrumbs(); ?>
+            <?php // custom_breadcrumbs(); ?>
+            
+            <?php
+            if ( function_exists('yoast_breadcrumb') ) {
+              yoast_breadcrumb( '<p id="breadcrumbs">','</p>' );
+            }
+            ?>
         </div>
     </div>
 </div>

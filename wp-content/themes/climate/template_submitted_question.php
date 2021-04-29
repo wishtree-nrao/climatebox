@@ -50,7 +50,7 @@
 													<div class="col-sm-12 col-md-12 col-lg-12">
 														<?php the_title( '<p class="title"><span class="grayfont"><i class="fas fa-quote-left"></i></span> ', '</p>' ); ?>
 														<div class="post_content">
-															<p><?php echo get_field('submit_question_desc'); ?></p>
+															<p><?php echo get_field('question_descrition'); ?></p>
 														</div>
 
 														<b class="entry-date"><?php pll_e('Submitted date'); ?> : <?php echo get_the_date(); ?></b>
@@ -110,7 +110,7 @@
 				<?php } else { ?>
 
 					<div class="alert alert-danger" role="alert">
-						<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>
+						<?php pll_e('Sorry, but you do not have permission to view this content.'); ?>   <?php pll_e('Please login to the portal to see page details.'); ?>
 					</div>
 
 				<?php } ?>
